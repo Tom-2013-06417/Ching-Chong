@@ -75,12 +75,9 @@ class PythonHighlighter (QSyntaxHighlighter):
         rules = []
 
         # Keyword, operator, and brace rules
-        rules += [(r'\b%s\b' % w, 0, STYLES['keyword'])
-            for w in PythonHighlighter.keywords]
-        rules += [(r'%s' % o, 0, STYLES['operator'])
-            for o in PythonHighlighter.operators]
-        rules += [(r'%s' % b, 0, STYLES['brace'])
-            for b in PythonHighlighter.braces]
+        rules += [(r'\b%s\b' % w, 0, STYLES['keyword']) for w in PythonHighlighter.keywords]
+        rules += [(r'%s' % o, 0, STYLES['operator']) for o in PythonHighlighter.operators]
+        rules += [(r'%s' % b, 0, STYLES['brace']) for b in PythonHighlighter.braces]
 
         # All other rules
         rules += [
