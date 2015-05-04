@@ -5,11 +5,9 @@ YUO GRADUATE DOCTOR.
 
 -_-
 
-lol
+Homework math with Score X and GWA Y and Essay Z. 				-.-( def Math (Score X, GWA Y, Essay Z) )
 
-Math homework with Score X and GWA Y and Essay Z. ( def Math (Score X, GWA Y, Essay Z) )
-
-	If X is 8, then								-.- make this look better
+	If X is 8, then										-.- make this look better
 		Do your chores from 0 to 10.
 			Y is Y + 1 lah.
 		End chores.
@@ -38,7 +36,7 @@ Math homework with Score X and GWA Y and Essay Z. ( def Math (Score X, GWA Y, Es
 	-_-
 
 
-Finish Math homework. ( end function Math )
+Finish homework math. ( end function Math )
 
 
 
@@ -46,13 +44,13 @@ Finish Math homework. ( end function Math )
 
 -.- Main function
 
-Score Y is 6 lah. ( int Y = 6 )
-Essay input is whateverYouSay_4 lah. ( string input = 'whateverYouSay_4' )
-GPA pi is 3.14 lah.			( float pi = 3.14 )
+Score Y is 6 lah. 											-.-( int Y = 7 )
+Essay input is whateverYouSay_4 lah. 							-.-( string input = 'whateverYouSay_4' )
+GPA pi is 3.14 lah.										-.-( float pi = 3.14 )
 
-Honor potato is own lah.  	( bool potato = True )
-Honor carrot is disown lah. ( bool carrot = False )
+Honor potato is own lah.  									-.-( bool potato = True )
+Honor carrot is disown lah. 									-.-( bool carrot = False )
 
-Y is do your math homework with Y and pi and input lah. ( Y = Math(Y, pi, input) )
+Y is do your math homework with Y and pi and input lah. 			-.-( Y = Math(Y, pi, input) )
 
-Showme Y, pi, input lah. ( print Y, pi, input )
+Showme Y, pi, input lah. 									-.-( print Y, pi, input )
