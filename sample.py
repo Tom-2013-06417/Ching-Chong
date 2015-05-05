@@ -2,7 +2,7 @@ import sys
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, QRegExp
 
-
+#sample comment lel
 
 def format(color, style=''):
 	"""Return a QTextCharFormat with the given attributes.
