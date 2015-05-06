@@ -51,7 +51,7 @@ Dear BasicWhileLoop,
 Father say make repeat chore again lah.						-.- initiate loop
 Must do X while X more lesser to Y lah.						-.- while loop as X while X < Y
 I show Father "PUTANG INA MO" lah.							-.- loop content
-Father surprise quiz: X = X + 1;							
+Father surprise quiz: X = X + 1.							
 I'm done with chore lah.									-.- close loop
 
 Sincerely, Cho Kin.
@@ -60,11 +60,11 @@ Sincerely, Cho Kin.
 
 Dear BasicConditional,
 
-Father ask X more lesser to Y lah!							-.- if
+Father ask X more lesser to Y lah.							-.- if
 I show Father "TRULALUBELS" lah.
 I double confirm lah.										-.- close if
 
-Father ask again Variable more greaterer to 10 lah!			-.- else if
+Father ask again Variable more greaterer to 10 lah.			-.- else if
 I show Father "YES MAYBE PO" lah.
 I double confirm lah.										-.- close (else) if
 
@@ -100,26 +100,26 @@ Sincerely, Cho Kin.
 
 Dear Blocking,
 
-Father ask A more lesser to B lah!							
-Father say make repeat chore again lah.						-.- initiate loop
-Must do X from 10 to 100 oclock lah.						-.- for loop as X goes from 10 to 100
-Father ask X same to A lah!									-.- inner conditional
-I show Father "BREAKING" lah.								-.- loop content
+Father ask A more lesser to B lah.							-.- if
+Father say make repeat chore again lah.						-.- loop 1 
+Must do X from 10 to 100 oclock lah.						
+Father ask X same to A lah.									-.- inner condition
+I show Father "BREAKING" lah.								-.- content
 I am tired lah.												-.- break
-I double confirm lah,
+I double confirm lah.										-.- end inner condition
 I'm done with chore lah.									-.- close loop
-I double confirm lah.										
+I double confirm lah.										-.- end if
 
-Father ask again Variable more greaterer to 10 lah!			
+Father ask again Variable more greaterer to 10 lah.			-.- else if
 Father say make repeat chore again lah.						-.- initiate loop
-Must do X from 10 to 100 oclock lah.						-.- for loop as X goes from 10 to 100
-Father say make repeat chore again lah.						-.- initiate loop
-Must do X while X more lesser to Y lah.						-.- while loop as X while X < Y
+Must do X from 10 to 100 oclock lah.
+Father say make repeat chore again lah.						-.- initiate inner loop
+Must do X while X more lesser to Y lah.						
 I show Father "PUTANG INA MO" lah.							-.- loop content
-Father surprise quiz: X = X + 1;							
+Father surprise quiz: X = X + 1;							-.- loop content
+I'm done with chore lah.									-.- close inner loop
 I'm done with chore lah.									-.- close loop
-I'm done with chore lah.	
-I double confirm lah.										
+I double confirm lah.										-.- end else if
 
 I did not know.												
 I show Father "NIAGRA FALSE" lah.
