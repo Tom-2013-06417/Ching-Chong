@@ -1,0 +1,134 @@
+Hi, I am Chokin.
+
+
+
+I send shrimp fried rice to all:									-.- declare global variables
+
+Score X, Y, Variable, A, B, C, PAPABOLS lah.
+Honor Booleo lah.
+
+Sincerely, Chokin.													-.- closing
+
+
+
+Dear Diary, 														-.- main	
+
+I show Father "My Report Cards" lah. 								-.- output 
+I give Father Variable lah. 										-.- scanf
+Father wants "PROMPT", I give Father Variable lah.					-.- scanf with prompt
+I write to Asshole lah.												-.- call a function that doesn't take parameters
+I write to ParameterAndReturn with X, Y, Booleo lah.				-.- call a function, sending parameters
+I get Booleo from ParameterAndReturn lah.							-.- store the return value of ParameterAndReturn to Booleo
+
+Sincerely, Chokin.
+
+
+
+Dear Asshole,														-.- define fxn with name "Asshole"
+
+Father says that I need:											-.- declare variables in scope of fxn
+Score X of 90 lah.
+GWA Y lah.
+to become doctor lah.												-.- end of variable declaration
+
+Sincerely, Chokin.
+
+
+
+Dear Arithmetic,
+
+Father surprise quiz: X = Y + 10 lah.								-.- one line of arithmetic
+Father surprise quiz: Y = X + 20 lah.
+Father surprise long quiz:											-.- block of arithmetic (optional)
+X = Y + 11 lah.
+Y = Y + 12 lah.
+I no pass lah.														-.- close arithmetic block
+
+Sincerely, Chokin.
+
+
+
+Dear BasicForLoop,
+
+Father say make repeat CHORE again lah.								-.- initiate loop
+Must do X from 10 to 100 oclock lah.								-.- for loop as X goes from 10 to 100
+I show Father "PUTANG INA MO" lah.									-.- loop content
+I'm done with CHORE lah.											-.- close loop
+
+Sincerely, Chokin.
+
+
+
+Dear BasicWhileLoop,
+
+Father say make repeat CHORENAME again lah.							-.- initiate loop
+Must do X while X more lesser to Y lah.								-.- while loop as X while X < Y
+I show Father "PUTANG INA MO" lah.									-.- loop content
+Father surprise quiz: X = X + 1 lah.									
+I'm done with CHORENAME lah.										-.- close loop
+Sincerely, Chokin.
+
+
+
+Dear BasicConditional,
+
+Father ask PUMPAM if X more lesser to Y lah.						-.- if
+I show Father "TRULALUBELS" lah.
+I double confirm PUMPAM lah.										-.- close if
+
+Father ask again PUMPAM if Variable more greaterer to 10 lah.		-.- else if
+I show Father "YES MAYBE PO" lah.
+I double confirm PUMPAM lah.										-.- close (else) if
+
+Father ask PUMPAM no more lah.										-.- else
+I show Father "NIAGRA FALSE" lah.
+Father ashamed of son for not answer PUMPAM lah.					-.- close else
+
+Sincerely, Chokin.
+
+
+
+Dear ParameterAndReturn,
+
+I want dumplings and:												-.- parameter block			
+Score X lah.
+GWA Xyzzy lah.
+Honor Variable lah.
+okay lah.															-.- end parameter block
+
+Father surprise quiz: Variable = Disown lah.
+
+I give you sum Variable lah.										-.- return function with Variable
+
+Sincerely, Chokin.
+
+
+
+Dear Blocking,
+
+Father ask JACOB if A more lesser to B lah.							-.- if
+Father say make repeat CHORE3 again lah.							-.- loop 1 
+Must do X from 10 to 100 oclock lah.						
+Father ask LEX if X same to A lah.									-.- inner condition
+I show Father "BREAKING" lah.										-.- content
+I am tired lah.														-.- break
+I double confirm LEX lah.											-.- end inner condition
+I'm done with CHORE3 lah.											-.- close loop
+I double confirm JACOB lah.											-.- end if
+
+Father ask again JACOB if Variable more greaterer to 10 lah.		-.- else if
+Father say make repeat CHORE again lah.								-.- initiate loop
+Must do X from 10 to 100 oclock lah.	
+Father say make repeat CHORE2 again lah.							-.- initiate inner loop
+Must do X while X more lesser to Y lah.						
+I show Father "PUTANG INA MO" lah.									-.- loop content
+Father surprise quiz: X = X + 1 lah.								-.- loop content
+I'm done with CHORE2 lah.											-.- close inner loop
+I'm done with CHORE lah.											-.- close loop
+I double confirm JACOB lah.											-.- end else if
+
+Father ask JACOB no more lah.											
+I show Father "NIAGRA FALSE" lah.
+Father ashamed of son for not answer JACOB lah.								
+
+Sincerely, Chokin.
