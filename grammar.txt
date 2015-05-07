@@ -1,0 +1,105 @@
+CHING CHONG GRAMMAR!!!
+
+//Initial Line
+<Start> -> "Hi, I am " <PN> "\n"
+
+//Declaration of Global Variables
+<GV> -> "I send shrimp fried rice to all:\n" 
+		{<VD>} 
+		"Sincerely, " <PN> ".\n"
+
+//Function Declaration
+<F> -> "Dear " <FN> ",\n" 
+ 	<P>
+ 	<VDF> 
+ 	{<S>}
+ 	"Sincerely, " <PN> ".\n"
+
+//Parameter Declaration for Functions
+<P> -> 	"I want dumplings and:\n"
+ 		{<VD>}
+ 		"okay lah.\n"
+
+//Return Value Statement
+<S> -> 	"I give you sum " <V> "lah.\n"
+
+//Function Call Statement
+<S> -> 	"I write to " <FN> [" with " <V> {", " <V>}] " lah.\n"
+		["I get " <V> " from " <FN> " lah.\n"]
+
+//Single Line Arithmetic Statement
+<S> -> 	"Father surprise quiz: " <math> " lah.\n"
+
+//Block Arithmetic Statements
+<S> -> 	"Father surprise long quiz: \n"
+		<math>
+		{<math>}
+	 	"I no pass lah.\n"
+
+//Conditional Statements
+<S> -> 	"Father ask if " <conditional> " lah.\n"
+		<S>
+		{<S>}
+		"I double confirm lah.\n"
+
+		[<elif>] 
+		[<else>]
+
+<elif> ->	"Father ask again if " <conditional> " lah.\n"
+			<S>
+			{<S>}
+			"I double confirm lah.\n"
+
+			[<elif>] | e
+
+<else> -> 	"Father ask no more lah.\n"
+			<S>
+			{<S>}
+			"Father ashamed of son lah.\n"
+
+//Input Statement
+<S> -> "I show Father " <V> " lah.\n"
+
+//Output Statement
+<S> -> ["Father wants " <V> ","] "I give Father " <V> " lah.\n"
+
+//Loop Statement
+<S> -> 	"Father say make repeat chore again lah.\n"
+		(<For>|<While>)
+		"I'm done with  chore lah.\n"
+
+//Break
+<S> -> "I'm tired lah.\n"
+
+//Continue
+<S> -> "Father brought out belt lah.\n"
+
+//For
+<For> -> "Must do " [<V>] " from " <value> " to " <value> "oclock lah.\n"
+		  <S>
+		  {<S>} 
+
+//While
+<While> -> 	"Must do " [<V>] " while " <cond> "\n"
+		  	<S>
+		  	{<S>} 
+
+//Variable Declaration in a Function
+<VDF> 	-> "Father says that I need:\n"
+		 	{<VD>}
+		 	"Sincerely, " <PN>, "."
+<VD>  	-> <DT> <VDs> {"," <VDs>} "lah.\n"
+<VDs> 	-> <VN> ["of" <value>]
+<DT> 	-> "Score" | "GWA" | "LetterGrade" | "Honor" | "Essay"
+<V> 	-> variable
+<value> -> alam niyo na to
+<PN> 	-> program name
+<FN> 	-> function name
+<math>  -> yung mga plus and shit
+
+<Print> -> "I show Father " <string> " lah."
+
+
+<string> -> A <string> | B <string> | ... | Z <string> { a | b | c | ... | z | <numbers>}
+
+<numbers> -> 0 <numbers> | 1 <numbers> | 9 <numbers> | e
