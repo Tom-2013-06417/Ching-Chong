@@ -1,0 +1,99 @@
+CHING CHONG GRAMMAR!!!
+
+//Initial Line
+<Start> -> 	"Hi, I am " <Name> "\n"
+
+//Declaration of Global Variables
+<GV> -> 	"I send shrimp fried rice to all:\n" 
+			{<VD>} 
+			"Sincerely, " <Name> ".\n"
+
+//Function Declaration
+<S> -> 		"Dear " <Name> ",\n" 
+		 	<P>
+		 	<VDF> 
+		 	{<S>}
+		 	"Sincerely, " <Name> ".\n"
+
+//Parameter Declaration for Functions
+<P> -> 		"I want dumplings and:\n"
+	 		{<VD>}
+	 		"okay lah.\n"
+
+//Return Value Statement
+<S> -> 		"I give you sum " <V> "lah.\n"
+
+//Function Call Statement
+<S> -> 		"I write to " <Name> [" with " <V> {", " <V>}] " lah.\n"
+			["I get " <V> " from " <Name> " lah.\n"]
+
+//Single Line Arithmetic Statement
+<S> -> 		"Father surprise quiz: " <math> " lah.\n"
+
+//Block Arithmetic Statements
+<S> -> 		"Father surprise long quiz: \n"
+			<math>
+			{<math>}
+		 	"I no pass lah.\n"
+
+//Conditional Statements
+<S> -> 		"Father ask " <Label> ", if " <conditional> " lah.\n"
+			<S>
+			{<S>}
+			"I double confirm " <Label> ", lah.\n"
+
+			[<elif>] 
+			[<else>]
+
+<elif> ->	"Father ask again " <Label> ", if " <conditional> " lah.\n"
+			<S>
+			{<S>}
+			"I double confirm " <Label> ", lah.\n"
+
+			[<elif>] | e
+
+<else> -> 	"Father ask " <Label> ", no more lah.\n"
+			<S>
+			{<S>}
+			"Father ashamed of son for not answer " <Label> ", lah.\n"
+
+//Input Statement
+<S> -> 		"I show Father " <V> " lah.\n"
+
+//Output Statement
+<S> -> 		["Father wants " <V> ","] "I give Father " <V> " lah.\n"
+
+//Loop Statement
+<S> -> 		"Father say make repeat " <Label> " again lah.\n"
+			(<For>|<While>)
+			"I'm done with  chore lah.\n"
+
+//Break
+<S> -> 		"I'm tired lah.\n"
+
+//Continue
+<S> -> 		"Father brought out belt lah.\n"
+
+//For
+<For> -> 	"Must do " [<V>] " from " <value> " to " <value> "oclock lah.\n"
+			<S>
+			{<S>} 
+
+//While
+<While> -> 	"Must do " [<V>] " while " <cond> "\n"
+		  	<S>
+		  	{<S>} 
+
+//Variable Declaration in a Function
+<VDF> 	-> 	"Father says that I need:\n"
+		 	{<VD>}
+		 	"Sincerely, " <Name>, "."
+<VD>  	-> 	<DT> <VDs> {"," <VDs>} "lah.\n"
+<VDs> 	-> 	<VN> ["of" <Value>]
+<DT> 	-> 	"Score" | "GWA" | "LetterGrade" | "Honor" | "Essay"
+
+<V> 	-> 	variable
+<Label> -> 	all capssssss
+<Value> -> 	alam niyo na to
+<Name> 	-> 	program name
+<Math>  -> 	yung mga plus and shit
