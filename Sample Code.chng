@@ -37,7 +37,7 @@ Sincerely, Cho Kin.
 
 Dear Arithmetic,
 
-Father surprise quiz: X = Y + 10 lah.							-.- one line of arithmetic
+Father surprise quiz: X = Y + 10 lah.						-.- one line of arithmetic
 Father surprise quiz: Y = X + 20 lah.
 Father surprise long quiz:									-.- block of arithmetic (optional)
 X = Y + 11 lah.
@@ -61,29 +61,28 @@ Sincerely, Cho Kin.
 
 Dear BasicWhileLoop,
 
-Father say make repeat chore CHORENAME again lah.						-.- initiate loop
+Father say make repeat chore CHORENAME again lah.			-.- initiate loop
 Must do X while X more lesser to Y lah.						-.- while loop as X while X < Y
 I show Father "PUTANG INA MO" lah.							-.- loop content
 Father surprise quiz: X = X + 1 lah.							
-I'm done with chore CHORENAME lah.									-.- close loop
-
+I'm done with chore CHORENAME lah.							-.- close loop
 Sincerely, Cho Kin.
 
 
 
 Dear BasicConditional,
 
-Father ask if X more lesser to Y lah.							-.- if
+Father ask if X more lesser to Y lah.						-.- if
 I show Father "TRULALUBELS" lah.
 I double confirm lah.										-.- close if
 
-Father ask again if Variable more greaterer to 10 lah.			-.- else if
+Father ask again if Variable more greaterer to 10 lah.		-.- else if
 I show Father "YES MAYBE PO" lah.
 I double confirm lah.										-.- close (else) if
 
-Father ask no more lah.											-.- else
+Father ask no more lah.										-.- else
 I show Father "NIAGRA FALSE" lah.
-Father ashamed of son lah.										-.- close else
+Father ashamed of son lah.									-.- close else
 
 Sincerely, Cho Kin.
 
