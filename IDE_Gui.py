@@ -74,7 +74,6 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 		# FIXME: The triple-quotes in these two lines will mess up the
 		# syntax highlighting from this point onward
 		self.tri_single = (QRegExp("-_-"), 1, STYLES['string2'])
-		# self.tri_double = (QRegExp('-_-'), 2, STYLES['string2'])
 
 		rules = []
 
@@ -94,9 +93,9 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 			(r"'[^'\\]*(\\.[^'\\]*)*'", 0, STYLES['string']),
 
 			# 'def' followed by an identifier
-			(r'\bHomework\b\s*(\w+)', 1, STYLES['defclass']),
+			(r'\bHi, I am\b\s*(\w+)\.', 1, STYLES['defclass']),
 			# 'class' followed by an identifier
-			(r'\bclass\b\s*(\w+)', 1, STYLES['defclass']),
+			(r'\bDear\b\s*(\w+)\,', 1, STYLES['defclass']),
 
 			# From '#' until a newline
 			(r'-.-[^\n]*', 0, STYLES['comment']),
@@ -238,10 +237,14 @@ class Main(QtGui.QMainWindow):
 			for files in self.openedFiles:
 				
 				if files != '':
-					self.initEditor(files)					
-					
-					with open(files,"rt") as file:
-						self.listOfOpenTabs[counter].setPlainText(file.read())
+					self.initEditor(files)
+
+					try:					
+						with open(files,"rt") as file:
+							self.listOfOpenTabs[counter].setPlainText(file.read())
+
+					except:
+						pass
 
 				counter += 1
 
@@ -386,8 +389,12 @@ class Main(QtGui.QMainWindow):
 				self.tab.setTabText(self.tab.currentIndex(), self.tab.currentWidget().filename.split('/')[-1])
 
 				with open(self.tab.currentWidget().filename, "w") as file:
-					file.write(self.tab.currentWidget().toPlainText())	
-
+					file.write(self.tab.currentWidget().toPlainText())
+		else:
+			
+			with open(self.tab.currentWidget().filename, "w") as file:
+				file.write(self.tab.currentWidget().toPlainText())
+				
 		if self.tab.currentWidget().filename not in self.openedFiles:		
 			self.recentlyOpened()
 
