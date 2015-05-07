@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, QRegExp
 
@@ -31,6 +31,8 @@ STYLES = {
 	'comment': format('gray'),
 	'self': format('black', 'italic'),
 	'numbers': format('brown'),
+	'terminator': format('green'),
+	'loops': format('orange'),
 }
 
 
@@ -98,6 +100,9 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 
 			# From '#' until a newline
 			(r'-.-[^\n]*', 0, STYLES['comment']),
+			(r'lah.', 0, STYLES['terminator']),
+			(r'Do your chores', 0, STYLES['loops']),
+			(r'End chores', 0, STYLES['loops']),
 
 			# Numeric literals
 			(r'\b[+-]?[0-9]+[lL]?\b', 0, STYLES['numbers']),
@@ -174,58 +179,106 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 
 
 
-class Main(QtGui.QMainWindow):
+class Editor(QtGui.QPlainTextEdit):
+	
+	def __init__(self, parent=None):
 
-	def __init__(self, parent = None):
-		QtGui.QMainWindow.__init__(self,parent)				
+		super(Editor, self).__init__(parent)
+		QtGui.QPlainTextEdit.__init__(self)
 
-		self.setWindowIcon(QtGui.QIcon("icons/icon.png"))		
+		self.filename = ''
 
 		self.font = QtGui.QFont()
 		self.font.setFamily("Consolas")
 		self.font.setPointSize(10.5)
+
+		self.setFont(self.font)
+		self.setTabStopWidth(33)
+
+		self.setFrameShape(QtGui.QFrame.NoFrame)
+
+		self.highlight = PythonHighlighter(self.document())
+
+	def setFileName(self, name):
+		self.filename = name
+
+
 		
-		self.initUI()
+class Main(QtGui.QMainWindow):
 
-		self.recentFile = open('saved.txt', 'r')
-		self.recentFile2 = open('saved.txt', 'a')
-
-		self.openedFiles = self.recentFile.read().split('\n')
-
-		try:
-			self.filename = self.openedFiles[-2].rstrip()
+	def __init__(self, parent = None):
 		
-			if self.filename != '':
-				with open(self.filename,"rt") as file:
-					self.text.setPlainText(file.read())
+		# super(Main, self).__init__(parent)
+		QtGui.QMainWindow.__init__(self, parent)				
 
-			else:
-				self.filename = ''	
+		self.setWindowIcon(QtGui.QIcon("icons/icon.png"))
 
-		except:
-			self.filename = ''
-			if self.filename != '':
-				self.openedFiles.remove(self.filename)
+		self.recentFiles = open('saved', 'r+')
+		self.writeRecentFiles = open('saved', 'a+')
+		
+		self.toReadCurrentTab = open('currTab', 'r')		
+		
+		readRecentTab = self.toReadCurrentTab.read()
 
-		self.highlight = PythonHighlighter(self.text.document())
-		self.text.show()
+		self.listOfOpenTabs = []
+
+		self.openedFiles = self.recentFiles.read().split('\n')
+
+		if self.openedFiles[0] == '':
+			self.initUI()
+			self.initEditor("")
+			self.initToolbar()
+			self.initMenubar()														# Initialize the bars	
+
+		else:
+			self.initUI()
+
+			counter = 0
+			
+			for files in self.openedFiles:
+				
+				if files != '':
+					self.initEditor(files)					
+					
+					with open(files,"rt") as file:
+						self.listOfOpenTabs[counter].setPlainText(file.read())
+
+				counter += 1
+
+				if readRecentTab == files:
+					self.tab.setCurrentWidget(self.listOfOpenTabs[-1])
+
+			self.initToolbar()
+			self.initMenubar()
 
 	def recentlyOpened(self):
+		self.writeRecentFiles.write(str(self.tab.currentWidget().filename) + '\n')
 
-		self.recentFile2.write(str(self.filename) + '\n')
+	def writeCurrentTab(self):
+		self.toWriteCurrentTab = open('currTab', 'w')
+		self.toWriteCurrentTab.write(self.tab.currentWidget().filename)
+		self.toWriteCurrentTab.close()
+
+	def initEditor(self, files):
+		a = Editor()
+		a.setFileName(files)
+		self.listOfOpenTabs.append(a)
+		
+		if files == "":
+			self.tab.addTab(a, 'Untitled')
+		else:
+			self.tab.addTab(a, os.path.basename(files))
+
+		a.cursorPositionChanged.connect(self.cursorPosition)
 
 	def initUI(self):
-		self.text = QtGui.QPlainTextEdit(self)									# Initialize the TEXTBOX EDITOR
-		self.setCentralWidget(self.text)										# Set it as the central widget
-		self.text.setFont(self.font)
-		self.text.setTabStopWidth(33)
 
-		self.text.cursorPositionChanged.connect(self.cursorPosition)
+		self.tab = QtGui.QTabWidget(self)
+		self.tab.setMovable(True)
+		self.tab.setTabsClosable(True)
+		self.setCentralWidget(self.tab)		
 
-		self.initToolbar()														# Initialize the bars
-		self.initMenubar()
-		
-		self.statusbar = self.statusBar()										# Initialize a statusbar for the window	
+		self.statusbar = self.statusBar()										# Initialize a statusbar for the window			
 		
 		self.setGeometry(180,100,1030,600)										# x and y coordinates on the screen, width, height
 		self.setWindowTitle("Ching Chong IDE")
@@ -251,36 +304,31 @@ class Main(QtGui.QMainWindow):
 		self.cutAction = QtGui.QAction(QtGui.QIcon("icons/cut.png"),"Cut",self)
 		self.cutAction.setStatusTip("Delete and copy text to clipboard")
 		self.cutAction.setShortcut("Ctrl+X")
-		self.cutAction.triggered.connect(self.text.cut)
+		self.cutAction.triggered.connect(self.tab.currentWidget().cut)
 
 		self.copyAction = QtGui.QAction(QtGui.QIcon("icons/copy.png"),"Copy",self)
 		self.copyAction.setStatusTip("Copy text to clipboard")
 		self.copyAction.setShortcut("Ctrl+C")
-		self.copyAction.triggered.connect(self.text.copy)
+		self.copyAction.triggered.connect(self.tab.currentWidget().copy)
 
 		self.pasteAction = QtGui.QAction(QtGui.QIcon("icons/paste.png"),"Paste",self)
 		self.pasteAction.setStatusTip("Paste text from clipboard")
 		self.pasteAction.setShortcut("Ctrl+V")
-		self.pasteAction.triggered.connect(self.text.paste)
+		self.pasteAction.triggered.connect(self.tab.currentWidget().paste)
 
 		self.undoAction = QtGui.QAction(QtGui.QIcon("icons/undo.png"),"Undo",self)
 		self.undoAction.setStatusTip("Undo last action")
 		self.undoAction.setShortcut("Ctrl+Z")
-		self.undoAction.triggered.connect(self.text.undo)
+		self.undoAction.triggered.connect(self.tab.currentWidget().undo)
 
 		self.redoAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"),"Redo",self)
 		self.redoAction.setStatusTip("Redo last undone thing")
 		self.redoAction.setShortcut("Ctrl+Y")
-		self.redoAction.triggered.connect(self.text.redo)
+		self.redoAction.triggered.connect(self.tab.currentWidget().redo)
 
 		self.exitAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"), "Exit", self)
 		self.exitAction.setShortcut("Ctrl+W")
-		self.exitAction.triggered.connect(self.exit)
-
-		# self.toolbar.addAction(self.newAction)
-		# self.toolbar.addAction(self.openAction)
-
-		# self.addToolBarBreak()												# Makes the next toolbar appear underneath this one
+		self.exitAction.triggered.connect(self.closeEvent)
 
 	def initFormatbar(self):
 		self.formatbar = self.addToolBar("Format")								# Initialize the FORMAT toolbar
@@ -305,40 +353,48 @@ class Main(QtGui.QMainWindow):
 		edit.addAction(self.pasteAction)
 
 	def new(self):
-		spawn = Main(self)
-		spawn.show()
-		spawn.filename = ''
-		spawn.text.setPlainText('')
+		a = Editor()		
+		self.listOfOpenTabs.append(a)		
+		self.tab.insertTab(self.tab.currentIndex()+1, a, "Untitled")
+		self.tab.setCurrentWidget(a)
+		a.cursorPositionChanged.connect(self.cursorPosition)
+		a.setFocus()
 
 	def open(self):
+		filename = str(QtGui.QFileDialog.getOpenFileName(self, 'Open File', ".", "(*.chng)"))
 
-		# Get filename and show only .writer files
-		self.filename = str(QtGui.QFileDialog.getOpenFileName(self, 'Open File', ".", "(*.chng)"))
+		if filename:
+			with open(filename,"r") as file:
+				a = Editor()
+				a.setPlainText(file.read())
+				self.listOfOpenTabs.append(a)
+				self.tab.insertTab(self.tab.currentIndex()+1, a, os.path.basename(filename))
+				
+				a.filename = filename
+				self.tab.setCurrentWidget(a)
+				a.cursorPositionChanged.connect(self.cursorPosition)
+				a.setFocus()
 
-		if self.filename:
-			with open(self.filename,"rt") as file:
-				self.text.setPlainText(file.read())
-
-		if self.filename not in self.openedFiles:		
-			self.recentlyOpened()	
+		if filename not in self.openedFiles:		
+			self.recentlyOpened()
 
 	def save(self):
+		if not self.tab.currentWidget().filename:
+			self.tab.currentWidget().filename = QtGui.QFileDialog.getSaveFileName(self, 'Save File', ".", "(*.chng)")
+			
+			if self.tab.currentWidget().filename != "":
+				self.tab.setTabText(self.tab.currentIndex(), self.tab.currentWidget().filename.split('/')[-1])
+
+				with open(self.tab.currentWidget().filename, "w") as file:
+					file.write(self.tab.currentWidget().toPlainText())	
+
+		if self.tab.currentWidget().filename not in self.openedFiles:		
+			self.recentlyOpened()
+
 		self.statusbar.showMessage('Saved')
 
-		if not self.filename:
-			self.filename = QtGui.QFileDialog.getSaveFileName(self, 'Save File', ".", "(*.chng)")
-
-		# if not self.filename.endswith(".chng"):
-			# self.filename += ".chng"
-
-		with open(self.filename,"wt") as file:
-			file.write(self.text.toPlainText())	
-
-		if self.filename not in self.openedFiles:		
-			self.recentlyOpened()		
-
 	def cursorPosition(self):
-		cursor = self.text.textCursor()
+		cursor = self.tab.currentWidget().textCursor()
 
 		# Mortals like 1-indexed things
 		line = cursor.blockNumber() + 1
@@ -346,14 +402,18 @@ class Main(QtGui.QMainWindow):
 
 		self.statusbar.showMessage("Line: {}, Column: {}".format(line,col))
 
-	def exit(self):
+	def closeEvent(self, event):
+		self.writeCurrentTab()
+		self.recentFiles.close()
+		self.writeRecentFiles.close()
+		self.toReadCurrentTab.close()
 		exit(1)
 
 
 
 def main():
 
-	app = QtGui.QApplication(sys.argv)
+	app = QtGui.QApplication(sys.argv)	
 
 	main = Main()
 	main.show()

@@ -5,6 +5,10 @@ YUO GRADUATE DOCTOR.
 
 -_-
 
+Get me Tkinter lah.
+From Tkinter get me Pillow lah.
+
+
 Homework math with Score X and GWA Y and Essay Z. 				-.-( def Math (Score X, GWA Y, Essay Z) )
 
 	If X is 8, then										-.- make this look better
@@ -19,22 +23,6 @@ Homework math with Score X and GWA Y and Essay Z. 				-.-( def Math (Score X, GW
 		Showme Z lah.
 
 	End if lah.
-
-	
-	-_-
-
-	if x == 8:
-		for x in range(0, 10):
-			y = y+1
-
-	elif x == 9:
-		x = y
-
-	else:
-		print z
-
-	-_-
-
 
 Finish homework math. ( end function Math )
 
