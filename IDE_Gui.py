@@ -219,6 +219,7 @@ class Main(QtGui.QMainWindow):
 
 		self.setWindowIcon(QtGui.QIcon("icons/icon.png"))
 
+<<<<<<< HEAD
 		try:			
 			self.readRecentFiles = open('saved', 'r+')			
 			
@@ -229,6 +230,27 @@ class Main(QtGui.QMainWindow):
 			self.readCurrentTab = open('currTab', 'w')
 
 		readRecentTab = self.readCurrentTab.read()
+=======
+		try:
+			self.recentFiles = open('saved', 'r+')
+		except IOError:
+			self.recentFiles = open('saved', 'w')
+			self.recentFiles.close()
+			self.recentFiles = open('saved', 'r+')
+		self.writeRecentFiles = open('saved', 'a+')
+		
+		try:
+			self.toReadCurrentTab = open('currTab', 'r')		
+		except IOError:
+			self.toReadCurrentTab = open('saved', 'w')
+			self.toReadCurrentTab.close()
+			self.toReadCurrentTab = open('saved', 'r+')
+			
+		self.writeRecentFiles = open('saved', 'a+')
+		
+		
+		readRecentTab = self.toReadCurrentTab.read()
+>>>>>>> f7aa6b05d14844c73b34e5c4357f228d6d200fb7
 
 		self.listOfOpenTabs = []
 

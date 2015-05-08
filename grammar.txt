@@ -2,6 +2,9 @@ CHING CHONG GRAMMAR!!!
 
 //Initial Line
 <Start> -> 	"Hi, I am " <Name> "\n"
+			[<GV>]
+			{<F>}
+			<Main>
 
 //Declaration of Global Variables
 <GV> -> 	"I send shrimp fried rice to all:\n" 
@@ -9,8 +12,15 @@ CHING CHONG GRAMMAR!!!
 			"Sincerely, " <Name> ".\n"
 
 //Function Declaration
-<S> -> 		"Dear " <Name> ",\n" 
-		 	<P>
+<F> -> 		"Dear " <Name> ",\n" 
+		 	[<P>]
+		 	<VDF> 
+		 	{<S>}
+		 	"Sincerely, " <Name> ".\n"
+
+//Main Function Declaration
+<F> -> 		"Dear Diary, \n" 
+		 	[<P>]
 		 	<VDF> 
 		 	{<S>}
 		 	"Sincerely, " <Name> ".\n"
@@ -32,8 +42,8 @@ CHING CHONG GRAMMAR!!!
 
 //Block Arithmetic Statements
 <S> -> 		"Father surprise long quiz: \n"
-			<math>
-			{<math>}
+			<Math>
+			{<Math>}
 		 	"I no pass lah.\n"
 
 //Conditional Statements
@@ -97,3 +107,4 @@ CHING CHONG GRAMMAR!!!
 <Value> -> 	alam niyo na to
 <Name> 	-> 	program name
 <Math>  -> 	yung mga plus and shit
+<Conditional> -> yung comparisons and stuff
