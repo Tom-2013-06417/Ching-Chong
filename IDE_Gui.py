@@ -26,13 +26,15 @@ STYLES = {
 	'operator': format('red'),
 	'brace': format('darkGray'),
 	'defclass': format('black', 'bold'),
-	'string': format('magenta'),
-	'string2': format('gray'),
+	'string': format('#A8CD3A'),
+	'string2': format('#A8CD3A'), #Comments
 	'comment': format('gray'),
 	'self': format('black', 'italic'),
 	'numbers': format('brown'),
 	'terminator': format('green'),
 	'loops': format('orange'),
+	'startingline': format('orange'),
+	'senderclass': format('red', 'bold')
 }
 
 
@@ -43,7 +45,7 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 	# Python keywords
 	keywords = [
 		'and', 'assert', 'break', 'class', 'continue', 'Homework', 'Finish homework',
-		'del', 'Else if', 'Else', 'except', 'exec', 'finally',
+		'del', 'Diary', 'Else if', 'Else', 'except', 'exec', 'finally',
 		'for', 'from', 'From', 'global', 'Get me', 'get me', 'If', 'import', 'in', 
 		'lambda', 'not', 'or', 'pass', 'Showme',
 		'raise', 'return', 'then', 'try', 'while', 'with', 'yield',
@@ -89,12 +91,14 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 
 			# Double-quoted string, possibly containing escape sequences
 			(r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),
-			# Single-quoted string, possibly containing escape sequences
-			(r"'[^'\\]*(\\.[^'\\]*)*'", 0, STYLES['string']),
 
 			# 'def' followed by an identifier
-			(r'\bHi, I am\b\s*(\w+)\.', 1, STYLES['defclass']),
+			(r'\bHi, I am\b\s*(\w+)\.', 1, STYLES['senderclass']),
+			(r'\bHi, I am\b', 0, STYLES['startingline']),
+			(r'Sincerely,\s*(\w+)\.', 1, STYLES['senderclass']),
+			(r'Sincerely,', 0, STYLES['startingline']),
 			# 'class' followed by an identifier
+			(r'\bDear\b', 0, STYLES['keyword']),
 			(r'\bDear\b\s*(\w+)\,', 1, STYLES['defclass']),
 
 			# From '#' until a newline
@@ -201,6 +205,9 @@ class Editor(QtGui.QPlainTextEdit):
 	def setFileName(self, name):
 		self.filename = name
 
+	def getFileName(self):
+		return self.filename
+
 
 		
 class Main(QtGui.QMainWindow):
@@ -212,16 +219,20 @@ class Main(QtGui.QMainWindow):
 
 		self.setWindowIcon(QtGui.QIcon("icons/icon.png"))
 
-		self.recentFiles = open('saved', 'r+')
-		self.writeRecentFiles = open('saved', 'a+')
-		
-		self.toReadCurrentTab = open('currTab', 'r')		
-		
-		readRecentTab = self.toReadCurrentTab.read()
+		try:			
+			self.readRecentFiles = open('saved', 'r+')			
+			
+			self.readCurrentTab = open('currTab', 'r+')	
+
+		except IOError:
+			self.writeRecentFiles = open('saved', 'w')
+			self.readCurrentTab = open('currTab', 'w')
+
+		readRecentTab = self.readCurrentTab.read()
 
 		self.listOfOpenTabs = []
 
-		self.openedFiles = self.recentFiles.read().split('\n')
+		self.openedFiles = self.readRecentFiles.read().split('\n')
 
 		if self.openedFiles[0] == '':
 			self.initUI()
@@ -254,13 +265,22 @@ class Main(QtGui.QMainWindow):
 			self.initToolbar()
 			self.initMenubar()
 
-	def recentlyOpened(self):
-		self.writeRecentFiles.write(str(self.tab.currentWidget().filename) + '\n')
+	def writeRecentlyOpenedFiles(self):
+		self.writeRecentFiles = open('saved', 'w')
+		
+		for files in self.listOfOpenTabs:
+			if files.getFileName():
+				self.writeRecentFiles.write(str(files.getFileName()) + '\n')
+		
+		self.writeRecentFiles.close()
 
 	def writeCurrentTab(self):
-		self.toWriteCurrentTab = open('currTab', 'w')
-		self.toWriteCurrentTab.write(self.tab.currentWidget().filename)
-		self.toWriteCurrentTab.close()
+		try:
+			self.toWriteCurrentTab = open('currTab', 'w')
+			self.toWriteCurrentTab.write(self.tab.currentWidget().getFileName())
+			self.toWriteCurrentTab.close()
+		except:
+			pass
 
 	def initEditor(self, files):
 		a = Editor()
@@ -279,7 +299,8 @@ class Main(QtGui.QMainWindow):
 		self.tab = QtGui.QTabWidget(self)
 		self.tab.setMovable(True)
 		self.tab.setTabsClosable(True)
-		self.setCentralWidget(self.tab)		
+		self.setCentralWidget(self.tab)
+		self.tab.tabCloseRequested.connect(self.closeTab)
 
 		self.statusbar = self.statusBar()										# Initialize a statusbar for the window			
 		
@@ -329,6 +350,17 @@ class Main(QtGui.QMainWindow):
 		self.redoAction.setShortcut("Ctrl+Y")
 		self.redoAction.triggered.connect(self.tab.currentWidget().redo)
 
+		self.fontSizeIndex = 6
+
+		self.fontSizes = ['6','7','8','9','10','11','12','13','14',
+             '15','16','18','20','22','24','26','28',
+             '32','36','40','44','48','54','60','66',
+             '72','80','88','96']
+
+		self.incFontSize = QtGui.QAction("Increment Font", self)
+		self.incFontSize.setShortcut("Ctrl++")
+		# self.incFontSize.triggered.connect(self.incFontSize)
+
 		self.exitAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"), "Exit", self)
 		self.exitAction.setShortcut("Ctrl+W")
 		self.exitAction.triggered.connect(self.closeEvent)
@@ -355,6 +387,8 @@ class Main(QtGui.QMainWindow):
 		edit.addAction(self.copyAction)
 		edit.addAction(self.pasteAction)
 
+		# view.addAction(self.setFontSize)
+
 	def new(self):
 		a = Editor()		
 		self.listOfOpenTabs.append(a)		
@@ -364,9 +398,18 @@ class Main(QtGui.QMainWindow):
 		a.setFocus()
 
 	def open(self):
+
+		fileAlreadyOpen = False
+
 		filename = str(QtGui.QFileDialog.getOpenFileName(self, 'Open File', ".", "(*.chng)"))
 
-		if filename:
+		for files in self.listOfOpenTabs:
+			if files.getFileName() == filename:
+				self.tab.setCurrentWidget(files)
+				fileAlreadyOpen = True
+				break
+
+		if filename and not fileAlreadyOpen:
 			with open(filename,"r") as file:
 				a = Editor()
 				a.setPlainText(file.read())
@@ -378,25 +421,25 @@ class Main(QtGui.QMainWindow):
 				a.cursorPositionChanged.connect(self.cursorPosition)
 				a.setFocus()
 
-		if filename not in self.openedFiles:		
-			self.recentlyOpened()
+		# if filename not in self.openedFiles:		
+		# 	self.writeRecentlyOpenedFiles()
 
 	def save(self):
-		if not self.tab.currentWidget().filename:
-			self.tab.currentWidget().filename = QtGui.QFileDialog.getSaveFileName(self, 'Save File', ".", "(*.chng)")
+		if not self.tab.currentWidget().getFileName():
+			self.tab.currentWidget().setFileName(QtGui.QFileDialog.getSaveFileName(self, 'Save File', ".", "(*.chng)"))
 			
-			if self.tab.currentWidget().filename != "":
-				self.tab.setTabText(self.tab.currentIndex(), self.tab.currentWidget().filename.split('/')[-1])
+			if self.tab.currentWidget().getFileName() != "":
+				self.tab.setTabText(self.tab.currentIndex(), self.tab.currentWidget().getFileName().split('/')[-1])
 
-				with open(self.tab.currentWidget().filename, "w") as file:
+				with open(self.tab.currentWidget().getFileName(), "w") as file:
 					file.write(self.tab.currentWidget().toPlainText())
 		else:
 			
-			with open(self.tab.currentWidget().filename, "w") as file:
+			with open(self.tab.currentWidget().getFileName(), "w") as file:
 				file.write(self.tab.currentWidget().toPlainText())
-				
-		if self.tab.currentWidget().filename not in self.openedFiles:		
-			self.recentlyOpened()
+
+		# if self.tab.currentWidget().getFileName() not in self.openedFiles:		
+		# 	self.writeRecentlyOpenedFiles()
 
 		self.statusbar.showMessage('Saved')
 
@@ -409,11 +452,22 @@ class Main(QtGui.QMainWindow):
 
 		self.statusbar.showMessage("Line: {}, Column: {}".format(line,col))
 
+	def incFontSize(self, fontsize):
+		self.tab.currentWidget().setPointSize(int(fontsize))
+
+	def closeTab(self):
+		print self.tab.current
+		self.listOfOpenTabs.remove(self.tab.currentWidget())		
+		self.tab.removeTab(self.tab.currentIndex())
+
+	def unsavedChanges(self):
+		pass
+
 	def closeEvent(self, event):
 		self.writeCurrentTab()
-		self.recentFiles.close()
-		self.writeRecentFiles.close()
-		self.toReadCurrentTab.close()
+		self.writeRecentlyOpenedFiles()
+		self.readRecentFiles.close()
+		self.readCurrentTab.close()
 		exit(1)
 
 
