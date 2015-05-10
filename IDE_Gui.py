@@ -1,6 +1,12 @@
 import sys, os
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, QRegExp
+from PyQt4.Qt import QWidget
+from PyQt4.Qt import QTextFormat
+from PyQt4.Qt import QVariant
+from PyQt4.Qt import QPainter
+from PyQt4.Qt import QHBoxLayout
+from PyQt4.Qt import QRect
 
 
 
@@ -181,19 +187,52 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 			return False
 
 
+class NumberBar(QWidget):
+
+	def __init__(self, edit):
+		QWidget.__init__(self, edit)
+
+		self.edit = edit
+		self.adjustWidth(1)
+
+		self.font = QtGui.QFont()
+		self.font.setFamily("Consolas")
+		self.font.setPointSize(10)
+
+		self.setFont(self.font)
+
+	def paintEvent(self, event):
+		self.edit.numberbarPaint(self, event)
+		QWidget.paintEvent(self, event)
+
+	def adjustWidth(self, count):
+		width = self.fontMetrics().width(unicode(count))
+		if self.width() != width:
+			self.setFixedWidth(width)
+
+	def updateContents(self, rect, scroll):
+		if scroll:
+			self.scroll(0, scroll)
+		else:
+			# It would be nice to do
+			# self.update(0, rect.y(), self.width(), rect.height())
+			# But we can't because it will not remove the bold on the
+			# current line if word wrap is enabled and a new block is
+			# selected.
+			self.update()
 
 class Editor(QtGui.QPlainTextEdit):
 	
 	def __init__(self, parent=None):
-
-		super(Editor, self).__init__(parent)
+		
 		QtGui.QPlainTextEdit.__init__(self)
+		QtGui.QFrame.__init__(self)	
 
 		self.filename = ''
 
 		self.font = QtGui.QFont()
 		self.font.setFamily("Consolas")
-		self.font.setPointSize(10.5)
+		self.font.setPointSize(10)
 
 		self.setFont(self.font)
 		self.setTabStopWidth(33)
@@ -202,11 +241,80 @@ class Editor(QtGui.QPlainTextEdit):
 
 		self.highlight = PythonHighlighter(self.document())
 
+		self.cursorPositionChanged.connect(self.highlightline)	
+
+
+	def highlightline(self):
+		hi_selection = QtGui.QTextEdit.ExtraSelection()
+
+		hi_selection.format.setBackground(self.palette().alternateBase())
+		hi_selection.format.setProperty(QTextFormat.FullWidthSelection, QVariant(True))
+		hi_selection.cursor = self.textCursor()
+		hi_selection.cursor.clearSelection()
+
+		self.setExtraSelections([hi_selection])
+
+	def numberbarPaint(self, number_bar, event):
+		font_metrics = self.fontMetrics()
+		current_line = self.document().findBlock(self.textCursor().position()).blockNumber() + 1
+
+		block = self.firstVisibleBlock()
+		line_count = block.blockNumber()
+		painter = QPainter(number_bar)
+		painter.fillRect(event.rect(), self.palette().base())
+
+		# Iterate over all visible text blocks in the document.
+		while block.isValid():
+			line_count += 1
+			block_top = self.blockBoundingGeometry(block).translated(self.contentOffset()).top()
+
+			# Check if the position of the block is out side of the visible
+			# area.
+			if not block.isVisible() or block_top >= event.rect().bottom():
+				break
+
+			# We want the line number for the selected line to be bold.
+			if line_count == current_line:
+				font = painter.font()
+				# font.setBold(True)
+				painter.setFont(font)
+			else:
+				font = painter.font()
+				font.setBold(False)
+				painter.setFont(font)
+
+			# Draw the line number right justified at the position of the line.
+			paint_rect = QRect(0, block_top, number_bar.width(), font_metrics.height())
+			painter.drawText(paint_rect, Qt.AlignRight, unicode(line_count))
+
+			block = block.next()
+
+		painter.end()
+
+
+
+class LNTextEdit(QtGui.QFrame):
+	
+	def __init__(self, *args):
+		QtGui.QFrame.__init__(self, *args)		
+
+		self.edit = Editor()
+		self.number_bar = NumberBar(self.edit)
+
+		hbox = QHBoxLayout(self)
+		hbox.setSpacing(10)
+		hbox.setMargin(10)
+		hbox.addWidget(self.number_bar)
+		hbox.addWidget(self.edit)
+
+		self.edit.blockCountChanged.connect(self.number_bar.adjustWidth)
+		self.edit.updateRequest.connect(self.number_bar.updateContents)
+
 	def setFileName(self, name):
-		self.filename = name
+		self.edit.filename = name
 
 	def getFileName(self):
-		return self.filename
+		return self.edit.filename
 
 
 		
@@ -219,42 +327,31 @@ class Main(QtGui.QMainWindow):
 
 		self.setWindowIcon(QtGui.QIcon("icons/icon.png"))
 
-<<<<<<< HEAD
-		try:			
-			self.readRecentFiles = open('saved', 'r+')			
-			
-			self.readCurrentTab = open('currTab', 'r+')	
-
-		except IOError:
-			self.writeRecentFiles = open('saved', 'w')
-			self.readCurrentTab = open('currTab', 'w')
-
-		readRecentTab = self.readCurrentTab.read()
-=======
 		try:
 			self.recentFiles = open('saved', 'r+')
+		
 		except IOError:
 			self.recentFiles = open('saved', 'w')
 			self.recentFiles.close()
 			self.recentFiles = open('saved', 'r+')
+		
 		self.writeRecentFiles = open('saved', 'a+')
 		
 		try:
 			self.toReadCurrentTab = open('currTab', 'r')		
+		
 		except IOError:
 			self.toReadCurrentTab = open('saved', 'w')
 			self.toReadCurrentTab.close()
 			self.toReadCurrentTab = open('saved', 'r+')
 			
-		self.writeRecentFiles = open('saved', 'a+')
-		
+		self.writeRecentFiles = open('saved', 'a+')		
 		
 		readRecentTab = self.toReadCurrentTab.read()
->>>>>>> f7aa6b05d14844c73b34e5c4357f228d6d200fb7
 
 		self.listOfOpenTabs = []
 
-		self.openedFiles = self.readRecentFiles.read().split('\n')
+		self.openedFiles = self.recentFiles.read().split('\n')
 
 		if self.openedFiles[0] == '':
 			self.initUI()
@@ -274,7 +371,7 @@ class Main(QtGui.QMainWindow):
 
 					try:					
 						with open(files,"rt") as file:
-							self.listOfOpenTabs[counter].setPlainText(file.read())
+							self.listOfOpenTabs[counter].edit.setPlainText(file.read())
 
 					except:
 						pass
@@ -305,7 +402,9 @@ class Main(QtGui.QMainWindow):
 			pass
 
 	def initEditor(self, files):
-		a = Editor()
+
+		a = LNTextEdit()
+
 		a.setFileName(files)
 		self.listOfOpenTabs.append(a)
 		
@@ -314,7 +413,7 @@ class Main(QtGui.QMainWindow):
 		else:
 			self.tab.addTab(a, os.path.basename(files))
 
-		a.cursorPositionChanged.connect(self.cursorPosition)
+		a.edit.cursorPositionChanged.connect(self.cursorPosition)
 
 	def initUI(self):
 
@@ -350,34 +449,34 @@ class Main(QtGui.QMainWindow):
 		self.cutAction = QtGui.QAction(QtGui.QIcon("icons/cut.png"),"Cut",self)
 		self.cutAction.setStatusTip("Delete and copy text to clipboard")
 		self.cutAction.setShortcut("Ctrl+X")
-		self.cutAction.triggered.connect(self.tab.currentWidget().cut)
+		self.cutAction.triggered.connect(self.tab.currentWidget().edit.cut)
 
 		self.copyAction = QtGui.QAction(QtGui.QIcon("icons/copy.png"),"Copy",self)
 		self.copyAction.setStatusTip("Copy text to clipboard")
 		self.copyAction.setShortcut("Ctrl+C")
-		self.copyAction.triggered.connect(self.tab.currentWidget().copy)
+		self.copyAction.triggered.connect(self.tab.currentWidget().edit.copy)
 
 		self.pasteAction = QtGui.QAction(QtGui.QIcon("icons/paste.png"),"Paste",self)
 		self.pasteAction.setStatusTip("Paste text from clipboard")
 		self.pasteAction.setShortcut("Ctrl+V")
-		self.pasteAction.triggered.connect(self.tab.currentWidget().paste)
+		self.pasteAction.triggered.connect(self.tab.currentWidget().edit.paste)
 
 		self.undoAction = QtGui.QAction(QtGui.QIcon("icons/undo.png"),"Undo",self)
 		self.undoAction.setStatusTip("Undo last action")
 		self.undoAction.setShortcut("Ctrl+Z")
-		self.undoAction.triggered.connect(self.tab.currentWidget().undo)
+		self.undoAction.triggered.connect(self.tab.currentWidget().edit.undo)
 
 		self.redoAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"),"Redo",self)
 		self.redoAction.setStatusTip("Redo last undone thing")
 		self.redoAction.setShortcut("Ctrl+Y")
-		self.redoAction.triggered.connect(self.tab.currentWidget().redo)
+		self.redoAction.triggered.connect(self.tab.currentWidget().edit.redo)
 
 		self.fontSizeIndex = 6
 
 		self.fontSizes = ['6','7','8','9','10','11','12','13','14',
-             '15','16','18','20','22','24','26','28',
-             '32','36','40','44','48','54','60','66',
-             '72','80','88','96']
+			 '15','16','18','20','22','24','26','28',
+			 '32','36','40','44','48','54','60','66',
+			 '72','80','88','96']
 
 		self.incFontSize = QtGui.QAction("Increment Font", self)
 		self.incFontSize.setShortcut("Ctrl++")
@@ -412,12 +511,12 @@ class Main(QtGui.QMainWindow):
 		# view.addAction(self.setFontSize)
 
 	def new(self):
-		a = Editor()		
+		a = LNTextEdit()		
 		self.listOfOpenTabs.append(a)		
 		self.tab.insertTab(self.tab.currentIndex()+1, a, "Untitled")
 		self.tab.setCurrentWidget(a)
-		a.cursorPositionChanged.connect(self.cursorPosition)
-		a.setFocus()
+		a.edit.cursorPositionChanged.connect(self.cursorPosition)
+		a.edit.setFocus()
 
 	def open(self):
 
@@ -433,15 +532,15 @@ class Main(QtGui.QMainWindow):
 
 		if filename and not fileAlreadyOpen:
 			with open(filename,"r") as file:
-				a = Editor()
-				a.setPlainText(file.read())
+				a = LNTextEdit()
+				a.edit.setPlainText(file.read())
 				self.listOfOpenTabs.append(a)
 				self.tab.insertTab(self.tab.currentIndex()+1, a, os.path.basename(filename))
 				
-				a.filename = filename
+				a.setFileName(filename)
 				self.tab.setCurrentWidget(a)
-				a.cursorPositionChanged.connect(self.cursorPosition)
-				a.setFocus()
+				a.edit.cursorPositionChanged.connect(self.cursorPosition)
+				a.edit.setFocus()
 
 		# if filename not in self.openedFiles:		
 		# 	self.writeRecentlyOpenedFiles()
@@ -454,11 +553,11 @@ class Main(QtGui.QMainWindow):
 				self.tab.setTabText(self.tab.currentIndex(), self.tab.currentWidget().getFileName().split('/')[-1])
 
 				with open(self.tab.currentWidget().getFileName(), "w") as file:
-					file.write(self.tab.currentWidget().toPlainText())
+					file.write(self.tab.currentWidget().edit.toPlainText())
 		else:
 			
 			with open(self.tab.currentWidget().getFileName(), "w") as file:
-				file.write(self.tab.currentWidget().toPlainText())
+				file.write(self.tab.currentWidget().edit.toPlainText())
 
 		# if self.tab.currentWidget().getFileName() not in self.openedFiles:		
 		# 	self.writeRecentlyOpenedFiles()
@@ -466,7 +565,7 @@ class Main(QtGui.QMainWindow):
 		self.statusbar.showMessage('Saved')
 
 	def cursorPosition(self):
-		cursor = self.tab.currentWidget().textCursor()
+		cursor = self.tab.currentWidget().edit.textCursor()
 
 		# Mortals like 1-indexed things
 		line = cursor.blockNumber() + 1
@@ -475,10 +574,9 @@ class Main(QtGui.QMainWindow):
 		self.statusbar.showMessage("Line: {}, Column: {}".format(line,col))
 
 	def incFontSize(self, fontsize):
-		self.tab.currentWidget().setPointSize(int(fontsize))
+		self.tab.currentWidget().edit.setPointSize(int(fontsize))
 
 	def closeTab(self):
-		print self.tab.current
 		self.listOfOpenTabs.remove(self.tab.currentWidget())		
 		self.tab.removeTab(self.tab.currentIndex())
 
@@ -488,8 +586,8 @@ class Main(QtGui.QMainWindow):
 	def closeEvent(self, event):
 		self.writeCurrentTab()
 		self.writeRecentlyOpenedFiles()
-		self.readRecentFiles.close()
-		self.readCurrentTab.close()
+		self.recentFiles.close()
+		self.toReadCurrentTab.close()
 		exit(1)
 
 
