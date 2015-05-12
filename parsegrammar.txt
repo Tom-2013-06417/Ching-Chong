@@ -1,0 +1,33 @@
+Start -> HiIam Name "\n" [ GV ] { F } Main
+GV -> ISendShrimp: "\n" { VD } Sincerely Name "." "\n"
+GV -> epsilon
+F -> Dear Name "," "\n" [ P ] VDF { S } Sincerely "," Name "." "\n"
+F -> DearDiary "," "\n" [ P ]	VDF { S } Sincerely "," Name "." "\n"
+P -> IWantDumplings: "\n" { VD } okay "lah." "\n"
+P -> epsilon
+S -> IGiveYouSum V "lah." "\n"
+S -> IWriteTo Name [ with V { , V } ] "lah." "\n" [ IGet V "from" Name "lah." "\n" ]
+S -> FSurpQuiz: Math "lah." "\n"
+S -> FSurpLQuiz: "\n" Math { Math } INoPass "lah." "\n"
+S -> FatherAsk Label "," "if" Conditional "lah." "\n" S { S } IdoubleC Label "," "lah." "\n" elif else
+elif ->	FatherAskA Label "," "if" Conditional "lah." "\n" S { S } IdoubleC Label "," "lah." "\n" [<elif>]
+elif -> epsilon
+else -> FatherAsk Label "," NoMore "lah." "\n" S { S } FatherAshamedofSon Label "," "lah." "\n"
+else -> epsilon
+S -> IShowFather V "lah." "\n"
+S -> [ FatherWants V "," ] IGiveFather V "lah. "\n"
+S -> FatherSayMakeRepeat Label again "lah." "\n" ( For | While ) I'mDoneWithChore "lah." "\n"
+S -> I'mTired "lah." "\n"
+S -> FatherBroughtOutBelt "lah." "\n"
+For -> 	MustDo [ V ] from Value to  Value oclock "lah." "\n" S { S }
+While -> MustDo [ V ] while Conditional "\n" S { S }
+VDF -> FatherSaysINeed: "\n" { VD } Sincerely "," Name "," "."
+VD -> DT VDs { "," VDs } "lah." "\n"
+VDs -> 	V [ "of" Value ]
+DT -> "Score" | "GWA" | "LetterGrade" | "Honor" | "Essay"
+V -> 	variable
+Label -> 	all capssssss
+Value -> 	alam niyo na to
+Name 	-> 	program name
+Math  -> 	yung mga plus and shit
+Conditional -> yung comparisons and stuff
