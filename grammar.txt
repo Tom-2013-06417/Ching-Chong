@@ -19,7 +19,7 @@ CHING CHONG GRAMMAR!!!
 		 	"Sincerely, " <Name> ".\n"
 
 //Main Function Declaration
-<F> -> 		"Dear Diary, \n" 
+<Main> -> 		"Dear Diary, \n" 
 		 	[<P>]
 		 	<VDF> 
 		 	{<S>}

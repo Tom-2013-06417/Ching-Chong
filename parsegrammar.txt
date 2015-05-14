@@ -1,15 +1,23 @@
-Start -> HiIam Name "\n" [ GV ] { F } Main
-GV -> ISendShrimp: "\n" { VD } Sincerely Name "." "\n"
+Start' -> Start
+Start -> HiIam Name \n GV F' Main
+GV -> ISendShrimp: \n { VD } Sincerely Name . \n
 GV -> epsilon
-F -> Dear Name "," "\n" [ P ] VDF { S } Sincerely "," Name "." "\n"
-F -> DearDiary "," "\n" [ P ]	VDF { S } Sincerely "," Name "." "\n"
-P -> IWantDumplings: "\n" { VD } okay "lah." "\n"
+F -> Dear Name , \n P VDF { S } Sincerely , Name . \n
+F' -> epsilon
+F' -> F F'
+Main -> DearDiary , \n P VDF { S } Sincerely , Name . \n
+F -> epsilon
+P -> IWantDumplings: \n { VD } okay lah. \n
 P -> epsilon
-S -> IGiveYouSum V "lah." "\n"
-S -> IWriteTo Name [ with V { , V } ] "lah." "\n" [ IGet V "from" Name "lah." "\n" ]
+S -> IGiveYouSum V lah. \n
+S -> IWriteTo Name S' lah. \n [ IGet V "from" Name "lah." "\n" ]
 S -> FSurpQuiz: Math "lah." "\n"
-S -> FSurpLQuiz: "\n" Math { Math } INoPass "lah." "\n"
+S -> FSurpLQuiz: "\n" Math { Math } INoPass lah. \n
 S -> FatherAsk Label "," "if" Conditional "lah." "\n" S { S } IdoubleC Label "," "lah." "\n" elif else
+S' -> epsilon
+S' -> with V S'' 
+S'' -> , V S''
+S'' -> epsilon
 elif ->	FatherAskA Label "," "if" Conditional "lah." "\n" S { S } IdoubleC Label "," "lah." "\n" [<elif>]
 elif -> epsilon
 else -> FatherAsk Label "," NoMore "lah." "\n" S { S } FatherAshamedofSon Label "," "lah." "\n"
