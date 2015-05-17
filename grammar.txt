@@ -1,7 +1,7 @@
 CHING CHONG GRAMMAR!!!
 
 //Initial Line
-<Start> -> 	"Hi, I am " <Name> "\n"
+<Start> -> 	"Hi, I am " <Name> . "\n"
 			[<GV>]
 			{<F>}
 			<Main>
@@ -19,7 +19,7 @@ CHING CHONG GRAMMAR!!!
 		 	"Sincerely, " <Name> ".\n"
 
 //Main Function Declaration
-<Main> -> 		"Dear Diary, \n" 
+<Main> -> 	"Dear Diary, \n" 
 		 	[<P>]
 		 	<VDF> 
 		 	{<S>}
