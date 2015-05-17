@@ -2,74 +2,90 @@ Start' -> Start
 Start -> HiIam Name . \n GlobVarDec FuncDec
 
 GlobVarDec -> ISendShrimp: \n { VD } Sincerely , Name . \n
-GlobVarDec -> epsilon
+GlobVarDec -> ''
 
 FuncDec -> FuncDec' FuncDec
-FuncDec -> epsilon
+FuncDec -> ''
 FuncDec' -> Dear Name , \n ParamDecFunc VDF { S } Sincerely , Name . \n
-FuncDec' -> epsilon
+FuncDec' -> ''
 
 ParamDecFunc -> IWantDumplings: \n { VD } okay lah. \n
-ParamDecFunc -> epsilon
+ParamDecFunc -> ''
 
 S -> S' S
-S -> epsilon
+S -> ''
 
 S' -> IGiveYouSum V lah. \n
 
 S' -> IWriteTo Name Sfuncall lah. \n Sreturn
 Sfuncall -> with V Sfuncall'
-Sfuncall -> epsilon
+Sfuncall -> ''
 Sfuncall' -> Sfuncall'' Sfuncall'
-Sfuncall' -> epsilon
+Sfuncall' -> ''
 Sfuncall'' -> , V Sfuncall'
-Sfuncall'' -> epsilon
+Sfuncall'' -> ''
 Sreturn -> IGet V from Name lah. \n
-Sreturn -> epsilon
+Sreturn -> ''
 
 S' -> FSurpQuiz: Math lah. \n
 S' -> FSurpLongQuiz: \n Math { Math } INoPass lah. \n
-S' -> FatherAsk Label "," "if" Conditional "lah." "\n" S { S } IdoubleC Label "," "lah." "\n" elif else
 
-elif ->	FatherAskA Label "," "if" Conditional "lah." "\n" S { S } IdoubleC Label "," "lah." "\n" [<elif>]
-elif -> epsilon
-else -> FatherAsk Label "," NoMore "lah." "\n" S { S } FatherAshamedofSon Label "," "lah." "\n"
-else -> epsilon
+S' -> FatherAsk Label , if Conditional lah. \n S { S } IdoubleC Label , lah. \n elif else
+elif ->	FatherAskA Label , if Conditional lah. \n S { S } IdoubleC Label , lah. \n elif
+elif -> ''
+else -> FatherAsk Label , NoMore lah. \n S { S } FatherAshamedofSon Label , lah. \n
+else -> ''
 
-S' -> IShowFather V "lah." "\n"
-S' -> [ FatherWants V "," ] IGiveFather V "lah. "\n"
-S' -> FatherSayMakeRepeat Label again "lah." "\n" ( For | While ) I'mDoneWithChore "lah." "\n"
-S' -> I'mTired "lah." "\n"
-S' -> FatherBroughtOutBelt "lah." "\n"
+S' -> IShowFather V lah. \n
 
-S' -> epsilon
+S' -> IGiveFather V lah. \n
+Sout -> FatherWants V , 
+Sout -> ''
 
-For -> 	MustDo [ V ] from Value to  Value oclock "lah." "\n" S { S }
-While -> MustDo [ V ] while Conditional "\n" S { S }
+S' -> FatherSayMakeRepeat Label again lah. \n Sloop I'mDoneWithChore lah. \n
+Sloop -> For
+Sloop -> While
+
+S' -> I'mTired lah. \n
+
+S' -> FatherBroughtOutBelt lah. \n
+
+S' -> ''
+
+For -> 	MustDo V from LoopValue to LoopValue oclock lah. \n S { S }
+While -> MustDo V while Conditional \n S { S }
 
 VDF -> FatherSaysThatINeed: \n { VD } Sincerely , Name .
 VD -> DT-declare lah. \n
 
-DT-declare -> Score V [ of integer] { , V [ of integer ] }
+DT-declare -> Score V [ of int] { , V [ of int ] }
 DT-declare -> GWA V [ of float]  { , V [ of float ] }
-DT-declare -> LetterGrade V [ of ( Big-letters | Small-letters ) ]  { , V [ of ( Big-letters | Small-letters ) ] }
+DT-declare -> LetterGrade V [ of ( BL | SL ) ]  { , V [ of ( BL | SL ) ] }
 DT-declare -> Honor V [ of ( own | disown )]  { , V [ of ( own | disown ) ] }
 DT-declare -> Essay V [ of Pang-string-lel ]  { , V [ of Pang-string-lel ] }
 
-V -> Big-letters { Pang-string-lel }
+V -> BL { Str }
+V -> ''
 
-Pang-string-lel -> ( Big-letters | Small-letters | integer ) { Big-letters | Small-letters | integer }
+LoopValue -> int
+LoopValue -> V
 
-Big-letters -> A | B | ... | Z
-Small-letters -> a | b | ... | z
+Str-> ( BL | SL | int ) { BL | SL | int }
+Str -> BL Str'
+Str -> SL Str'
+Str -> intt
 
-integer -> 0 integer | .... | 9 integer
+BL -> A | B | ... | Z
+SL -> a | b | ... | z
+
+int -> 0 int | .... | 9 int
+int -> ''
 
 Label -> V
 
-float ->  integer . integer
+float ->  int . int
 
-Name -> Big-letters { Big-letters | Small-letters }
+Name -> BL { BL | SL }
 
 Math -> term
 Math -> Math + term
@@ -80,7 +96,7 @@ term -> term / factor
 factor -> exp
 factor -> factor ** exp
 exp -> V
-exp -> ( V )
+exp -> ( Math )
 
 
 
