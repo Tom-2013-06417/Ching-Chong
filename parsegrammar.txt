@@ -1,15 +1,15 @@
 Start' -> Start
 Start -> HiIam Name . \n GlobVarDec FuncDec
 
-GlobVarDec -> ISendShrimp: \n { VD } Sincerely , Name . \n
+GlobVarDec -> ISendShrimp: \n VD Sincerely , Name . \n
 GlobVarDec -> ''
 
 FuncDec -> FuncDec' FuncDec
 FuncDec -> ''
-FuncDec' -> Dear Name , \n ParamDecFunc VDF { S } Sincerely , Name . \n
+FuncDec' -> Dear Name , \n ParamDecFunc VDF S Sincerely , Name . \n
 FuncDec' -> ''
 
-ParamDecFunc -> IWantDumplings: \n { VD } okay lah. \n
+ParamDecFunc -> IWantDumplings: \n VD okay lah. \n
 ParamDecFunc -> ''
 
 S -> S' S
@@ -28,12 +28,12 @@ Sreturn -> IGet V from Name lah. \n
 Sreturn -> ''
 
 S' -> FSurpQuiz: Math lah. \n
-S' -> FSurpLongQuiz: \n Math { Math } INoPass lah. \n
+S' -> FSurpLongQuiz: \n Math Math INoPass lah. \n
 
-S' -> FatherAsk Label , if Conditional lah. \n S { S } IdoubleC Label , lah. \n elif else
-elif ->	FatherAskA Label , if Conditional lah. \n S { S } IdoubleC Label , lah. \n elif
+S' -> FatherAsk Label , if Conditional lah. \n S S IdoubleC Label , lah. \n elif else
+elif ->	FatherAskA Label , if Conditional lah. \n S S IdoubleC Label , lah. \n elif
 elif -> ''
-else -> FatherAsk Label , NoMore lah. \n S { S } FatherAshamedofSon Label , lah. \n
+else -> FatherAsk Label , NoMore lah. \n S S FatherAshamedofSon Label , lah. \n
 else -> ''
 
 S' -> IShowFather V lah. \n
@@ -52,73 +52,163 @@ S' -> FatherBroughtOutBelt lah. \n
 
 S' -> ''
 
-For -> 	MustDo V from LoopValue to LoopValue oclock lah. \n S { S }
-While -> MustDo V while Conditional \n S { S }
+For -> 	MustDo V from LoopValue to LoopValue oclock lah. \n S S
+While -> MustDo V while Conditional \n S S
 
-VDF -> FatherSaysThatINeed: \n { VD } Sincerely , Name .
-VD -> DT-declare lah. \n
+VDF -> FatherSaysThatINeed: \n VD Sincerely , Name .
 
-DT-declare -> Score V [ of int] { , V [ of int ] }
-DT-declare -> GWA V [ of float]  { , V [ of float ] }
-DT-declare -> LetterGrade V [ of ( BL | SL ) ]  { , V [ of ( BL | SL ) ] }
-DT-declare -> Honor V [ of ( own | disown )]  { , V [ of ( own | disown ) ] }
-DT-declare -> Essay V [ of Pang-string-lel ]  { , V [ of Pang-string-lel ] }
+VD -> VD' VD
+VD -> ''
+VD' -> DT-declare lah. \n
+VD' -> ''
 
-V -> BL { Str }
+DT-declare -> Score V DT-int DT-moreint
+DT-int -> of Int
+DT-int -> ''
+DT-moreint -> DT-moreint' DT-moreint
+DT-moreint -> ''
+DT-moreint' -> , V DT-int
+DT-moreint' -> ''
+
+DT-declare -> GWA V DT-flt DT-moreflt
+DT-flt -> of Float
+DT-flt -> ''
+DT-moreflt -> DT-moreflt' DT-moreflt
+DT-moreflt -> ''
+DT-moreflt' -> , V DT-flt
+DT-moreflt' -> ''
+
+DT-declare -> LetterGrade V DT-char DT-morechar
+DT-char -> of Char
+DT-char -> ''
+DT-morechar -> DT-morechar' DT-morechar
+DT-morechar -> ''
+DT-morechar' -> , V DT-char
+DT-morechar' -> ''
+
+DT-declare -> Honor V DT-bool DT-morebool
+DT-bool -> of Bool
+DT-bool -> ''
+DT-morebool -> DT-morebool' DT-morebool
+DT-morebool -> ''
+DT-morebool' -> , V DT-bool
+DT-morebool' -> ''
+
+DT-declare -> Essay V DT-str DT-morestr
+DT-str -> of Str
+DT-str -> ''
+DT-morestr -> DT-morestr' DT-morestr
+DT-morestr -> ''
+DT-morestr' -> , V DT-str
+DT-morestr' -> ''
+
+V -> Str
 V -> ''
 
-LoopValue -> int
+LoopValue -> Int
 LoopValue -> V
 
-Str-> ( BL | SL | int ) { BL | SL | int }
+BL -> A
+BL -> B
+BL -> C
+BL -> D
+BL -> E
+BL -> F
+BL -> G
+BL -> H
+BL -> I
+BL -> J
+BL -> K
+BL -> L
+BL -> M
+BL -> N
+BL -> O
+BL -> P
+BL -> Q
+BL -> R
+BL -> S
+BL -> T
+BL -> U
+BL -> V
+BL -> W
+BL -> X
+BL -> Y
+BL -> Z
+
+SL -> a
+SL -> b
+SL -> c
+SL -> d
+SL -> e
+SL -> f
+SL -> g
+SL -> h
+SL -> i
+SL -> j
+SL -> k
+SL -> l
+SL -> m
+SL -> n
+SL -> o
+SL -> p
+SL -> q
+SL -> r
+SL -> s
+SL -> t
+SL -> u
+SL -> v
+SL -> w
+SL -> x
+SL -> y
+SL -> z
+
+Int -> 0 Int
+Int -> 1 Int
+Int -> 2 Int
+Int -> 3 Int
+Int -> 4 Int
+Int -> 5 Int
+Int -> 6 Int
+Int -> 7 Int
+Int -> 8 Int
+Int -> 9 Int
+Int -> ''
+
+Float ->  Int . Int
+
+Char -> BL
+Char -> SL
+
 Str -> BL Str'
 Str -> SL Str'
-Str -> intt
+Str -> Int Str '
+Str -> ''
+Str' -> EndStr Str'
+Str' -> ''
+EndStr -> BL
+EndStr -> SL
+EndStr -> Int
+EndStr -> ''
 
-BL -> A | B | ... | Z
-SL -> a | b | ... | z
+Bool -> own
+Bool -> disown
 
-int -> 0 int | .... | 9 int
-int -> ''
+Label -> BL BL'
+BL' -> BL BL'
+BL' -> ''
 
-Label -> V
+Name -> BL Str
 
-float ->  int . int
-
-Name -> BL { BL | SL }
-
-Math -> term
-Math -> Math + term
-Math -> Math - term
+Math -> expr Math
+Math -> ''
+expr -> term
+expr -> expr + term
+expr -> expr - term
 term -> factor
 term -> term * factor
 term -> term / factor
 factor -> exp
 factor -> factor ** exp
 exp -> V
-exp -> ( Math )
-
-
-
-
-
-
-
-
-
-
-
-********************
-<term> -> <factor> { (* | /) <factor> }
-<factor> -> <expo> { ** <expo> }
-<expo> -> <V> | ( <V> )
-VDF -> FatherSaysINeed: "\n" { VD } Sincerely "," Name "," "."
-VD -> DT VDs { "," VDs } "lah." "\n"
-VDs -> 	V [ "of" Value ]
-DT -> "Score" | "GWA" | "LetterGrade" | "Honor" | "Essay"
-V -> 	variable
-Label -> 	all capssssss
-Value -> 	alam niyo na to
-Name 	-> 	program name
-Math  -> 	yung mga plus and shit
-Conditional -> yung comparisons and stuff
+exp -> Int
+exp -> ( expr )
