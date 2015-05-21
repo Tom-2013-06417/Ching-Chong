@@ -8,6 +8,8 @@ from PyQt4.Qt import QPainter
 from PyQt4.Qt import QHBoxLayout
 from PyQt4.Qt import QRect
 
+from ext import *
+
 
 
 def format(color, style=''):
@@ -220,6 +222,8 @@ class NumberBar(QWidget):
 			# current line if word wrap is enabled and a new block is
 			# selected.
 			self.update()
+
+
 
 class Editor(QtGui.QPlainTextEdit):
 	
@@ -479,6 +483,11 @@ class Main(QtGui.QMainWindow):
 		self.dedentAction.setShortcut("Shift+Tab")
 		self.dedentAction.triggered.connect(self.dedent)
 
+		self.findAction = QtGui.QAction("Find and replace",self)
+		self.findAction.setStatusTip("Find and replace words in your document")
+		self.findAction.setShortcut("Ctrl+F")
+		self.findAction.triggered.connect(find.Find(self).show)
+
 		self.fontSizeIndex = 6
 
 		self.fontSizes = ['6','7','8','9','10','11','12','13','14',
@@ -518,6 +527,8 @@ class Main(QtGui.QMainWindow):
 		edit.addSeparator()
 		edit.addAction(self.indentAction)
 		edit.addAction(self.dedentAction)
+		edit.addSeparator()
+		edit.addAction(self.findAction)
 
 		# view.addAction(self.setFontSize)
 
