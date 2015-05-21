@@ -1,0 +1,80 @@
+Start -> Statement
+
+ManyStatement -> Statement ManyStatement
+ManyStatement -> ''
+
+Statement -> For
+For -> FatherSayMakeRepeat Label againlah. \n MustDo Var from Int to Int oclocklah. \n ManyStatement I'mDoneWith Label lah. \n
+
+Statement -> While
+While -> FatherSayMakeRepeat Label againlah. \n MustDo Label while Conditional lah. \n ManyStatement I'mDoneWith Label lah. \n
+
+Statement -> If
+If   -> FatherAsk Label , if Conditional lah. \n ManyStatement Idoubleconfirm Label , lah. \n Elif
+Elif ->	FatherAskAgain Label , if Conditional lah. \n ManyStatement Idoubleconfirm Label , lah. \n Elif
+Elif -> Else
+Else -> FatherAsk Label , NoMore lah. \n ManyStatement FatherAshamedofSon Label , lah. \n
+Else -> ''
+Conditional -> Bool
+Conditional -> Var
+Conditional -> Expr moreLesserTo Expr
+Conditional -> Expr lesserTo Expr 
+Conditional -> Expr moreGreatererTo Expr 
+Conditional -> Expr greatererTo Expr 
+Conditional -> Expr sameTo Expr 
+Conditional -> Expr notSameTo Expr
+Label -> Str
+
+Statement -> Print
+Print -> IShowFather Var lah. \n
+
+Statement -> InputPrompt
+InputPrompt -> FatherWants Str , Input
+InputPrompt -> Input
+Input -> IGiveFather Var lah. \n
+
+Statement -> Arith
+Arith -> FatherSurpriseQuiz: Math lah. \n
+Arith -> FatherSurpriseLongQ: \n LQ
+LQ -> Math \n LQ
+LQ -> Ididnotknowlah.
+
+Math -> Var = Expr
+Expr -> Expr + Term
+Expr -> Expr - Term
+Expr -> Term
+Term -> Term * Ex
+Term -> Term / Ex
+Term -> Ex
+
+Ex -> Ex ** Factor
+Ex -> Factor
+Factor -> ( Expr )
+Factor -> Var
+Factor -> Int
+
+Int -> Digit Int'
+Var -> Str
+Int' -> Int
+Int' -> ''
+Float ->  Int . Int
+Char -> BL
+Char -> SL
+Char -> CD
+Str -> Char Str'
+Str' -> Str
+Str' -> ''
+BL -> A
+BL -> B
+BL -> C
+SL -> a
+SL -> b
+SL -> c
+CD -> "0"
+CD -> "1" 
+CD -> "2"
+Digit -> 0
+Digit -> 1
+
+Bool -> Own
+Bool -> Disown 
