@@ -32,19 +32,20 @@ def format(color, style=''):
 
 # Syntax styles that can be shared by all languages
 STYLES = {
-	'keyword': format('blue'),
+	'keyword': format('#2B43BA'),
 	'operator': format('red'),
 	'brace': format('darkGray'),
 	'defclass': format('black', 'bold'),
 	'string': format('#A8CD3A'),
-	'string2': format('#A8CD3A'), #Comments
-	'comment': format('gray'),
+	'string2': format('#777777'),			 #Comments
+	'comment': format('#777777', 'italic'),
 	'self': format('black', 'italic'),
 	'numbers': format('brown'),
 	'terminator': format('green'),
-	'loops': format('orange'),
-	'startingline': format('orange'),
-	'senderclass': format('red', 'bold')
+	'loops': format('#FF7E00'),
+	'startingline': format('#FF7E00'),
+	'senderclass': format('#CD4422', 'bold'),	#Name of sender
+	'defname': format('#FF7E00'),
 }
 
 
@@ -54,19 +55,18 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 	"""
 	# Python keywords
 	keywords = [
-		'and', 'assert', 'break', 'class', 'continue', 'Homework', 'Finish homework',
-		'del', 'Diary', 'Else if', 'Else', 'except', 'exec', 'finally',
-		'for', 'from', 'From', 'global', 'Get me', 'get me', 'If', 'import', 'in', 
-		'lambda', 'not', 'or', 'pass', 'Showme',
-		'raise', 'return', 'then', 'try', 'while', 'with', 'yield',
-		'None', 'own', 'disown',
+		'and', 'assert', 'ask', 'again', 'break', 'class', 'continue', 'Homework', 'Finish homework',
+		'del', 'Diary', 'no more', 'except', 'exec', 'finally',
+		'from', 'From', 'global', 'Get me', 'get me', 'if', 'import', 'in', 
+		'lambda', 'not', 'or', 'pass', 'raise', 'return', 'then', 'try', 'while', 'with', 'yield',
+		'None', 'Own', 'Disown', 'GWA', 'Score', 'Essay', 'Honor', 'okay'
 	]
 
 	# Python operators
-	operators = [
-		'is',
+	operators = [		
 		# Comparison
 		'!=', '<', '<=', '>', '>=',
+		'more lesser to', 'more greaterer to', 'same to',
 		# Arithmetic
 		'\+', '-', '\*', '/', '//', '\%', '\*\*',
 		# In-place
@@ -108,19 +108,40 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 			(r'Sincerely,\s*(\w+)\.', 1, STYLES['senderclass']),
 			(r'Sincerely,', 0, STYLES['startingline']),
 			# 'class' followed by an identifier
-			(r'\bDear\b', 0, STYLES['keyword']),
+			(r'\bDear\b', 0, STYLES['defname']),
 			(r'\bDear\b\s*(\w+)\,', 1, STYLES['defclass']),
 
-			# From '#' until a newline
-			(r'-.-[^\n]*', 0, STYLES['comment']),
+			# From '#' until a newline			
 			(r'lah.', 0, STYLES['terminator']),
 			(r'Do your chores', 0, STYLES['loops']),
 			(r'End chores', 0, STYLES['loops']),
+			(r'I show Father', 0, STYLES['keyword']),
+			(r'I give Father', 0, STYLES['keyword']),
+			(r'Father wants', 0, STYLES['keyword']),
+			(r'I write to', 0, STYLES['keyword']),
+			(r'I get', 0, STYLES['keyword']),
+			(r'Father surprise quiz:', 0, STYLES['keyword']),
+			(r'Father surprise long quiz:', 0, STYLES['keyword']),
+			(r'Father say make repeat', 0, STYLES['keyword']),
+			(r'to become doctor', 0, STYLES['keyword']),
+			(r'Father says that I need', 0, STYLES['keyword']),
+			(r'Must do', 0, STYLES['keyword']),
+			(r'I\'m done', 0, STYLES['keyword']),
+			(r'Father ask', 0, STYLES['keyword']),
+			(r'I double confirm', 0, STYLES['keyword']),
+			(r'Father says that I need', 0, STYLES['keyword']),
+			(r'Father ashamed of son for not answer', 0, STYLES['keyword']),
+			(r'I want dumplings and', 0, STYLES['keyword']),
+			(r'I send shrimp fried rice to all:', 0, STYLES['keyword']),
+			(r'I no pass', 0, STYLES['keyword']),
+			
 
 			# Numeric literals
 			(r'\b[+-]?[0-9]+[lL]?\b', 0, STYLES['numbers']),
 			(r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b', 0, STYLES['numbers']),
 			(r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', 0, STYLES['numbers']),
+
+			(r'-.-[^\n]*', 0, STYLES['comment']),
 		]
 
 		# Build a QRegExp for each pattern
@@ -237,6 +258,7 @@ class Editor(QtGui.QPlainTextEdit):
 		self.filename = ''
 
 		self.font = QtGui.QFont()
+		#self.font.setFamily("Faraco Hand")
 		self.font.setFamily("Consolas")
 		self.font.setPointSize(10)
 
@@ -250,6 +272,13 @@ class Editor(QtGui.QPlainTextEdit):
 		self.cursorPositionChanged.connect(self.highlightline)
 
 		self.setWordWrapMode(0)
+
+		pal = QtGui.QPalette()
+		# bgc = QtGui.QColor("#1E1E1E")
+		# pal.setColor(QtGui.QPalette.Base, bgc)		
+		textc = QtGui.QColor(40, 40, 40)
+		pal.setColor(QtGui.QPalette.Text, textc)
+		self.setPalette(pal)
 
 		scrollbarStyleSheet = """
 		/* HORIZONTAL */
@@ -283,7 +312,7 @@ class Editor(QtGui.QPlainTextEdit):
 	def highlightline(self):
 		hi_selection = QtGui.QTextEdit.ExtraSelection()
 
-		hi_selection.format.setBackground(self.palette().alternateBase())
+		hi_selection.format.setBackground(QtGui.QColor("#FFFFDA"))
 		hi_selection.format.setProperty(QTextFormat.FullWidthSelection, QVariant(True))
 		hi_selection.cursor = self.textCursor()
 		hi_selection.cursor.clearSelection()
