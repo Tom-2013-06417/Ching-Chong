@@ -8,6 +8,8 @@ from PyQt4.Qt import QPainter
 from PyQt4.Qt import QHBoxLayout
 from PyQt4.Qt import QRect
 
+import subprocess
+
 from ext import *
 
 
@@ -245,7 +247,37 @@ class Editor(QtGui.QPlainTextEdit):
 
 		self.highlight = PythonHighlighter(self.document())
 
-		self.cursorPositionChanged.connect(self.highlightline)	
+		self.cursorPositionChanged.connect(self.highlightline)
+
+		self.setWordWrapMode(0)
+
+		scrollbarStyleSheet = """
+		/* HORIZONTAL */
+		QScrollBar:horizontal {
+			border: none;
+			background: none;
+			height: 8px;
+		}
+
+		QScrollBar::handle:horizontal {
+			background: lightgray;
+			min-width: 26px;
+		}
+
+		/* VERTICAL */
+		QScrollBar:vertical {
+			border: none;
+			background: none;
+			width: 8px;		
+		}
+
+		QScrollBar::handle:vertical {
+			background: lightgray;
+			min-height: 26px;
+		}
+
+		"""	
+		self.setStyleSheet(scrollbarStyleSheet)
 
 
 	def highlightline(self):
@@ -488,6 +520,11 @@ class Main(QtGui.QMainWindow):
 		self.findAction.setShortcut("Ctrl+F")
 		self.findAction.triggered.connect(find.Find(self).show)
 
+		self.buildAction = QtGui.QAction("Build", self)
+		self.buildAction.setStatusTip("Compile then run the program")
+		self.buildAction.setShortcut("Ctrl+B")
+		self.buildAction.triggered.connect(self.build)
+
 		self.fontSizeIndex = 6
 
 		self.fontSizes = ['6','7','8','9','10','11','12','13','14',
@@ -511,7 +548,6 @@ class Main(QtGui.QMainWindow):
 
 		file = menubar.addMenu("File")
 		edit = menubar.addMenu("Edit")
-		view = menubar.addMenu("View")
 		tools = menubar.addMenu("Tools")
 
 		file.addAction(self.newAction)
@@ -530,7 +566,12 @@ class Main(QtGui.QMainWindow):
 		edit.addSeparator()
 		edit.addAction(self.findAction)
 
+		tools.addAction(self.buildAction)
+
 		# view.addAction(self.setFontSize)
+
+	def something(self):
+		subprocess.Popen("start chrome.exe", shell=True)
 
 	def new(self):
 		a = LNTextEdit()		
@@ -658,6 +699,9 @@ class Main(QtGui.QMainWindow):
 					break
 
 				cursor.deleteChar()
+
+	def build(self):
+		pass
 
 	def cursorPosition(self):
 		cursor = self.tab.currentWidget().edit.textCursor()
