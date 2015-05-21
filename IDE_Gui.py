@@ -66,7 +66,7 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 	operators = [		
 		# Comparison
 		'!=', '<', '<=', '>', '>=',
-		'more lesser to', 'more greaterer to', 'same to',
+		'more lesser to', 'more greaterer to', 'same to', 'greaterer to', 'lesser to',
 		# Arithmetic
 		'\+', '-', '\*', '/', '//', '\%', '\*\*',
 		# In-place
@@ -554,6 +554,10 @@ class Main(QtGui.QMainWindow):
 		self.buildAction.setShortcut("Ctrl+B")
 		self.buildAction.triggered.connect(self.build)
 
+		self.wordWrapAction = QtGui.QAction("Word Wrap", self, checkable = True)
+		self.wordWrapAction.setStatusTip("Set a word wrap.")
+		self.wordWrapAction.triggered.connect(self.setWordWrap)
+
 		self.fontSizeIndex = 6
 
 		self.fontSizes = ['6','7','8','9','10','11','12','13','14',
@@ -577,6 +581,7 @@ class Main(QtGui.QMainWindow):
 
 		file = menubar.addMenu("File")
 		edit = menubar.addMenu("Edit")
+		view = menubar.addMenu("View")
 		tools = menubar.addMenu("Tools")
 
 		file.addAction(self.newAction)
@@ -594,6 +599,8 @@ class Main(QtGui.QMainWindow):
 		edit.addAction(self.dedentAction)
 		edit.addSeparator()
 		edit.addAction(self.findAction)
+
+		view.addAction(self.wordWrapAction)
 
 		tools.addAction(self.buildAction)
 
@@ -731,6 +738,12 @@ class Main(QtGui.QMainWindow):
 
 	def build(self):
 		pass
+
+	def setWordWrap(self):
+		if self.wordWrapAction.isChecked():
+			self.tab.currentWidget().edit.setWordWrapMode(3)
+		else:
+			self.tab.currentWidget().edit.setWordWrapMode(0)
 
 	def cursorPosition(self):
 		cursor = self.tab.currentWidget().edit.textCursor()
