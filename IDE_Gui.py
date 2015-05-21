@@ -303,7 +303,7 @@ class LNTextEdit(QtGui.QFrame):
 
 		hbox = QHBoxLayout(self)
 		hbox.setSpacing(10)
-		hbox.setMargin(10)
+		hbox.setContentsMargins(10,0,0,0)
 		hbox.addWidget(self.number_bar)
 		hbox.addWidget(self.edit)
 
@@ -471,6 +471,14 @@ class Main(QtGui.QMainWindow):
 		self.redoAction.setShortcut("Ctrl+Y")
 		self.redoAction.triggered.connect(self.tab.currentWidget().edit.redo)
 
+		self.indentAction = QtGui.QAction("Indent Area",self)
+		self.indentAction.setShortcut("Ctrl+Tab")
+		self.indentAction.triggered.connect(self.indent)
+
+		self.dedentAction = QtGui.QAction("Dedent Area",self)
+		self.dedentAction.setShortcut("Shift+Tab")
+		self.dedentAction.triggered.connect(self.dedent)
+
 		self.fontSizeIndex = 6
 
 		self.fontSizes = ['6','7','8','9','10','11','12','13','14',
@@ -507,6 +515,9 @@ class Main(QtGui.QMainWindow):
 		edit.addAction(self.cutAction)
 		edit.addAction(self.copyAction)
 		edit.addAction(self.pasteAction)
+		edit.addSeparator()
+		edit.addAction(self.indentAction)
+		edit.addAction(self.dedentAction)
 
 		# view.addAction(self.setFontSize)
 
@@ -563,6 +574,79 @@ class Main(QtGui.QMainWindow):
 		# 	self.writeRecentlyOpenedFiles()
 
 		self.statusbar.showMessage('Saved')
+
+	def indent(self):
+		# Grab the cursor
+		cursor = self.tab.currentWidget().edit.textCursor()
+
+		if cursor.hasSelection():
+			# Store the current line/block number
+			temp = cursor.blockNumber()
+
+			# Move to the selection's last line
+			cursor.setPosition(cursor.selectionEnd())
+
+			# Calculate range of selection
+			diff = cursor.blockNumber() - temp
+
+			# Iterate over lines
+			for n in range(diff + 1):
+				# Move to start of each line
+				cursor.movePosition(QtGui.QTextCursor.StartOfLine)
+
+				# Insert tabbing
+				cursor.insertText("\t")
+
+				# And move back up
+				cursor.movePosition(QtGui.QTextCursor.Up)
+
+		# If there is no selection, just insert a tab
+		else:
+			cursor.insertText("\t")
+
+	def dedent(self):
+		cursor = self.tab.currentWidget().edit.textCursor()
+
+		if cursor.hasSelection():
+			# Store the current line/block number
+			temp = cursor.blockNumber()
+
+			# Move to the selection's last line
+			cursor.setPosition(cursor.selectionEnd())
+
+			# Calculate range of selection
+			diff = cursor.blockNumber() - temp
+
+			# Iterate over lines
+			for n in range(diff + 1):
+				self.handleDedent(cursor)
+
+				# Move up
+				cursor.movePosition(QtGui.QTextCursor.Up)
+
+		else:
+			self.handleDedent(cursor)
+
+
+	def handleDedent(self,cursor):
+		cursor.movePosition(QtGui.QTextCursor.StartOfLine)
+
+		# Grab the current line
+		line = cursor.block().text()
+
+		# If the line starts with a tab character, delete it
+		if str(line).startswith("\t"):
+			# Delete next character
+			cursor.deleteChar()
+
+		# Otherwise, delete all spaces until a non-space character is met
+		else:
+			for char in line[:8]:
+
+				if char != " ":
+					break
+
+				cursor.deleteChar()
 
 	def cursorPosition(self):
 		cursor = self.tab.currentWidget().edit.textCursor()
