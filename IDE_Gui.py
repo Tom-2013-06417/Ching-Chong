@@ -335,6 +335,7 @@ class LNTextEdit(QtGui.QFrame):
 		QtGui.QFrame.__init__(self, *args)		
 
 		self.edit = Editor()
+		self.pyFile = ""
 		self.number_bar = NumberBar(self.edit)
 
 		hbox = QHBoxLayout(self)
@@ -351,6 +352,12 @@ class LNTextEdit(QtGui.QFrame):
 
 	def getFileName(self):
 		return self.edit.filename
+		
+	def setPyFile(self,name):
+		self.pyFile = name
+	
+	def getPyFile(self):
+		return self.pyFile
 
 
 		
@@ -701,7 +708,12 @@ class Main(QtGui.QMainWindow):
 				cursor.deleteChar()
 
 	def build(self):
-		pass
+		splitList = os.path.basename(self.tab.currentWidget().getFileName()).split(".chng")
+		pyName = splitList[0] + ".py"
+		self.tab.currentWidget().setPyFile(pyName)
+		runString = "python2 " + self.tab.currentWidget().getPyFile()
+	
+		subprocess.Popen(runString,shell = True)
 
 	def cursorPosition(self):
 		cursor = self.tab.currentWidget().edit.textCursor()
