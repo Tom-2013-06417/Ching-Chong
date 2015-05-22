@@ -1,29 +1,78 @@
-Start -> Statement
+Start -> Hi,IAm Name . \n GlobalVarDec ManyFunction
 
-ManyStatement -> Statement ManyStatement
-ManyStatement -> ''
+
+
+GlobalVarDec -> ISendShrimpFriedRiceToAll: \n Declare ManyDeclare Sincerely, Name . \n
+GlobalVarDec -> ''
+
+
+
+ManyFunction -> Function ManyFunction
+ManyFunction -> ''
+
+Function -> Dear Name , \n ParameterSegment VarDecSegment FunctionStatement Sincerely, Name . \n
+ParameterSegment -> IWantDumplingsAnd: \n Declare ManyDeclare okaylah. \n
+ParameterSegment -> ''
+VarDecSegment -> FatherSaysINeed: \n Declare ManyDeclare ToBecomeDoctorlah. \n
+VarDecSegment -> ''
+ManyDeclare -> Declare ManyDeclare
+ManyDeclare -> ''
+
+Declare -> GWA Var lah. \n
+Declare -> Score Var lah. \n
+Declare -> LetterGrade Var lah. \n
+Declare -> Honor Var lah. \n
+Declare -> Essay Var lah. \n
+
+FunctionStatement -> Statement FunctionStatement
+FunctionStatement -> Return FunctionStatement
+FunctionStatement -> ''
+Return -> IGiveYouSum Var lah. \n
+
+Statement -> FunctionCall 
+FunctionCall -> IWriteTo Name FxnCallParameter
+FxnCallParameter -> With Var ManyVar FxnCallReturn
+FxnCallParameter -> FxnCallReturn
+FxnCallReturn -> lah. \n IGet Var From Var lah. \n
+FxnCallReturn -> lah. \n 
+
+ManyVar -> , Var ManyVar
+ManyVar -> ''
+
+
 
 Statement -> For
-For -> FatherSayMakeRepeat Label againlah. \n MustDo Var from Int to Int oclocklah. \n ManyStatement I'mDoneWith Label lah. \n
+For -> FatherSayMakeRepeat Label againlah. \n MustDo Var from Int to Int oclocklah. \n ControlStructureStatement I'mDoneWith Label lah. \n
 
 Statement -> While
-While -> FatherSayMakeRepeat Label againlah. \n MustDo Label while Conditional lah. \n ManyStatement I'mDoneWith Label lah. \n
+While -> FatherSayMakeRepeat Label againlah. \n MustDo Var while Conditional lah. \n ControlStructureStatement I'mDoneWith Label lah. \n
 
 Statement -> If
-If   -> FatherAsk Label , if Conditional lah. \n ManyStatement Idoubleconfirm Label , lah. \n Elif
-Elif ->	FatherAskAgain Label , if Conditional lah. \n ManyStatement Idoubleconfirm Label , lah. \n Elif
+If   -> FatherAsk Label , if Conditional lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
+If   -> FatherAsk Label , is Var Boolean lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
+If   -> FatherAsk Label , if Boolean lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
+Elif ->	FatherAskAgain Label , if Conditional lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
+Elif ->	FatherAskAgain Label , is Var lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
+Elif ->	FatherAskAgain Label , if Boolean lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
 Elif -> Else
-Else -> FatherAsk Label , NoMore lah. \n ManyStatement FatherAshamedofSon Label , lah. \n
+Else -> FatherStopAsk Label lah. \n ControlStructureStatement FatherAshamedofSon Label , lah. \n
 Else -> ''
-Conditional -> Bool
-Conditional -> Var
+
 Conditional -> Expr moreLesserTo Expr
 Conditional -> Expr lesserTo Expr 
 Conditional -> Expr moreGreatererTo Expr 
 Conditional -> Expr greatererTo Expr 
 Conditional -> Expr sameTo Expr 
 Conditional -> Expr notSameTo Expr
-Label -> Str
+
+ControlStructureStatement -> Statement ControlStructureStatement
+ControlStructureStatement -> Break ControlStructureStatement
+ControlStructureStatement -> Continue ControlStructureStatement
+ControlStructureStatement -> ''
+Break -> I'mTiredlah. \n
+Continue -> FatherBroughtOutBelt. \n
+
+
 
 Statement -> Print
 Print -> IShowFather Var lah. \n
@@ -33,11 +82,14 @@ InputPrompt -> FatherWants Str , Input
 InputPrompt -> Input
 Input -> IGiveFather Var lah. \n
 
+
+
 Statement -> Arith
 Arith -> FatherSurpriseQuiz: Math lah. \n
-Arith -> FatherSurpriseLongQ: \n LQ
-LQ -> Math \n LQ
-LQ -> Ididnotknowlah.
+
+Arith -> FatherSurpriseLongQ: \n Math lah. LQ
+LQ -> Math lah. \n LQ
+LQ -> Ididnotknowlah. \n
 
 Math -> Var = Expr
 Expr -> Expr + Term
@@ -46,24 +98,45 @@ Expr -> Term
 Term -> Term * Ex
 Term -> Term / Ex
 Term -> Ex
-
 Ex -> Ex ** Factor
 Ex -> Factor
 Factor -> ( Expr )
 Factor -> Var
 Factor -> Int
 
+
+
+Bool -> Own
+Bool -> Disown 
+
+Float ->  Int . Int
+
 Int -> Digit Int'
-Var -> Str
 Int' -> Int
 Int' -> ''
-Float ->  Int . Int
+
+Digit -> 0
+Digit -> 1
+
+Var -> BL Str2
+
+Label -> BL MoreLabel
+MoreLabel -> Label
+MoreLabel -> ''
+
+Name -> BL NamePrime
+NamePrime -> SL NamePrimePrime
+NamePrime -> BL NamePrimePrime
+NamePrimePrime -> NamePrime
+NamePrimePrime -> ''
+
+Str -> Char Str2
+Str2 -> Str
+Str2 -> ''
+
 Char -> BL
 Char -> SL
 Char -> CD
-Str -> Char Str'
-Str' -> Str
-Str' -> ''
 BL -> A
 BL -> B
 BL -> C
@@ -73,8 +146,3 @@ SL -> c
 CD -> "0"
 CD -> "1" 
 CD -> "2"
-Digit -> 0
-Digit -> 1
-
-Bool -> Own
-Bool -> Disown 
