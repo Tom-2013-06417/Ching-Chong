@@ -72,7 +72,7 @@ Statement -> FunctionCall
 FunctionCall -> IWriteTo Name FxnCallParameter
 FxnCallParameter -> With Var ManyVar FxnCallReturn
 FxnCallParameter -> FxnCallReturn
-FxnCallReturn -> lah. \n IGet Var From Var lah. \n
+FxnCallReturn -> lah. \n IGet Var From Name lah. \n
 FxnCallReturn -> lah. \n 
 
 ManyVar -> , Var ManyVar
@@ -81,10 +81,10 @@ ManyVar -> ''
 
 
 Statement -> For
-For -> FatherSayMakeRepeat Label againlah. \n MustDo Var from Int to Int oclocklah. \n ControlStructureStatement I'mDoneWith Label lah. \n
+For -> FatherSayMakeRepeat Label againlah. \n MustDo Var from Var to Var oclocklah. \n ControlStructureStatement I'mDoneWith Label lah. \n
 
 Statement -> While
-While -> FatherSayMakeRepeat Label againlah. \n MustDo Var while Conditional lah. \n ControlStructureStatement I'mDoneWith Label lah. \n
+While -> FatherSayMakeRepeat Label againlah. \n MustDo Label while Conditional lah. \n ControlStructureStatement I'mDoneWith Label lah. \n
 
 Statement -> If
 If   -> FatherAsk Label , if Conditional lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
@@ -94,7 +94,7 @@ Elif ->	FatherAskAgain Label , if Conditional lah. \n ControlStructureStatement 
 Elif ->	FatherAskAgain Label , is Var lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
 Elif ->	FatherAskAgain Label , if Boolean lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
 Elif -> Else
-Else -> FatherStopAsk Label lah. \n ControlStructureStatement FatherAshamedofSon Label , lah. \n
+Else -> FatherStopAsking Label lah. \n ControlStructureStatement FatherAshamedofSonForNotAnswer Label , lah. \n
 Else -> ''
 
 Conditional -> Expr moreLesserTo Expr
@@ -109,7 +109,7 @@ ControlStructureStatement -> Break ControlStructureStatement
 ControlStructureStatement -> Continue ControlStructureStatement
 ControlStructureStatement -> ''
 Break -> I'mTiredlah. \n
-Continue -> FatherBroughtOutBelt. \n
+Continue -> FatherBroughtOutBeltlah. \n
 
 
 
