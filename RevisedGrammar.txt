@@ -1,9 +1,9 @@
-Start -> Hi,IAm Name . \n GlobalVarDec ManyFunction
+Start -> Initialize
 
+Initialize -> Hi,Iam Name . \n GlobalVarDec
 
-
-GlobalVarDec -> ISendShrimpFriedRiceToAll: \n Declare ManyDeclare Sincerely, Name . \n
-GlobalVarDec -> ''
+GlobalVarDec -> ISendShrimpFriedRiceToAll: \n Declare ManyDeclare Sincerely, Name . \n ManyFunction
+GlobalVarDec -> ManyFunction
 
 
 
@@ -18,11 +18,21 @@ VarDecSegment -> ''
 ManyDeclare -> Declare ManyDeclare
 ManyDeclare -> ''
 
-Declare -> GWA Var lah. \n
-Declare -> Score Var lah. \n
-Declare -> LetterGrade Var lah. \n
-Declare -> Honor Var lah. \n
-Declare -> Essay Var lah. \n
+Declare -> IntDeclare
+IntDeclare -> Score Var IntVal IntMore lah. \n
+IntVal -> of Int 
+IntVal -> ''
+IntMore -> , Var IntVal IntMore2
+IntMore2 -> IntMore
+IntMore2 -> ''
+Declare -> FltDeclare
+FltDeclare -> GWA Var lah. \n
+ChrDeclare -> LetterGrade Var lah. \n
+Declare -> ChrDeclare
+StrDeclare -> Essay Var lah. \n
+Declare -> StrDeclare
+BlnDeclare -> Honor Var lah. \n
+Declare -> BlnDeclare
 
 FunctionStatement -> Statement FunctionStatement
 FunctionStatement -> Return FunctionStatement
@@ -97,6 +107,7 @@ Expr -> Expr - Term
 Expr -> Term
 Term -> Term * Ex
 Term -> Term / Ex
+Term -> Term % Ex
 Term -> Ex
 Ex -> Ex ** Factor
 Ex -> Factor
