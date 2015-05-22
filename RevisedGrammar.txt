@@ -19,20 +19,49 @@ ManyDeclare -> Declare ManyDeclare
 ManyDeclare -> ''
 
 Declare -> IntDeclare
-IntDeclare -> Score Var IntVal IntMore lah. \n
+IntDeclare -> Score Var IntVal IntMore 
 IntVal -> of Int 
 IntVal -> ''
 IntMore -> , Var IntVal IntMore2
+IntMore -> lah. \n
 IntMore2 -> IntMore
 IntMore2 -> ''
+
 Declare -> FltDeclare
-FltDeclare -> GWA Var lah. \n
-ChrDeclare -> LetterGrade Var lah. \n
+FltDeclare -> GWA Var FltVal FltMore
+FltVal -> of Float 
+FltVal -> ''
+FltMore -> , Var FltVal FltMore2
+FltMore -> lah. \n
+FltMore2 -> FltMore
+FltMore2 -> ''
+
 Declare -> ChrDeclare
-StrDeclare -> Essay Var lah. \n
+ChrDeclare -> LetterGrade Var ChrVal ChrMore 
+ChrVal -> of Char 
+ChrVal -> ''
+ChrMore -> , Var ChrVal ChrMore2
+ChrMore -> lah. \n
+ChrMore2 -> ChrMore
+ChrMore2 -> ''
+
 Declare -> StrDeclare
-BlnDeclare -> Honor Var lah. \n
+StrDeclare -> Essay Var StrVal StrMore 
+StrVal -> of Str 
+StrVal -> ''
+StrMore -> , Var StrVal StrMore2
+StrMore -> lah. \n
+StrMore2 -> StrMore
+StrMore2 -> ''
+
 Declare -> BlnDeclare
+BlnDeclare -> Honor Var BlnVal BlnMore 
+BlnVal -> of Boolean 
+BlnVal -> ''
+BlnMore -> , Var BlnVal BlnMore2
+BlnMore -> lah. \n
+BlnMore2 -> BlnMore
+BlnMore2 -> ''
 
 FunctionStatement -> Statement FunctionStatement
 FunctionStatement -> Return FunctionStatement
@@ -117,8 +146,8 @@ Factor -> Int
 
 
 
-Bool -> Own
-Bool -> Disown 
+Boolean -> Own
+Boolean -> Disown 
 
 Float ->  Int . Int
 
