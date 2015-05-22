@@ -57,8 +57,8 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 	"""
 	# Python keywords
 	keywords = [
-		'and', 'again', 'ask', 'Diary', 'no more', 'from', 'From', 'if', 'in', 'oclock',
-		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'okay'
+		'and', 'again', 'ask', 'Diary', 'no more', 'from', 'From', 'if', 'in', 'is', 'of', 'oclock',
+		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'okay', 'LetterGrade'
 	]
 
 	boolean = ['Own', 'Disown']
@@ -69,11 +69,6 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 		'more lesser to', 'more greaterer to', 'same to', 'not same to', 'greaterer to', 'lesser to',
 		# Arithmetic
 		'\+', '-', '\*', '/', '//', '\%', '\*\*', '=',
-		# In-place
-		'\+=', '-=', '\*=', '/=', '\%=',
-		# Bitwise
-		'\^', '\|', '\&', '\~', '>>', '<<',
-
 	]
 
 	# Python braces
@@ -123,8 +118,9 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 
 			(r'Father wants', 0, STYLES['keyword']),
 
-			(r'I write to', 0, STYLES['keyword']),
-			(r'I get', 0, STYLES['keyword']),
+			(r'I write to', 0, STYLES['keyword']),	
+
+			(r'I get', 0, STYLES['keyword']),			
 
 			(r'Father surprise quiz:', 0, STYLES['keyword']),
 			(r'Father surprise long quiz:', 0, STYLES['keyword']),
@@ -278,12 +274,15 @@ class Editor(QtGui.QPlainTextEdit):
 		QtGui.QPlainTextEdit.__init__(self)
 		QtGui.QFrame.__init__(self)	
 
-		self.filename = ''
+		self.filename = ''		
+
+		self.textChanged.connect(self.changed)
 
 		self.font = QtGui.QFont()
-		#self.font.setFamily("Faraco Hand")
 		self.font.setFamily("Consolas")
 		self.font.setPointSize(10)
+
+		self.fontSizeIndex = 2
 
 		self.setFont(self.font)
 		self.setTabStopWidth(33)
@@ -330,12 +329,22 @@ class Editor(QtGui.QPlainTextEdit):
 
 		"""	
 		self.setStyleSheet(scrollbarStyleSheet)
-
+		self.changesSaved = True
 
 	def highlightline(self):
 		hi_selection = QtGui.QTextEdit.ExtraSelection()
 
 		hi_selection.format.setBackground(QtGui.QColor("#FFFFDA"))
+		hi_selection.format.setProperty(QTextFormat.FullWidthSelection, QVariant(True))
+		hi_selection.cursor = self.textCursor()
+		hi_selection.cursor.clearSelection()
+
+		self.setExtraSelections([hi_selection])
+
+	def removeHightlightline(self):
+		hi_selection = QtGui.QTextEdit.ExtraSelection()
+
+		hi_selection.format.setBackground(QtGui.QColor("#FFFFFF"))
 		hi_selection.format.setProperty(QTextFormat.FullWidthSelection, QVariant(True))
 		hi_selection.cursor = self.textCursor()
 		hi_selection.cursor.clearSelection()
@@ -364,7 +373,7 @@ class Editor(QtGui.QPlainTextEdit):
 			# We want the line number for the selected line to be bold.
 			if line_count == current_line:
 				font = painter.font()
-				# font.setBold(True)
+				font.setBold(True)
 				painter.setFont(font)
 			else:
 				font = painter.font()
@@ -378,6 +387,9 @@ class Editor(QtGui.QPlainTextEdit):
 			block = block.next()
 
 		painter.end()
+
+	def changed(self):
+		self.changesSaved = False
 
 
 
@@ -467,6 +479,7 @@ class Main(QtGui.QMainWindow):
 					try:					
 						with open(files,"rt") as file:
 							self.listOfOpenTabs[counter].edit.setPlainText(file.read())
+							self.listOfOpenTabs[counter].edit.changesSaved = True
 
 					except:
 						pass
@@ -573,7 +586,7 @@ class Main(QtGui.QMainWindow):
 		self.dedentAction.setShortcut("Shift+Tab")
 		self.dedentAction.triggered.connect(self.dedent)
 
-		self.findAction = QtGui.QAction(QtGui.QIcon("icons/find.png"),"Find and replace",self)
+		self.findAction = QtGui.QAction(QtGui.QIcon("icons/find.png"),"Find and Replace",self)
 		self.findAction.setStatusTip("Find and replace words in your document")
 		self.findAction.setShortcut("Ctrl+F")
 		self.findAction.triggered.connect(find.Find(self).show)
@@ -592,20 +605,27 @@ class Main(QtGui.QMainWindow):
 		self.showStatusBarAction.triggered.connect(self.displayStatusBar)
 		self.showStatusBarAction.setChecked(True)
 
-		self.fontSizeIndex = 6
+		self.showHighlightlineAction = QtGui.QAction("Highlight Current Line", self, checkable = True)
+		self.showHighlightlineAction.setStatusTip("Show or hide the highlight line")
+		self.showHighlightlineAction.triggered.connect(self.toggleHighlightLine)
+		self.showHighlightlineAction.setChecked(True)		
 
-		self.fontSizes = ['6','7','8','9','10','11','12','13','14',
-			 '15','16','18','20','22','24','26','28',
-			 '32','36','40','44','48','54','60','66',
-			 '72','80','88','96']
+		self.incFontSizeAction = QtGui.QAction("Increment Font Size", self)
+		self.incFontSizeAction.setShortcut("Ctrl+=")
+		self.incFontSizeAction.triggered.connect(self.incFontSize)
 
-		self.incFontSize = QtGui.QAction("Increment Font", self)
-		self.incFontSize.setShortcut("Ctrl++")
-		# self.incFontSize.triggered.connect(self.incFontSize)
+		self.decFontSizeAction = QtGui.QAction("Decrement Font Size", self)
+		self.decFontSizeAction.setShortcut("Ctrl+-")
+		self.decFontSizeAction.triggered.connect(self.decFontSize)
 
-		self.exitAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"), "Exit", self)
+		self.exitAction = QtGui.QAction("Exit", self)
 		self.exitAction.setShortcut("Ctrl+W")
 		self.exitAction.triggered.connect(self.closeEvent)
+
+		self.fontSizes = [8,9,10,11,12,13,14,
+			 15,16,18,20,22,24,26,28,
+			 32,36,40,44,48,54,60,66,
+			 72,80,88,96]
 
 	def initFormatbar(self):
 		self.formatbar = self.addToolBar("Format")								# Initialize the FORMAT toolbar
@@ -621,6 +641,7 @@ class Main(QtGui.QMainWindow):
 		file.addAction(self.newAction)
 		file.addAction(self.openAction)
 		file.addAction(self.saveAction)
+		file.addAction(self.exitAction)
 
 		edit.addAction(self.undoAction)
 		edit.addAction(self.redoAction)
@@ -637,6 +658,10 @@ class Main(QtGui.QMainWindow):
 		view.addAction(self.showStatusBarAction)
 		view.addSeparator()
 		view.addAction(self.wordWrapAction)
+		view.addAction(self.showHighlightlineAction)
+		view.addSeparator()
+		view.addAction(self.incFontSizeAction)
+		view.addAction(self.decFontSizeAction)
 
 		tools.addAction(self.buildAction)
 
@@ -646,12 +671,12 @@ class Main(QtGui.QMainWindow):
 		subprocess.Popen("start chrome.exe", shell=True)
 
 	def new(self):
-		a = LNTextEdit()		
-		self.listOfOpenTabs.append(a)		
-		self.tab.insertTab(self.tab.currentIndex()+1, a, "Untitled")
+		a = LNTextEdit()			
+		self.tab.insertTab(self.tab.currentIndex()+1, a, "Untitled.chng")
 		self.tab.setCurrentWidget(a)
 		a.edit.cursorPositionChanged.connect(self.cursorPosition)
-		a.edit.setFocus()
+		a.edit.setFocus()		
+		self.listOfOpenTabs.append(a)
 
 	def open(self):
 
@@ -669,6 +694,7 @@ class Main(QtGui.QMainWindow):
 			with open(filename,"r") as file:
 				a = LNTextEdit()
 				a.edit.setPlainText(file.read())
+				a.edit.changesSaved = True
 				self.listOfOpenTabs.append(a)
 				self.tab.insertTab(self.tab.currentIndex()+1, a, os.path.basename(filename))
 				
@@ -689,15 +715,15 @@ class Main(QtGui.QMainWindow):
 
 				with open(self.tab.currentWidget().getFileName(), "w") as file:
 					file.write(self.tab.currentWidget().edit.toPlainText())
-		else:
-			
+
+				self.tab.currentWidget().edit.changesSaved = True		
+		
+		else:			
 			with open(self.tab.currentWidget().getFileName(), "w") as file:
 				file.write(self.tab.currentWidget().edit.toPlainText())
+				self.tab.currentWidget().edit.changesSaved = True
 
-		# if self.tab.currentWidget().getFileName() not in self.openedFiles:		
-		# 	self.writeRecentlyOpenedFiles()
-
-		self.statusbar.showMessage('Saved')
+		self.statusbar.showMessage('Saved')		
 
 	def indent(self):
 		# Grab the cursor
@@ -714,7 +740,7 @@ class Main(QtGui.QMainWindow):
 			diff = cursor.blockNumber() - temp
 
 			# Iterate over lines
-			for n in range(diff + 1):
+			for n in xrange(diff + 1):
 				# Move to start of each line
 				cursor.movePosition(QtGui.QTextCursor.StartOfLine)
 
@@ -782,7 +808,7 @@ class Main(QtGui.QMainWindow):
 	def setWordWrap(self):
 		if self.wordWrapAction.isChecked():
 			for tab in self.listOfOpenTabs:
-				tab.edit.setWordWrapMode(3)			
+				tab.edit.setWordWrapMode(3)
 		else:
 			for tab in self.listOfOpenTabs:
 				tab.edit.setWordWrapMode(0)
@@ -793,6 +819,17 @@ class Main(QtGui.QMainWindow):
 		else:
 			self.statusbar.show()
 
+	def toggleHighlightLine(self):
+		if not self.showHighlightlineAction.isChecked():
+			for tab in self.listOfOpenTabs:
+				tab.edit.cursorPositionChanged.connect(tab.edit.removeHightlightline)				
+				tab.edit.removeHightlightline()
+
+		else:
+			for tab in self.listOfOpenTabs:	
+				tab.edit.cursorPositionChanged.connect(tab.edit.highlightline)				
+				tab.edit.highlightline()
+
 	def cursorPosition(self):
 		cursor = self.tab.currentWidget().edit.textCursor()
 
@@ -802,22 +839,103 @@ class Main(QtGui.QMainWindow):
 
 		self.statusbar.showMessage("Line: {}, Column: {}".format(line,col))
 
-	def incFontSize(self, fontsize):
-		self.tab.currentWidget().edit.setPointSize(int(fontsize))
+	def incFontSize(self):
 
-	def closeTab(self):
-		self.listOfOpenTabs.remove(self.tab.currentWidget())		
-		self.tab.removeTab(self.tab.currentIndex())
+		if self.tab.currentWidget().edit.fontSizeIndex > 29:
+			self.tab.currentWidget().edit.fontSizeIndex = 28
 
-	def unsavedChanges(self):
-		pass
+		self.tab.currentWidget().edit.fontSizeIndex += 1			
+
+		try:
+			self.tab.currentWidget().edit.font.setPointSize(self.fontSizes[self.tab.currentWidget().edit.fontSizeIndex])			
+		except IndexError:
+			pass
+
+		self.tab.currentWidget().edit.setFont(self.tab.currentWidget().edit.font)
+		# self.tab.currentWidget().number_bar.setFont(self.tab.currentWidget().edit.font)
+
+	def decFontSize(self):
+
+		if self.tab.currentWidget().edit.fontSizeIndex == 0:
+			self.tab.currentWidget().edit.fontSizeIndex = 1
+
+		self.tab.currentWidget().edit.fontSizeIndex -= 1
+
+		try:
+			self.tab.currentWidget().edit.font.setPointSize(self.fontSizes[self.tab.currentWidget().edit.fontSizeIndex])
+		except IndexError:
+			pass				
+
+		self.tab.currentWidget().edit.setFont(self.tab.currentWidget().edit.font)
+		# self.tab.currentWidget().number_bar.setFont(self.tab.currentWidget().edit.font)
+
+	def closeTab(self):		
+		if self.tab.currentWidget().edit.changesSaved == False:
+			popup = QtGui.QMessageBox(self)
+			popup.setIcon(QtGui.QMessageBox.Warning)
+			popup.setText("%s has been modified" % (os.path.basename(self.tab.currentWidget().getFileName())))
+			popup.setInformativeText("Do you want to save your changes?")
+			popup.setStandardButtons(QtGui.QMessageBox.Save|QtGui.QMessageBox.Cancel|QtGui.QMessageBox.Discard)
+			popup.setDefaultButton(QtGui.QMessageBox.Save)
+			answer = popup.exec_()
+
+			if answer == QtGui.QMessageBox.Save:
+				self.save()
+				if self.tab.currentWidget().getFileName() != "":
+					self.listOfOpenTabs.remove(self.tab.currentWidget())
+					self.tab.removeTab(self.tab.currentIndex())
+
+			elif answer == QtGui.QMessageBox.Discard:
+				self.listOfOpenTabs.remove(self.tab.currentWidget())		
+				self.tab.removeTab(self.tab.currentIndex())	
+
+		else:
+			self.listOfOpenTabs.remove(self.tab.currentWidget())
+			self.tab.removeTab(self.tab.currentIndex())
+
 
 	def closeEvent(self, event):
-		self.writeCurrentTab()
-		self.writeRecentlyOpenedFiles()
-		self.recentFiles.close()
-		self.toReadCurrentTab.close()
-		exit(1)
+		checker = True
+
+		for tab in self.listOfOpenTabs:
+			
+			if tab.edit.changesSaved == False:
+				popup = QtGui.QMessageBox(self)
+				popup.setIcon(QtGui.QMessageBox.Warning)
+				popup.setText("%s has been modified" % (os.path.basename(tab.getFileName())))
+				popup.setInformativeText("Do you want to save your changes?")
+				popup.setStandardButtons(QtGui.QMessageBox.Save|QtGui.QMessageBox.Cancel|QtGui.QMessageBox.Discard)
+				popup.setDefaultButton(QtGui.QMessageBox.Save)
+				answer = popup.exec_()
+
+				if answer == QtGui.QMessageBox.Save:
+					self.save()
+					if tab.getFileName() == '':
+						try:
+							event.ignore()
+						except:
+							pass
+
+						checker = False
+				
+				elif answer == QtGui.QMessageBox.Discard:
+					pass
+
+				else:
+					try:
+						event.ignore()
+					except:
+						pass
+
+					checker = False
+					break
+
+		if checker == True:
+			self.writeCurrentTab()
+			self.writeRecentlyOpenedFiles()
+			self.recentFiles.close()
+			self.toReadCurrentTab.close()
+			exit(1)
 
 
 
