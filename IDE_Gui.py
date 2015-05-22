@@ -33,9 +33,10 @@ def format(color, style=''):
 # Syntax styles that can be shared by all languages
 STYLES = {
 	'keyword': format('#2B43BA'),
-	'operator': format('red'),
+	'operator': format('#F51462'),
 	'brace': format('darkGray'),
 	'defclass': format('black', 'bold'),
+	'mainclass': format('#2B43BA', 'bold'),
 	'string': format('#A8CD3A'),
 	'string2': format('#777777'),			 #Comments
 	'comment': format('#777777', 'italic'),
@@ -46,6 +47,7 @@ STYLES = {
 	'startingline': format('#FF7E00'),
 	'senderclass': format('#CD4422', 'bold'),	#Name of sender
 	'defname': format('#FF7E00'),
+	'boolean': format('#C332CD'),
 }
 
 
@@ -55,24 +57,23 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 	"""
 	# Python keywords
 	keywords = [
-		'and', 'assert', 'ask', 'again', 'break', 'class', 'continue', 'Homework', 'Finish homework',
-		'del', 'Diary', 'no more', 'except', 'exec', 'finally',
-		'from', 'From', 'global', 'Get me', 'get me', 'if', 'import', 'in', 
-		'lambda', 'not', 'or', 'pass', 'raise', 'return', 'then', 'try', 'while', 'with', 'yield',
-		'None', 'Own', 'Disown', 'GWA', 'Score', 'Essay', 'Honor', 'okay'
+		'and', 'again', 'ask', 'Diary', 'no more', 'from', 'From', 'if', 'in', 'oclock',
+		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'okay'
 	]
+
+	boolean = ['Own', 'Disown']
 
 	# Python operators
 	operators = [		
 		# Comparison
-		'!=', '<', '<=', '>', '>=',
-		'more lesser to', 'more greaterer to', 'same to', 'greaterer to', 'lesser to',
+		'more lesser to', 'more greaterer to', 'same to', 'not same to', 'greaterer to', 'lesser to',
 		# Arithmetic
-		'\+', '-', '\*', '/', '//', '\%', '\*\*',
+		'\+', '-', '\*', '/', '//', '\%', '\*\*', '=',
 		# In-place
 		'\+=', '-=', '\*=', '/=', '\%=',
 		# Bitwise
 		'\^', '\|', '\&', '\~', '>>', '<<',
+
 	]
 
 	# Python braces
@@ -87,12 +88,15 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 		# syntax highlighting from this point onward
 		self.tri_single = (QRegExp("-_-"), 1, STYLES['string2'])
 
+		True
+
 		rules = []
 
 		# Keyword, operator, and brace rules
 		rules += [(r'%s' % o, 0, STYLES['operator']) for o in PythonHighlighter.operators]
 		rules += [(r'\b%s\b' % w, 0, STYLES['keyword']) for w in PythonHighlighter.keywords]
 		rules += [(r'%s' % b, 0, STYLES['brace']) for b in PythonHighlighter.braces]
+		rules += [(r'\b%s\b' % w, 0, STYLES['boolean']) for w in PythonHighlighter.boolean]
 
 		# All other rules
 		rules += [
@@ -110,30 +114,49 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 			# 'class' followed by an identifier
 			(r'\bDear\b', 0, STYLES['defname']),
 			(r'\bDear\b\s*(\w+)\,', 1, STYLES['defclass']),
+			(r'Diary', 0, STYLES['mainclass']),
 
 			# From '#' until a newline			
-			(r'lah.', 0, STYLES['terminator']),
-			(r'Do your chores', 0, STYLES['loops']),
-			(r'End chores', 0, STYLES['loops']),
+			(r'lah.', 0, STYLES['terminator']),			
 			(r'I show Father', 0, STYLES['keyword']),
 			(r'I give Father', 0, STYLES['keyword']),
+
 			(r'Father wants', 0, STYLES['keyword']),
+
 			(r'I write to', 0, STYLES['keyword']),
 			(r'I get', 0, STYLES['keyword']),
+
 			(r'Father surprise quiz:', 0, STYLES['keyword']),
 			(r'Father surprise long quiz:', 0, STYLES['keyword']),
+			
 			(r'Father say make repeat', 0, STYLES['keyword']),
+			(r'\bFather say make repeat\b\s*([A-Z]+)', 1, STYLES['senderclass']),
+
 			(r'to become doctor', 0, STYLES['keyword']),
 			(r'Father says that I need', 0, STYLES['keyword']),
+			
 			(r'Must do', 0, STYLES['keyword']),
-			(r'I\'m done', 0, STYLES['keyword']),
+			(r'\bMust do\b\s*([A-Z]+)\s*\bwhile\b', 1, STYLES['senderclass']),
+			
+			(r'I\'m done with', 0, STYLES['keyword']),
+			(r'\bI\'m done with\b\s*([A-Z]+)', 1, STYLES['senderclass']),
+			
 			(r'Father ask', 0, STYLES['keyword']),
+			(r'\bFather ask\b\s*([A-Z]+)', 1, STYLES['senderclass']),
+
+			(r'Father ask again', 0, STYLES['keyword']),
+			(r'\bFather ask again\b\s*([A-Z]+)', 1, STYLES['senderclass']),
+
 			(r'I double confirm', 0, STYLES['keyword']),
+			(r'\bI double confirm\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 			(r'Father says that I need', 0, STYLES['keyword']),
 			(r'Father ashamed of son for not answer', 0, STYLES['keyword']),
+			(r'\bFather ashamed of son for not answer\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 			(r'I want dumplings and', 0, STYLES['keyword']),
 			(r'I send shrimp fried rice to all:', 0, STYLES['keyword']),
 			(r'I no pass', 0, STYLES['keyword']),
+			(r'I give you sum', 0, STYLES['keyword']),
+			(r'I am tired', 0, STYLES['keyword']),
 			
 
 			# Numeric literals
@@ -501,8 +524,7 @@ class Main(QtGui.QMainWindow):
 		self.setWindowTitle("Ching Chong IDE")
 
 	def initToolbar(self):
-		# self.toolbar = self.addToolBar("Options")								# Initialize the OPTIONS toolbar
-
+		
 		self.newAction = QtGui.QAction(QtGui.QIcon("icons/new.png"),"New File",self)
 		self.newAction.setStatusTip("Create a new document from scratch.")
 		self.newAction.setShortcut("Ctrl+N")
@@ -543,27 +565,32 @@ class Main(QtGui.QMainWindow):
 		self.redoAction.setShortcut("Ctrl+Y")
 		self.redoAction.triggered.connect(self.tab.currentWidget().edit.redo)
 
-		self.indentAction = QtGui.QAction("Indent Area",self)
+		self.indentAction = QtGui.QAction(QtGui.QIcon("icons/indent.png"),"Indent Area",self)
 		self.indentAction.setShortcut("Ctrl+Tab")
 		self.indentAction.triggered.connect(self.indent)
 
-		self.dedentAction = QtGui.QAction("Dedent Area",self)
+		self.dedentAction = QtGui.QAction(QtGui.QIcon("icons/dedent.png"),"Dedent Area",self)
 		self.dedentAction.setShortcut("Shift+Tab")
 		self.dedentAction.triggered.connect(self.dedent)
 
-		self.findAction = QtGui.QAction("Find and replace",self)
+		self.findAction = QtGui.QAction(QtGui.QIcon("icons/find.png"),"Find and replace",self)
 		self.findAction.setStatusTip("Find and replace words in your document")
 		self.findAction.setShortcut("Ctrl+F")
 		self.findAction.triggered.connect(find.Find(self).show)
 
-		self.buildAction = QtGui.QAction("Build", self)
+		self.buildAction = QtGui.QAction(QtGui.QIcon("icons/build.png"),"Build", self)
 		self.buildAction.setStatusTip("Compile then run the program")
 		self.buildAction.setShortcut("Ctrl+B")
 		self.buildAction.triggered.connect(self.build)
 
 		self.wordWrapAction = QtGui.QAction("Word Wrap", self, checkable = True)
-		self.wordWrapAction.setStatusTip("Set a word wrap.")
+		self.wordWrapAction.setStatusTip("Set a word wrap")
 		self.wordWrapAction.triggered.connect(self.setWordWrap)
+
+		self.showStatusBarAction = QtGui.QAction("Status Bar", self, checkable = True)
+		self.showStatusBarAction.setStatusTip("Show or hide the status bar")
+		self.showStatusBarAction.triggered.connect(self.displayStatusBar)
+		self.showStatusBarAction.setChecked(True)
 
 		self.fontSizeIndex = 6
 
@@ -607,6 +634,8 @@ class Main(QtGui.QMainWindow):
 		edit.addSeparator()
 		edit.addAction(self.findAction)
 
+		view.addAction(self.showStatusBarAction)
+		view.addSeparator()
 		view.addAction(self.wordWrapAction)
 
 		tools.addAction(self.buildAction)
@@ -722,7 +751,6 @@ class Main(QtGui.QMainWindow):
 		else:
 			self.handleDedent(cursor)
 
-
 	def handleDedent(self,cursor):
 		cursor.movePosition(QtGui.QTextCursor.StartOfLine)
 
@@ -747,15 +775,23 @@ class Main(QtGui.QMainWindow):
 		splitList = os.path.basename(self.tab.currentWidget().getFileName()).split(".chng")
 		pyName = splitList[0] + ".py"
 		self.tab.currentWidget().setPyFile(pyName)
-		runString = "python2 " + self.tab.currentWidget().getPyFile()
+		runString = "python " + self.tab.currentWidget().getPyFile()
 	
 		subprocess.Popen(runString,shell = True)
 
 	def setWordWrap(self):
 		if self.wordWrapAction.isChecked():
-			self.tab.currentWidget().edit.setWordWrapMode(3)
+			for tab in self.listOfOpenTabs:
+				tab.edit.setWordWrapMode(3)			
 		else:
-			self.tab.currentWidget().edit.setWordWrapMode(0)
+			for tab in self.listOfOpenTabs:
+				tab.edit.setWordWrapMode(0)
+
+	def displayStatusBar(self):
+		if not self.showStatusBarAction.isChecked():
+			self.statusbar.hide()
+		else:
+			self.statusbar.show()
 
 	def cursorPosition(self):
 		cursor = self.tab.currentWidget().edit.textCursor()
