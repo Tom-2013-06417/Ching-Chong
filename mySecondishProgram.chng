@@ -4,21 +4,22 @@ I send shrimp fried rice to all:
 Score ThisIsGlobal lah.
 Score X of 100, Y, Z, A, B, C, Sumthin of 666 lah.
 GWA SecondYear of 3.0 lah.
+GWA Math of 5.0, Science of 1.75, Physics of 5.0 lah.
 LetterGrade Physics of A lah.
 Essay Eng10 of "longlonglong shit" lah.
+ReportCard FirstSem with 4 entries lah.
+ReportCard SecondSem with Math, Science, Physics lah.
 Honor Zuko of Disown, Zumo of Own lah.
 
 Sincerely, Jim.
 
-134135,126
+
 
 Dear FunctionCall,
 
 I want dumplings and:
 Score ThisIsAParameter lah.
 GWA ThisIsAlsoAParameter lah.
-ReportCard Grades with 4 entries lah.
-ReportCard Grades with Stuff,Stuff2,Stuff3 lah.
 okay lah.
 
 Father says that I need:
@@ -28,6 +29,27 @@ to become doctor lah.
 
 I give you sum ThisIsTheReturnVariable lah.
 Sincerely, Jim.
+
+
+
+Dear ListModification,
+
+Father says that I need:
+Score LocalToGlobal lah.
+Score ListVariable lah.
+Score PopVariable lah.
+Score PopFirstInstanceOfThisVariable lah.
+Score ListLength lah.
+ReportCard LocalList with 4 entries lah.
+to become doctor lah.
+
+Teacher adds ListVariable to LocalList lah.
+Teacher gets PopVariable from LocalList lah.
+Father gets PopFirstInstanceOfThisVariable from LocalList lah.
+Father counts ListLength of A+ in ReportCard lah.
+Teacher adds LocalToGlobal to FirstSem lah.
+
+Sincereley, Jim.
 
 
 
@@ -68,7 +90,7 @@ I show Father "This is a for loop" lah.
 I'm done with THISISALABEL lah.
 
 Father say make repeat HASTOBESAME again lah.
-Must do HASTOBESAME while X more lesser to Y lah.
+Must repeat HASTOBESAME while X more lesser to Y lah.
 I show Father "This is a while loop" lah.
 Father surprise quiz: X = X + 1 lah.
 I'm done with HASTOBESAME lah.
@@ -101,7 +123,7 @@ Dear NotDiuhry,
 
 Father ask HARDERQUESTION, if X lesser to Y lah.
 	Father say make repeat INNERLOOP again lah.
-	Must do INNERLOOP while X more lesser to Y lah.
+	Must repeat INNERLOOP while X more lesser to Y lah.
 		Father say make repeat INNERINNERLOOP again lah.
 		Must do A from X to Y oclock lah.
 		I show Father "This is a complex loop" lah.
