@@ -1,6 +1,6 @@
 ''' Forgive the messy code'''
 ''' Proper pt.txt looks something like this
-	State	ACTION	GOTO
+        State	ACTION	GOTO
 	+	*	(	)	a	$	A	E	T	F	id
 0	 	 	s4	 	s6	 	 	1	2	3	5
 1	s7	 	 	 	 	z	 	 	 	 	 
@@ -29,7 +29,7 @@ id -> a
 Inputting this should work here.
 '''
 def parseTableMaker():
-	file=open("pt.txt","r")
+	file=open("pt3.txt","r")
 	file.readline()
 	string = file.readline()
 	inputs=string.split("\t")
@@ -69,7 +69,7 @@ def parseTableMaker():
 
 	return lr_table
 def rules():
-	file=open("grammar.txt","r")
+	file=open("grammar3.txt","r")
 
 	grammarDict = {}
 	iter = 0

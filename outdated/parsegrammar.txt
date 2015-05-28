@@ -14,49 +14,48 @@ ParamDecFunc -> ''
 
 S -> S' S
 S -> ''
-
 S' -> IGiveYouSum V lah. \n
-
 S' -> IWriteTo Name Sfuncall lah. \n Sreturn
+
 Sfuncall -> with V Sfuncall'
 Sfuncall -> ''
 Sfuncall' -> Sfuncall'' Sfuncall'
 Sfuncall' -> ''
 Sfuncall'' -> , V Sfuncall'
 Sfuncall'' -> ''
+
 Sreturn -> IGet V from Name lah. \n
 Sreturn -> ''
 
 S' -> FSurpQuiz: Math lah. \n
 S' -> FSurpLongQuiz: \n Math Math INoPass lah. \n
-
 S' -> FatherAsk Label , if Conditional lah. \n S S IdoubleC Label , lah. \n elif else
+
 elif ->	FatherAskA Label , if Conditional lah. \n S S IdoubleC Label , lah. \n elif
 elif -> ''
+
 else -> FatherAsk Label , NoMore lah. \n S S FatherAshamedofSon Label , lah. \n
 else -> ''
 
 S' -> IShowFather V lah. \n
-
 S' -> IGiveFather V lah. \n
+
 Sout -> FatherWants V , 
 Sout -> ''
 
 S' -> FatherSayMakeRepeat Label again lah. \n Sloop I'mDoneWithChore lah. \n
+
 Sloop -> For
 Sloop -> While
 
 S' -> I'mTired lah. \n
-
 S' -> FatherBroughtOutBelt lah. \n
-
 S' -> ''
 
 For -> 	MustDo V from LoopValue to LoopValue oclock lah. \n S S
 While -> MustDo V while Conditional \n S S
 
 VDF -> FatherSaysThatINeed: \n VD Sincerely , Name .
-
 VD -> VD' VD
 VD -> ''
 VD' -> DT-declare lah. \n
@@ -69,7 +68,6 @@ DT-moreint -> DT-moreint' DT-moreint
 DT-moreint -> ''
 DT-moreint' -> , V DT-int
 DT-moreint' -> ''
-
 DT-declare -> GWA V DT-flt DT-moreflt
 DT-flt -> of Float
 DT-flt -> ''
@@ -77,7 +75,6 @@ DT-moreflt -> DT-moreflt' DT-moreflt
 DT-moreflt -> ''
 DT-moreflt' -> , V DT-flt
 DT-moreflt' -> ''
-
 DT-declare -> LetterGrade V DT-char DT-morechar
 DT-char -> of Char
 DT-char -> ''
@@ -85,7 +82,6 @@ DT-morechar -> DT-morechar' DT-morechar
 DT-morechar -> ''
 DT-morechar' -> , V DT-char
 DT-morechar' -> ''
-
 DT-declare -> Honor V DT-bool DT-morebool
 DT-bool -> of Bool
 DT-bool -> ''
@@ -93,7 +89,6 @@ DT-morebool -> DT-morebool' DT-morebool
 DT-morebool -> ''
 DT-morebool' -> , V DT-bool
 DT-morebool' -> ''
-
 DT-declare -> Essay V DT-str DT-morestr
 DT-str -> of Str
 DT-str -> ''
@@ -101,13 +96,10 @@ DT-morestr -> DT-morestr' DT-morestr
 DT-morestr -> ''
 DT-morestr' -> , V DT-str
 DT-morestr' -> ''
-
 V -> Str
 V -> ''
-
 LoopValue -> Int
 LoopValue -> V
-
 BL -> A
 BL -> B
 BL -> C
@@ -134,7 +126,6 @@ BL -> W
 BL -> X
 BL -> Y
 BL -> Z
-
 SL -> a
 SL -> b
 SL -> c
@@ -161,7 +152,6 @@ SL -> w
 SL -> x
 SL -> y
 SL -> z
-
 CD -> "0"
 CD -> "1" 
 CD -> "2" 
@@ -172,7 +162,6 @@ CD -> "6"
 CD -> "7"
 CD -> "8"
 CD -> "9"
-
 Digit -> 0
 Digit -> 1 
 Digit -> 2 
@@ -183,28 +172,21 @@ Digit -> 6
 Digit -> 7
 Digit -> 8
 Digit -> 9
-
 Int -> Digit Int'
-Int' -> Int Int' | ''
-
+Int' -> Int Int'
+Int' -> ''
 Float ->  Int . Int
-
 Char -> BL
 Char -> SL
 Char -> CD
-
 Str -> Char Str'
 Str' -> Str Str'
 Str' -> ''
-
-
 Bool -> own
 Bool -> disown
-
 Label -> BL BL'
 BL' -> BL BL'
 BL' -> ''
-
 Name -> BL Str
 
 Math -> expr Math
