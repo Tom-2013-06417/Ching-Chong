@@ -1,17 +1,15 @@
 from parseTableConverter import parseTableMaker
 from parseTableConverter import rules
+from hu import tokenizer
 
 def find_index(ch): #this returns the index of the lexeme in the table
-	i = 0
-	lrMinOne = len(lr_table) - 1
-	
-	for i in range(len(lr_table[0])):
-		if (lr_table[lrMinOne][i] == ch):
-			return i
-	
+    i = 0
+    lrMinOne = len(lr_table) - 1
     
-
-
+    for i in range(len(lr_table[0])):
+        if (lr_table[lrMinOne][i] == ch):
+            return i
+    
 
 lr_table=parseTableMaker()
 
@@ -22,19 +20,33 @@ lr_table=parseTableMaker()
 
 grammar_rules = rules()
 
-list_of_tokens = []
-list_of_tokens = raw_input("Input:") + '$'
-the_input = []
-i = 0
 '''
 for i in list_of_tokens: #this removes all the spaces in the input
     if (i != ' '):
         the_input.append(i)
 '''
 
-#the_input=["Hi,Iam", "A", "a", "a", ".", "\\n", "$"]
+the_input = tokenizer("mySecondishProgram.chng")
 
-the_input = ['Hi,Iam', 'A', 'a', 'a', '.', '\\n', 'ISendShrimpFriedRiceToAll:', '\\n', 'Score', 'A', 'A', 'of', '1', '1', '1', '1', '1', ',', 'B', 'of', '1', '0', '1', '0', '1', ',', 'C', 'lah.', '\\n', 'GWA', 'A', 'B', 'of', '0', '.', '1', 'lah.', '\\n', 'Honor', 'A', 'B', 'of', 'Disown', 'lah.', '\\n', 'LetterGrade', 'C', 'C', 'of', 'C', 'lah.', '\\n', 'Essay', 'B', 'C', 'of', '"', 'C', 'C', 'C', 'C', '"', 'lah.', '\\n', 'Sincerely,', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'IShowFather', 'A', 'lah.', '\\n', 'Sincerely,', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'FatherSayMakeRepeat', 'A', 'againlah.', '\\n', 'MustDo', 'A', 'from', 'A', 'to', 'A', 'oclocklah.', '\\n', 'IShowFather', 'A', 'lah.', '\\n', "I'mDoneWith", 'A', 'lah.', '\\n', 'Sincerely,', 'A', 'A', '.', '\\n', '$']
+#the_input = ['HiIam', 'A', 'a', 'a', '.', '\\n', 'ISendShrimpFriedRiceToAll:', '\\n', 'Score', 'A', 'A', 'of', '-', '1', '1', '1', '1', '1', ',', 'B', 'of', '1', '0', '1', '0', '1', ',', 'C', 'lah.', '\\n', 'GWA', 'A', 'B', 'of', '0', '.', '1', 'lah.', '\\n', 'Honor', 'A', 'B', 'of', 'Disown', 'lah.', '\\n', 'LetterGrade', 'C', 'C', 'of', 'C', 'lah.', '\\n', 'Essay', 'B', 'C', 'of', '"', 'C', 'C', 'C', 'C', '"', 'lah.', '\\n', 'Sincerely', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'IShowFather', 'A', 'lah.', '\\n', 'Sincerely', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'FatherSayMakeRepeat', 'A', 'againlah.', '\\n', 'MustDo', 'A', 'from', 'A', 'to', 'A', 'oclocklah.', '\\n', 'IShowFather', 'A', 'lah.', '\\n', "I'mDoneWith", 'A', 'lah.', '\\n', 'Sincerely', 'A', 'A', '.', '\\n', '$']
+
+
+#i wanna make a dictionary such that 
+#the keys => the line number of a code, 
+#the values => actual line of code
+dict_of_line_and_code = {}
+templist = []
+count = 1
+for j in the_input:
+    if j != '\\n':
+        templist.append(j)
+    else:
+        dict_of_line_and_code[count] = templist
+        count += 1
+        templist = []
+        
+#print dict_of_line_and_code
+
 
 stack = [0] #we want the stack to be inititally 0
 stack_var_index = 0
@@ -43,12 +55,13 @@ print ["stack",   "input",   "action"]
 #first, we find the intersection of the last element of stack list
 intersection = '0'
 
-while (True):
+while (1):
     action = [] #this is the 'action' list where the shift/reduce functions are shown
     input_var_index = find_index(the_input[0])
 
     try:
         intersection = lr_table[stack_var_index][input_var_index]
+        #print [stack]
     except TypeError:
         #this is for inputs that are not what we declared in the rules
         print "Syntax Error."
@@ -56,9 +69,9 @@ while (True):
     else:
         if (intersection[0] == 's'): #if the order is a 'shift'
             action = [intersection]
-            print [ stack ]
-            print [ the_input ]
-            print [ action ]
+            #print [ stack ]
+            #print [ the_input ]
+            #print [ action ]
             stack.append ( the_input.pop(0) )
             stack.append ( int(intersection[1:]) )
             stack_var_index = int(intersection[1:])
@@ -66,19 +79,22 @@ while (True):
         elif (intersection[0] == 'r'):#if the order is a 'reduce'
             temp1 = grammar_rules[int(intersection[1:])] #so pag rule 1, temp1 = ['A', '->', 'id', '=', 'E']
             index_arrow = temp1.index('->')
-			
+            
 
             temp2 = temp1[index_arrow + 1:]
 
             if "''" in temp2:
                 temp2 = []
-			
+            """print "ddd"
+            for i in temp2:
+                print i
+            print 'end'"""				
             count = len(temp2) * 2
 
             action = [intersection]
-            print [ stack ]
-            print [ the_input ]
-            print [ action ]            
+            #print [ stack ]
+            #print [ the_input ]
+            #print [ action ]            
             while (count != 0): #the popping process
                 stack.pop()
                 count -= 1
@@ -92,9 +108,11 @@ while (True):
 
         elif (intersection[0] == 'z'): #if the order is 'accept'
             action = ["accept"]
-            print [ stack ]
-            print [ the_input ]
-            print [ action ]            
+            #print [ stack ]
+            #print [ the_input ]
+            #print [ action ]            
+            print "DONE!"
+            print action
             break
         else:
             #it found an 'x', meaning there's an error
@@ -102,3 +120,9 @@ while (True):
             #it means that the intersection is an 'x' in this code
             print "Syntax Error.!"
             break
+        #print "--"
+        #print [ stack ]
+        #print "========================="
+        #print [ the_input ]
+        #print "========================="
+        print [ action ]

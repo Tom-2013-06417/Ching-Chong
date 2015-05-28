@@ -1,22 +1,24 @@
 Start -> Initialize
-Initialize -> Hi,Iam Name . \n GlobalVarDec
-GlobalVarDec -> ISendShrimpFriedRiceToAll: \n Declare ManyDeclare Sincerely, Name . \n ManyFunction
+ManyNewLine -> \n ManyNewLine
+ManyNewLine -> ''
+Initialize -> HiIam Name . ManyNewLine GlobalVarDec
+GlobalVarDec -> ISendShrimpFriedRiceToAll: ManyNewLine Declare ManyDeclare Sincerely Name . ManyNewLine ManyFunction
 GlobalVarDec -> ManyFunction
 ManyFunction -> Function ManyFunction
 ManyFunction -> ''
-Function -> Dear Name , \n ParameterSegment VarDecSegment FunctionStatement Sincerely, Name . \n
-ParameterSegment -> IWantDumplingsAnd: \n Declare ManyDeclare okaylah. \n
+Function -> Dear Name , ManyNewLine ParameterSegment VarDecSegment FunctionStatement Sincerely Name . ManyNewLine
+ParameterSegment -> IWantDumplingsAnd: ManyNewLine Declare ManyDeclare okaylah. ManyNewLine
 ParameterSegment -> ''
-VarDecSegment -> FatherSaysINeed: \n Declare ManyDeclare ToBecomeDoctorlah. \n
+VarDecSegment -> FatherSaysINeed: ManyNewLine Declare ManyDeclare ToBecomeDoctorlah. ManyNewLine
 VarDecSegment -> ''
 ManyDeclare -> Declare ManyDeclare
 ManyDeclare -> ''
 Declare -> IntDeclare
 IntDeclare -> Score Var IntVal IntMore
-IntVal -> of Int
+IntVal -> of PwedeNegInt
 IntVal -> ''
 IntMore -> , Var IntVal IntMore2
-IntMore -> lah. \n
+IntMore -> lah. ManyNewLine
 IntMore2 -> IntMore
 IntMore2 -> ''
 Declare -> FltDeclare
@@ -24,7 +26,7 @@ FltDeclare -> GWA Var FltVal FltMore
 FltVal -> of Float
 FltVal -> ''
 FltMore -> , Var FltVal FltMore2
-FltMore -> lah. \n
+FltMore -> lah. ManyNewLine
 FltMore2 -> FltMore
 FltMore2 -> ''
 Declare -> ChrDeclare
@@ -32,7 +34,7 @@ ChrDeclare -> LetterGrade Var ChrVal ChrMore
 ChrVal -> of Char
 ChrVal -> ''
 ChrMore -> , Var ChrVal ChrMore2
-ChrMore -> lah. \n
+ChrMore -> lah. ManyNewLine
 ChrMore2 -> ChrMore
 ChrMore2 -> ''
 Declare -> StrDeclare
@@ -40,7 +42,7 @@ StrDeclare -> Essay Var StrVal StrMore
 StrVal -> of StrLit
 StrVal -> ''
 StrMore -> , Var StrVal StrMore2
-StrMore -> lah. \n
+StrMore -> lah. ManyNewLine
 StrMore2 -> StrMore
 StrMore2 -> ''
 Declare -> BlnDeclare
@@ -48,49 +50,49 @@ BlnDeclare -> Honor Var BlnVal BlnMore
 BlnVal -> of Boolean
 BlnVal -> ''
 BlnMore -> , Var BlnVal BlnMore2
-BlnMore -> lah. \n
+BlnMore -> lah. ManyNewLine
 BlnMore2 -> BlnMore
 BlnMore2 -> ''
 Declare -> ListDeclare
 ListDeclare -> ReportCard Var ListVal
-ListVal -> with Int entries lah. \n
+ListVal -> with PwedeNegInt entries lah. ManyNewLine
 ListVal -> with Var ListMore
 ListMore -> , Var ListMore2
 ListMore2 -> ListMore
-ListMore2 -> lah. \n
+ListMore2 -> lah. ManyNewLine
 FunctionStatement -> Statement FunctionStatement
 FunctionStatement -> Return FunctionStatement
 FunctionStatement -> ''
-Return -> IGiveYouSum Var lah. \n
+Return -> IGiveYouSum Var lah. ManyNewLine
 Statement -> FunctionCall
 FunctionCall -> IWriteTo Name FxnCallParameter
 FxnCallParameter -> With Var ManyVar FxnCallReturn
 FxnCallParameter -> FxnCallReturn
-FxnCallReturn -> lah. \n IGet Var From Name lah. \n
-FxnCallReturn -> lah. \n
+FxnCallReturn -> lah. ManyNewLine IGet Var From Name lah. ManyNewLine
+FxnCallReturn -> lah. ManyNewLine
 ManyVar -> , Var ManyVar
 ManyVar -> ''
 Statement -> ListAdd
-ListAdd -> TeacherAdds Var to Var lah. \n
+ListAdd -> TeacherAdds Var to Var lah. ManyNewLine
 Statement -> ListPop
-ListPop -> TeacherGets Var from Var lah. \n
+ListPop -> TeacherGets Var from Var lah. ManyNewLine
 Statement -> ListRemoveInstance
-ListRemoveInstance -> FatherGets Var from Var lah. \n
+ListRemoveInstance -> FatherGets Var from Var lah. ManyNewLine
 Statement -> ListLength
-ListLength -> FatherCounts Var ofA+ in Var lah. \n
+ListLength -> FatherCounts Var ofA+ in Var lah. ManyNewLine
 Statement -> For
-For -> FatherSayMakeRepeat Label againlah. \n MustDo Var from Var to Var oclocklah. \n ControlStructureStatement I'mDoneWith Label lah. \n
+For -> FatherSayMakeRepeat Label againlah. ManyNewLine MustDo Var from Var to Var oclocklah. ManyNewLine ControlStructureStatement I'mDoneWith Label lah. ManyNewLine
 Statement -> While
-While -> FatherSayMakeRepeat Label againlah. \n MustRepeat Label while Conditional lah. \n ControlStructureStatement I'mDoneWith Label lah. \n
+While -> FatherSayMakeRepeat Label againlah. ManyNewLine MustRepeat Label while Conditional lah. ManyNewLine ControlStructureStatement I'mDoneWith Label lah. ManyNewLine
 Statement -> If
-If   -> FatherAsk Label , if Conditional lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
-If   -> FatherAsk Label , is Var Boolean lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
-If   -> FatherAsk Label , if Boolean lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
-Elif ->	FatherAskAgain Label , if Conditional lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
-Elif ->	FatherAskAgain Label , is Var lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
-Elif ->	FatherAskAgain Label , if Boolean lah. \n ControlStructureStatement Idoubleconfirm Label , lah. \n Elif
+If   -> FatherAsk Label , if Conditional lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+If   -> FatherAsk Label , is Var Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+If   -> FatherAsk Label , if Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+Elif ->	FatherAskAgain Label , if Conditional lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+Elif ->	FatherAskAgain Label , is Var lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+Elif ->	FatherAskAgain Label , if Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
 Elif -> Else
-Else -> FatherStopAsking Label lah. \n ControlStructureStatement FatherAshamedofSonForNotAnswer Label , lah. \n
+Else -> FatherStopAsking Label lah. ManyNewLine ControlStructureStatement FatherAshamedofSonForNotAnswer Label , lah. ManyNewLine
 Else -> ''
 Conditional -> Expr moreLesserTo Expr
 Conditional -> Expr lesserTo Expr
@@ -102,21 +104,21 @@ ControlStructureStatement -> Statement ControlStructureStatement
 ControlStructureStatement -> Break ControlStructureStatement
 ControlStructureStatement -> Continue ControlStructureStatement
 ControlStructureStatement -> ''
-Break -> I'mTiredlah. \n
-Continue -> FatherBroughtOutBeltlah. \n
+Break -> I'mTiredlah. ManyNewLine
+Continue -> FatherBroughtOutBeltlah. ManyNewLine
 Statement -> Print
-Print -> IShowFather Var lah. \n
-Print -> IShowFather StrLit lah. \n
+Print -> IShowFather Var lah. ManyNewLine
+Print -> IShowFather StrLit lah. ManyNewLine
 Statement -> InputPrompt
 InputPrompt -> FatherWants Var , Input
 InputPrompt -> FatherWants StrLit , Input
 InputPrompt -> Input
-Input -> IGiveFather Var lah. \n
+Input -> IGiveFather Var lah. ManyNewLine
 Statement -> Arith
-Arith -> FatherSurpriseQuiz: Math lah. \n
-Arith -> FatherSurpriseLongQ: \n Math lah. LQ
-LQ -> Math lah. \n LQ
-LQ -> Ididnotknowlah. \n
+Arith -> FatherSurpriseQuiz: Math lah. ManyNewLine
+Arith -> FatherSurpriseLongQ: ManyNewLine Math lah. LQ
+LQ -> Math lah. ManyNewLine LQ
+LQ -> Ididnotknowlah. ManyNewLine
 Math -> Var = Expr
 Expr -> Expr + Term
 Expr -> Expr - Term
@@ -129,10 +131,12 @@ Ex -> Ex ** Factor
 Ex -> Factor
 Factor -> ( Expr )
 Factor -> Var
-Factor -> Int
+Factor -> PwedeNegInt
 Boolean -> Own
 Boolean -> Disown
-Float -> Int . Int
+Float -> PwedeNegInt . Int
+PwedeNegInt -> - Int
+PwedeNegInt -> Int
 Int -> Digit Int'
 Int' -> Int
 Int' -> ''
@@ -225,3 +229,10 @@ CD -> "6"
 CD -> "7"
 CD -> "8"
 CD -> "9"
+ASCII -> _
+ASCII -> '
+ASCII -> @
+ASCII -> !
+ASCII -> ?
+ASCII -> #
+ASCII -> &
