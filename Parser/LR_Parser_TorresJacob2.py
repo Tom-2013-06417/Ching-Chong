@@ -22,7 +22,6 @@ lr_table=parseTableMaker()
 
 grammar_rules = rules()
 
-
 list_of_tokens = []
 list_of_tokens = raw_input("Input:") + '$'
 the_input = []
@@ -33,7 +32,9 @@ for i in list_of_tokens: #this removes all the spaces in the input
         the_input.append(i)
 '''
 
-the_input=["Hi,Iam", "A", "a", "a", ".", "\n", "$"]
+#the_input=["Hi,Iam", "A", "a", "a", ".", "\\n", "$"]
+
+the_input = ['Hi,Iam', 'A', 'a', 'a', '.', '\\n', 'ISendShrimpFriedRiceToAll:', '\\n', 'Score', 'A', 'A', 'of', '1', '1', '1', '1', '1', ',', 'B', 'of', '1', '0', '1', '0', '1', ',', 'C', 'lah.', '\\n', 'GWA', 'A', 'B', 'of', '0', '.', '1', 'lah.', '\\n', 'Honor', 'A', 'B', 'of', 'Disown', 'lah.', '\\n', 'LetterGrade', 'C', 'C', 'of', 'C', 'lah.', '\\n', 'Essay', 'B', 'C', 'of', '"', 'C', 'C', 'C', 'C', '"', 'lah.', '\\n', 'Sincerely,', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'IShowFather', 'A', 'lah.', '\\n', 'Sincerely,', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'FatherSayMakeRepeat', 'A', 'againlah.', '\\n', 'MustDo', 'A', 'from', 'A', 'to', 'A', 'oclocklah.', '\\n', 'IShowFather', 'A', 'lah.', '\\n', "I'mDoneWith", 'A', 'lah.', '\\n', 'Sincerely,', 'A', 'A', '.', '\\n', '$']
 
 stack = [0] #we want the stack to be inititally 0
 stack_var_index = 0
@@ -47,11 +48,7 @@ while (True):
     input_var_index = find_index(the_input[0])
 
     try:
-        print "--"
-        print input_var_index
-        print stack_var_index
         intersection = lr_table[stack_var_index][input_var_index]
-        print intersection
     except TypeError:
         #this is for inputs that are not what we declared in the rules
         print "Syntax Error."
@@ -59,8 +56,9 @@ while (True):
     else:
         if (intersection[0] == 's'): #if the order is a 'shift'
             action = [intersection]
-            print [ stack, the_input, action ]
-
+            print [ stack ]
+            print [ the_input ]
+            print [ action ]
             stack.append ( the_input.pop(0) )
             stack.append ( int(intersection[1:]) )
             stack_var_index = int(intersection[1:])
@@ -68,12 +66,19 @@ while (True):
         elif (intersection[0] == 'r'):#if the order is a 'reduce'
             temp1 = grammar_rules[int(intersection[1:])] #so pag rule 1, temp1 = ['A', '->', 'id', '=', 'E']
             index_arrow = temp1.index('->')
+			
 
             temp2 = temp1[index_arrow + 1:]
+
+            if "''" in temp2:
+                temp2 = []
+			
             count = len(temp2) * 2
-            
+
             action = [intersection]
-            print [ stack, the_input, action ]
+            print [ stack ]
+            print [ the_input ]
+            print [ action ]            
             while (count != 0): #the popping process
                 stack.pop()
                 count -= 1
@@ -82,11 +87,14 @@ while (True):
             
             stack.append(the_letter)
             stack.append( lr_table[last_num][ find_index(the_letter) ] )
+
             stack_var_index = lr_table[last_num][ find_index(the_letter) ]
 
         elif (intersection[0] == 'z'): #if the order is 'accept'
             action = ["accept"]
-            print [ stack, the_input, action ]
+            print [ stack ]
+            print [ the_input ]
+            print [ action ]            
             break
         else:
             #it found an 'x', meaning there's an error
@@ -94,12 +102,3 @@ while (True):
             #it means that the intersection is an 'x' in this code
             print "Syntax Error.!"
             break
-
-
-        
-        
-        
-    
-
-
-
