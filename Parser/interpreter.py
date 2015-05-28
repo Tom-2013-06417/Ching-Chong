@@ -75,7 +75,7 @@ def getEnder(file, num, label=0):
 
 def interpreter(mainlist, n, indents=0):
 	list = mainlist[n]
-	file = open("mySecondishProgram.chng","r")
+	file = open("dummycode.chng","r")
 	writervar = '\t'*indents
 
 	for num, line in enumerate(file, 1):					#line is literally just what the string in the line is, num is what line number
@@ -126,29 +126,54 @@ def interpreter(mainlist, n, indents=0):
 					if splitDistinguish[0] == "GWA":
 						
 						variableDict["Float"].append(splitDistinguish[1])
-						writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
-						print writeString
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
 						for i in range(1,len(nameAndValue)):
 							variableDict["Float"].append(nameAndValue[i].split(" of ")[0])
 							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "Score":
 						variableDict["Int"].append(splitDistinguish[1])
-						writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
-						print writeString
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
+						
 						for i in range(1,len(nameAndValue)):
+							
 							variableDict["Int"].append(nameAndValue[i].split(" of ")[0])
+							
 							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "Honor":
 						
 						variableDict["Bool"].append(splitDistinguish[1])
-						if "Own" == str(splitDistinguish[3]):
+						try:
+							
+							if "Own" == str(splitDistinguish[3]):
 								bool = "True"
-						else:
-							bool = "False"
-						writeString = splitDistinguish[1] + " = " + bool
-						print writeString
+							if "Disown" == str(splitDistinguish[3]):
+								bool = "False"
+							writeString = splitDistinguish[1] + " = " + bool
+							print writeString 
+							
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
+						
 						for i in range(1,len(nameAndValue)):
 							variableDict["Bool"].append(nameAndValue[i].split(" of ")[0])
 							if "Own" == str(nameAndValue[i].split(" of ")[1]):
@@ -158,19 +183,36 @@ def interpreter(mainlist, n, indents=0):
 							writeString = str(nameAndValue[i].split(" of ")[0]) + " = " + bool
 							print writeString
 					if splitDistinguish[0] == "LetterGrade":
-						writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
-						print writeString
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
 						variableDict["Char"].append(splitDistinguish[1])
+						
 						for i in range(1,len(nameAndValue)):
 							variableDict["Char"].append(nameAndValue[i].split(" of ")[0])
 							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "Essay":
-						writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
-						print writeString
+
 						variableDict["String"].append(splitDistinguish[1])
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
 						for i in range(1,len(nameAndValue)):
 							variableDict["String"].append(nameAndValue[i].split(" of ")[0])
+							
 							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "ReportCard":
@@ -239,6 +281,6 @@ def interpreter(mainlist, n, indents=0):
 
 #list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
 #list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
-list = [["VarDecSegment",26]]
+list = [["VarDecSegment",62]]
 interpreter(list, 0)
 
