@@ -506,6 +506,7 @@ class Main(QtGui.QMainWindow):
 
 			self.initToolbar()
 			self.initMenubar()
+			self.readPreferences()
 
 	def writeRecentlyOpenedFiles(self):
 		self.writeRecentFiles = open('saved', 'w')
@@ -523,6 +524,51 @@ class Main(QtGui.QMainWindow):
 			self.toWriteCurrentTab.close()
 		except:
 			pass
+
+	def writePreferences(self):
+		temp = open('preferences', 'w')
+		
+		temp.write(str(self.showStatusBarAction.isChecked())+'\n')
+		temp.write(str(self.wordWrapAction.isChecked())+'\n')
+		temp.write(str(self.showHighlightlineAction.isChecked())+'\n')
+
+		temp.close()
+
+	def readPreferences(self):
+		try:
+			temp = open('preferences', 'r+')
+			
+			if temp.readline().rstrip() == "True":				#Status bar
+				self.statusbar.show()
+				self.showStatusBarAction.setChecked(True)
+			else:	
+				self.statusbar.hide()
+				self.showStatusBarAction.setChecked(False)
+
+			if temp.readline().rstrip() == "True":
+				for tab in self.listOfOpenTabs:
+					tab.edit.setWordWrapMode(3)
+				self.wordWrapAction.setChecked(True)
+			else:
+				for tab in self.listOfOpenTabs:
+					tab.edit.setWordWrapMode(0)
+				self.wordWrapAction.setChecked(False)
+
+			if temp.readline().rstrip() == "False":
+				for tab in self.listOfOpenTabs:
+					tab.edit.cursorPositionChanged.connect(tab.edit.removeHightlightline)				
+					tab.edit.removeHightlightline()
+				self.showHighlightlineAction.setChecked(False)
+			else:
+				for tab in self.listOfOpenTabs:	
+					tab.edit.cursorPositionChanged.connect(tab.edit.highlightline)				
+					tab.edit.highlightline()
+				self.showHighlightlineAction.setChecked(True)
+
+			temp.close()
+
+		except Exception, e:
+			print e
 
 	def initEditor(self, files):
 
@@ -623,7 +669,7 @@ class Main(QtGui.QMainWindow):
 		self.showHighlightlineAction = QtGui.QAction("Highlight Current Line", self, checkable = True)
 		self.showHighlightlineAction.setStatusTip("Show or hide the highlight line")
 		self.showHighlightlineAction.triggered.connect(self.toggleHighlightLine)
-		self.showHighlightlineAction.setChecked(True)		
+		self.showHighlightlineAction.setChecked(True)
 
 		self.incFontSizeAction = QtGui.QAction("Increment Font Size", self)
 		self.incFontSizeAction.setShortcut("Ctrl+=")
@@ -683,7 +729,7 @@ class Main(QtGui.QMainWindow):
 		# view.addAction(self.setFontSize)
 
 	def something(self):
-		subprocess.Popen("start|cmd", shell=True)
+		subprocess.Popen("start", shell=True)
 
 	def new(self):
 		a = LNTextEdit()			
@@ -958,6 +1004,7 @@ class Main(QtGui.QMainWindow):
 					break
 
 		if checker == True:
+			self.writePreferences()
 			self.writeCurrentTab()
 			self.writeRecentlyOpenedFiles()
 			self.recentFiles.close()
