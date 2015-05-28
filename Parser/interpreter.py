@@ -1,13 +1,20 @@
 
 def nextline(file, num):
 	num = num + 1
+	string = ""
 	for num, line in enumerate(file, num):
 		line = line.strip()
 		if line == "I did not know lah.":
-			return
+			return string
+		if line =="to become doctor lah.":
+			return string
+		if "Sincerely, " in line:
+			return string
 		line = line.split(" lah")[0]
-		print line
 		
+		string = string + line + "\n"
+		
+	
 
 
 def interpreter(list):
@@ -33,23 +40,72 @@ def interpreter(list):
 				variable = inputList2[1].split(" lah")[0]
 				writeString = str(variable) + "= input(" + prompt + ")"
 				print writeString
+			if list[0] == "VarDecSegment":
+				variablesDeclared = nextline(file, num)
+				listedVars = variablesDeclared.split("\n")
+				variableDict = {"Int":[],"Float":[],"Bool":[],"Char":[],"String":[],"List":[]}
+				for i in listedVars:
+				
+					splitLine = i.split("\n")
+					
+					nameAndValue = splitLine[0].split(", ")
+					splitDistinguish = nameAndValue[0].split(" ")
+					print splitDistinguish [0]
+					if splitDistinguish[0] == "GWA":
+						
+						variableDict["Float"].append(splitDistinguish[1])
+						for i in range(1,len(nameAndValue)):
+							variableDict["Float"].append(nameAndValue[i].split(" of ")[0])
+					
+					if splitDistinguish[0] == "Score":
+						variableDict["Int"].append(splitDistinguish[1])
+						for i in range(1,len(nameAndValue)):
+							variableDict["Int"].append(nameAndValue[i].split(" of ")[0])
+						
+					
+					if splitDistinguish[0] == "Honor":
+						variableDict["Bool"].append(splitDistinguish[1])
+						for i in range(1,len(nameAndValue)):
+							variableDict["Bool"].append(nameAndValue[i].split(" of ")[0])
+					if splitDistinguish[0] == "LetterGrade":
+						variableDict["Char"].append(splitDistinguish[1])
+						for i in range(1,len(nameAndValue)):
+							variableDict["Char"].append(nameAndValue[i].split(" of ")[0])
+						
+					if splitDistinguish[0] == "Essay":
+						variableDict["String"].append(splitDistinguish[1])
+						for i in range(1,len(nameAndValue)):
+							variableDict["String"].append(nameAndValue[i].split(" of ")[0])
+						
+					if splitDistinguish[0] == "ReportCard":
+						variableDict["List"].append(splitDistinguish[1])
+						for i in range(1,len(nameAndValue)):
+							
+							variableDict["List"].append(nameAndValue[i].split(" of ")[0])
+					
+
+				print variableDict
 			if list[0] == "Arithmetic":
 				inputList = line.split("Father surprise quiz: ")
 				inputList2 = inputList[1].split(" lah")
 				arith = inputList2[0]
-				print arith
+				writeString = arith
+				print writeString
 			if list[0] == "ArithmeticBlock":
-				nextline(file, num)
+				writeString = nextline(file, num)
+				print writeString
 			if list[0] == "Break":
 				breaker = "break"
-				print breaker
+				writeString = breaker
+				print writeString
 			if list[0] == "Continue":
 				continuer = "continue"
-				print continuer
+				writeString = continuer
+				print writeString
 			if list[0] == "For":
 				pass
 
 			break
 
-list = ["ArithmeticBlock", 141]
+list = ["VarDecSegment", 5]
 interpreter(list)
