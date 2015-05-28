@@ -1,6 +1,6 @@
 ''' Forgive the messy code'''
 ''' Proper pt.txt looks something like this
-	State	ACTION	GOTO
+        State	ACTION	GOTO
 	+	*	(	)	a	$	A	E	T	F	id
 0	 	 	s4	 	s6	 	 	1	2	3	5
 1	s7	 	 	 	 	z	 	 	 	 	 
