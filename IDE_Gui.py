@@ -52,13 +52,14 @@ STYLES = {
 
 
 
-class PythonHighlighter (QtGui.QSyntaxHighlighter):
+class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 	"""Syntax highlighter for the Python language.
 	"""
 	# Python keywords
 	keywords = [
-		'and', 'again', 'ask', 'Diary', 'no more', 'from', 'From', 'if', 'in', 'is', 'of', 'oclock',
-		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'okay', 'LetterGrade'
+		'and', 'again', 'ask', 'Diary', 'from', 'From', 'if', 'in', 'is', 'of', 'oclock',
+		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'okay', 'LetterGrade',
+		'Father'
 	]
 
 	boolean = ['Own', 'Disown']
@@ -88,10 +89,10 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 		rules = []
 
 		# Keyword, operator, and brace rules
-		rules += [(r'%s' % o, 0, STYLES['operator']) for o in PythonHighlighter.operators]
-		rules += [(r'\b%s\b' % w, 0, STYLES['keyword']) for w in PythonHighlighter.keywords]
-		rules += [(r'%s' % b, 0, STYLES['brace']) for b in PythonHighlighter.braces]
-		rules += [(r'\b%s\b' % w, 0, STYLES['boolean']) for w in PythonHighlighter.boolean]
+		rules += [(r'%s' % o, 0, STYLES['operator']) for o in ChingChongHighlighter.operators]
+		rules += [(r'\b%s\b' % w, 0, STYLES['keyword']) for w in ChingChongHighlighter.keywords]
+		rules += [(r'%s' % b, 0, STYLES['brace']) for b in ChingChongHighlighter.braces]
+		rules += [(r'\b%s\b' % w, 0, STYLES['boolean']) for w in ChingChongHighlighter.boolean]
 
 		# All other rules
 		rules += [
@@ -142,6 +143,9 @@ class PythonHighlighter (QtGui.QSyntaxHighlighter):
 
 			(r'Father ask again', 0, STYLES['keyword']),
 			(r'\bFather ask again\b\s*([A-Z]+)', 1, STYLES['senderclass']),
+
+			(r'Father stop asking', 0, STYLES['keyword']),
+			(r'\bFather stop asking\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 
 			(r'I double confirm', 0, STYLES['keyword']),
 			(r'\bI double confirm\b\s*([A-Z]+)', 1, STYLES['senderclass']),
@@ -289,7 +293,7 @@ class Editor(QtGui.QPlainTextEdit):
 
 		self.setFrameShape(QtGui.QFrame.NoFrame)
 
-		self.highlight = PythonHighlighter(self.document())
+		self.highlight = ChingChongHighlighter(self.document())
 
 		self.cursorPositionChanged.connect(self.highlightline)
 
@@ -873,8 +877,14 @@ class Main(QtGui.QMainWindow):
 		if self.tab.currentWidget().edit.changesSaved == False:
 			popup = QtGui.QMessageBox(self)
 			popup.setIcon(QtGui.QMessageBox.Warning)
-			popup.setText("%s has been modified" % (os.path.basename(self.tab.currentWidget().getFileName())))
-			popup.setInformativeText("Do you want to save your changes?")
+			popup.setWindowTitle("Ching Chong Warning")
+
+			if self.tab.currentWidget().getFileName() != '':
+				popup.setText("%s isn't saved lah." % (os.path.basename(self.tab.currentWidget().getFileName())))
+			else:
+				popup.setText("Untitled.chng isn't saved lah.")
+
+			popup.setInformativeText("Do you want save?")
 			popup.setStandardButtons(QtGui.QMessageBox.Save|QtGui.QMessageBox.Cancel|QtGui.QMessageBox.Discard)
 			popup.setDefaultButton(QtGui.QMessageBox.Save)
 			answer = popup.exec_()
@@ -902,8 +912,14 @@ class Main(QtGui.QMainWindow):
 			if tab.edit.changesSaved == False:
 				popup = QtGui.QMessageBox(self)
 				popup.setIcon(QtGui.QMessageBox.Warning)
-				popup.setText("%s has been modified" % (os.path.basename(tab.getFileName())))
-				popup.setInformativeText("Do you want to save your changes?")
+				popup.setWindowTitle("Ching Chong Warning")
+
+				if tab.getFileName() != '':
+					popup.setText("%s isn't saved lah." % (os.path.basename(tab.getFileName())))
+				else:
+					popup.setText("Untitled.chng isn't saved lah.")
+				
+				popup.setInformativeText("Do you want save?")
 				popup.setStandardButtons(QtGui.QMessageBox.Save|QtGui.QMessageBox.Cancel|QtGui.QMessageBox.Discard)
 				popup.setDefaultButton(QtGui.QMessageBox.Save)
 				answer = popup.exec_()
