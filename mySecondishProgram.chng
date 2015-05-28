@@ -1,6 +1,7 @@
 Hi, I am Jim.
 
 I send shrimp fried rice to all:
+
 Score ThisIsGlobal lah.
 Score X of 100, Y, Z, A, B, C, Sumthin of 666 lah.
 GWA SecondYear of 3.0 lah.
@@ -12,7 +13,6 @@ ReportCard SecondSem with Math, Science, Physics lah.
 Honor Zuko of Disown, Zumo of Own lah.
 
 Sincerely, Jim.
-
 
 
 Dear FunctionCall,
@@ -28,6 +28,7 @@ Score ThisIsTheReturnVariable lah.
 to become doctor lah.
 
 I give you sum ThisIsTheReturnVariable lah.
+
 Sincerely, Jim.
 
 
@@ -35,33 +36,37 @@ Sincerely, Jim.
 Dear ListModification,
 
 Father says that I need:
+
 Score LocalToGlobal lah.
 Score ListVariable lah.
 Score PopVariable lah.
 Score PopFirstInstanceOfThisVariable lah.
 Score ListLength lah.
 ReportCard LocalList with 4 entries lah.
+
 to become doctor lah.
 
 Teacher adds ListVariable to LocalList lah.
 Teacher gets PopVariable from LocalList lah.
 Father gets PopFirstInstanceOfThisVariable from LocalList lah.
-Father counts ListLength of A+ in ReportCard lah.
+Father counts ListLength of A+ in SampleReportCard lah.
 Teacher adds LocalToGlobal to FirstSem lah.
 
-Sincereley, Jim.
+Sincerely, Jim.
 
 
 
 Dear FunctionTwo,
 
 Father says that I need:
+
 Score ThisIsWhereIStoreTheReturnVariable lah.
 Essay ThisIsAlsoSomethingToPrint lah.
 Essay ThisIsAlsoAPrompt of "Prompt" lah.
 Score ThisIsSomethingToStore lah.
 Score ThisIsSomethingToStoreToo lah.
 Score ThisIsSomethingToStore3 lah.
+
 to become doctor lah.
 
 I write to FunctionCall with ThisIsGlobal, SecondYear lah.
@@ -161,8 +166,8 @@ Sincerely, Jim.
 
 
 
-Dear Diary, 
-
+Dear Diary, 																	-.- I don't know what to do next
+																				-.- Oh no what is 3 + Father says
 Father say make repeat BREAKCONTINUE again lah.
 Must do Z from A to C oclock lah.
 	I show Father "This loop breaks and continues" lah.
@@ -174,7 +179,7 @@ Must do Z from A to C oclock lah.
 	
 	Father ask again BUSY, if Z same to ((A+C)/2) lah.
 		I show Father "This is gonna break" lah.
-		I'm tired lah.
+		I am tired lah.
 	Father ashamed of son for not answer BUSY lah.
 I'm done with BREAKCONTINUE lah.
 

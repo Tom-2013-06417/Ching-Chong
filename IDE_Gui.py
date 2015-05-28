@@ -1,4 +1,6 @@
 import sys, os
+import subprocess
+
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, QRegExp
 from PyQt4.Qt import QWidget
@@ -7,8 +9,6 @@ from PyQt4.Qt import QVariant
 from PyQt4.Qt import QPainter
 from PyQt4.Qt import QHBoxLayout
 from PyQt4.Qt import QRect
-
-import subprocess
 
 from ext import *
 
@@ -34,10 +34,10 @@ def format(color, style=''):
 STYLES = {
 	'keyword': format('#2B43BA'),
 	'operator': format('#F51462'),
-	'brace': format('darkGray'),
+	'brace': format('#14A6F5'),
 	'defclass': format('black', 'bold'),
 	'mainclass': format('#2B43BA', 'bold'),
-	'string': format('#A8CD3A'),
+	'string': format('#87AF10'),
 	'string2': format('#777777'),			 #Comments
 	'comment': format('#777777', 'italic'),
 	'self': format('black', 'italic'),
@@ -58,8 +58,8 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 	# Python keywords
 	keywords = [
 		'and', 'again', 'ask', 'Diary', 'from', 'From', 'if', 'in', 'is', 'of', 'oclock',
-		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'okay', 'LetterGrade',
-		'Father'
+		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'ReportCard', 'okay', 'LetterGrade', 'Teacher', 'adds', 'to', 'gets',
+		'Father', 'counts'
 	]
 
 	boolean = ['Own', 'Disown']
@@ -89,8 +89,8 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 		rules = []
 
 		# Keyword, operator, and brace rules
-		rules += [(r'%s' % o, 0, STYLES['operator']) for o in ChingChongHighlighter.operators]
 		rules += [(r'\b%s\b' % w, 0, STYLES['keyword']) for w in ChingChongHighlighter.keywords]
+		rules += [(r'%s' % o, 0, STYLES['operator']) for o in ChingChongHighlighter.operators]		
 		rules += [(r'%s' % b, 0, STYLES['brace']) for b in ChingChongHighlighter.braces]
 		rules += [(r'\b%s\b' % w, 0, STYLES['boolean']) for w in ChingChongHighlighter.boolean]
 
@@ -113,9 +113,15 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 			(r'Diary', 0, STYLES['mainclass']),
 
 			# From '#' until a newline			
-			(r'lah.', 0, STYLES['terminator']),			
+			(r'lah.', 0, STYLES['terminator']),	
+			(r'desu.', 0, STYLES['terminator']),
+
+			(r'DABEST SI MAM RAE!', 0, STYLES['senderclass']),				
+			
 			(r'I show Father', 0, STYLES['keyword']),
 			(r'I give Father', 0, STYLES['keyword']),
+
+			(r'of A\+ in', 0, STYLES['keyword']),
 
 			(r'Father wants', 0, STYLES['keyword']),
 
@@ -134,6 +140,9 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 			
 			(r'Must do', 0, STYLES['keyword']),
 			(r'\bMust do\b\s*([A-Z]+)\s*\bwhile\b', 1, STYLES['senderclass']),
+
+			(r'Must repeat', 0, STYLES['keyword']),
+			(r'\bMust repeat\b\s*([A-Z]+)\s*\bwhile\b', 1, STYLES['senderclass']),
 			
 			(r'I\'m done with', 0, STYLES['keyword']),
 			(r'\bI\'m done with\b\s*([A-Z]+)', 1, STYLES['senderclass']),
@@ -156,7 +165,9 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 			(r'I send shrimp fried rice to all:', 0, STYLES['keyword']),
 			(r'I no pass', 0, STYLES['keyword']),
 			(r'I give you sum', 0, STYLES['keyword']),
-			(r'I am tired', 0, STYLES['keyword']),
+			
+			(r'I am tired', 0, STYLES['keyword']),					 	# Break
+			(r'Father brought out belt', 0, STYLES['keyword']),			# Continue
 			
 
 			# Numeric literals
@@ -598,7 +609,7 @@ class Main(QtGui.QMainWindow):
 		self.buildAction = QtGui.QAction(QtGui.QIcon("icons/build.png"),"Build", self)
 		self.buildAction.setStatusTip("Compile then run the program")
 		self.buildAction.setShortcut("Ctrl+B")
-		self.buildAction.triggered.connect(self.build)
+		self.buildAction.triggered.connect(self.something)
 
 		self.wordWrapAction = QtGui.QAction("Word Wrap", self, checkable = True)
 		self.wordWrapAction.setStatusTip("Set a word wrap")
@@ -672,7 +683,7 @@ class Main(QtGui.QMainWindow):
 		# view.addAction(self.setFontSize)
 
 	def something(self):
-		subprocess.Popen("start chrome.exe", shell=True)
+		subprocess.Popen("start|cmd", shell=True)
 
 	def new(self):
 		a = LNTextEdit()			
