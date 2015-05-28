@@ -1,14 +1,60 @@
 
+def conditional(cond):
+	if cond == "Own":
+		return True
+	elif cond == "Disown":
+		return False
+	else:
+		if "more greaterer to" in cond:
+			split = "more greaterer to"
+			val = ">"
+
+
+		elif "greaterer to" in cond:
+			split = "greaterer to"
+			val = ">="
+
+		elif "more lesser to" in cond:
+			split = "more lesser to"
+			val = "<"
+		
+		elif "lesser to" in cond:
+			split = "lesser to"
+			val = "<="
+
+		elif "not same to" in cond:
+			split = "not same to"
+			val = "!="
+
+		elif "same to" in cond:
+			split = "same to"
+			val = "=="
+
+		else: 
+			print "SYNTAX ERROR"
+			return
+
+		cond = cond.split(split)
+		return cond[0] + val + cond[1]
+
+
+
+#print conditional("C more greaterer to X")
+
+
 def nextline(file, num, indents=0):
 	num = num + 1
 	string = ""
 	for num, line in enumerate(file, num):
 		line = line.strip()
 		if line == "I did not know lah.":
+			string = string[:-1]
 			return string
 		elif line =="to become doctor lah.":
+			string = string[:-1]
 			return string
 		elif "Sincerely, " in line:
+			string = string[:-1]
 			return string
 		else:
 			line = '\t'*indents + line.split(" lah")[0]
@@ -23,12 +69,13 @@ def getEnder(file, num, label=0):
 		line = line.strip()
 		if line == loopend:
 			return num
+	print "SYNTAX ERROR"
 
 
 
 def interpreter(mainlist, n, indents=0):
 	list = mainlist[n]
-	file = open("mySecondishProgram.chng","r")
+	file = open("dummycode.chng","r")
 	writervar = '\t'*indents
 
 	for num, line in enumerate(file, 1):					#line is literally just what the string in the line is, num is what line number
@@ -125,18 +172,47 @@ def interpreter(mainlist, n, indents=0):
 
 				writervar = writervar + "for " + condvar + " in range(" + condrng1 + "," + condrng2 + "):"
 				print writervar
-
 				limit = getEnder(file, num, label)
-				n = n + 1
 				try:
 					while mainlist[n][1] < limit:
-						indents += 1
-						interpreter(mainlist, n, indents) 
 						n = n + 1
+						if mainlist[n][1] > limit:
+							indents = indents - 1
+						n = interpreter(mainlist, n, indents+1)
 				except IndexError:
 					pass
-			break
+				return n
+			if list[0] == "While":
+				whileList = line.split("Father say make repeat ")
+				whileList2 = whileList[1].split(" again lah.")
+				label = whileList2[0]
+				num = num + 1
+				for num, newline in enumerate(file, num):
+					condline = newline
+					break
 
-list = [["ArithmeticBlock", 141]]
-#list = [["For", 92], ["Print", 94]] 
+				label2 = condline.split(" while ")[0].split("Must repeat ")[1]
+				if label != label2:
+					print "SYNTAX ERROR"
+				cond = condline.split(" while ")[1].split(" lah.")[0]
+				conditional2 = conditional(cond)
+
+				writervar = writervar + "while " + conditional2
+				print writervar
+				limit = getEnder(file, num, label)
+				try:
+					while mainlist[n][1] < limit:
+						n = n + 1
+						if mainlist[n][1] > limit:
+							indents = indents - 1
+						n = interpreter(mainlist, n, indents+1)
+				except IndexError:
+					pass
+			return n
+
+
+
+list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
+list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
 interpreter(list, 0)
+
