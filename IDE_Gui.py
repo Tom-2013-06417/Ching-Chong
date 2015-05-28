@@ -1,4 +1,6 @@
 import sys, os
+import subprocess
+
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import Qt, QRegExp
 from PyQt4.Qt import QWidget
@@ -7,8 +9,6 @@ from PyQt4.Qt import QVariant
 from PyQt4.Qt import QPainter
 from PyQt4.Qt import QHBoxLayout
 from PyQt4.Qt import QRect
-
-import subprocess
 
 from ext import *
 
@@ -34,10 +34,10 @@ def format(color, style=''):
 STYLES = {
 	'keyword': format('#2B43BA'),
 	'operator': format('#F51462'),
-	'brace': format('darkGray'),
+	'brace': format('#14A6F5'),
 	'defclass': format('black', 'bold'),
 	'mainclass': format('#2B43BA', 'bold'),
-	'string': format('#A8CD3A'),
+	'string': format('#87AF10'),
 	'string2': format('#777777'),			 #Comments
 	'comment': format('#777777', 'italic'),
 	'self': format('black', 'italic'),
@@ -58,8 +58,8 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 	# Python keywords
 	keywords = [
 		'and', 'again', 'ask', 'Diary', 'from', 'From', 'if', 'in', 'is', 'of', 'oclock',
-		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'okay', 'LetterGrade',
-		'Father'
+		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'ReportCard', 'okay', 'LetterGrade', 'Teacher', 'adds', 'to', 'gets',
+		'Father', 'counts'
 	]
 
 	boolean = ['Own', 'Disown']
@@ -89,8 +89,8 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 		rules = []
 
 		# Keyword, operator, and brace rules
-		rules += [(r'%s' % o, 0, STYLES['operator']) for o in ChingChongHighlighter.operators]
 		rules += [(r'\b%s\b' % w, 0, STYLES['keyword']) for w in ChingChongHighlighter.keywords]
+		rules += [(r'%s' % o, 0, STYLES['operator']) for o in ChingChongHighlighter.operators]		
 		rules += [(r'%s' % b, 0, STYLES['brace']) for b in ChingChongHighlighter.braces]
 		rules += [(r'\b%s\b' % w, 0, STYLES['boolean']) for w in ChingChongHighlighter.boolean]
 
@@ -113,9 +113,15 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 			(r'Diary', 0, STYLES['mainclass']),
 
 			# From '#' until a newline			
-			(r'lah.', 0, STYLES['terminator']),			
+			(r'lah.', 0, STYLES['terminator']),	
+			(r'desu.', 0, STYLES['terminator']),
+
+			(r'DABEST SI MAM RAE!', 0, STYLES['senderclass']),				
+			
 			(r'I show Father', 0, STYLES['keyword']),
 			(r'I give Father', 0, STYLES['keyword']),
+
+			(r'of A\+ in', 0, STYLES['keyword']),
 
 			(r'Father wants', 0, STYLES['keyword']),
 
@@ -134,6 +140,9 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 			
 			(r'Must do', 0, STYLES['keyword']),
 			(r'\bMust do\b\s*([A-Z]+)\s*\bwhile\b', 1, STYLES['senderclass']),
+
+			(r'Must repeat', 0, STYLES['keyword']),
+			(r'\bMust repeat\b\s*([A-Z]+)\s*\bwhile\b', 1, STYLES['senderclass']),
 			
 			(r'I\'m done with', 0, STYLES['keyword']),
 			(r'\bI\'m done with\b\s*([A-Z]+)', 1, STYLES['senderclass']),
@@ -156,7 +165,9 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 			(r'I send shrimp fried rice to all:', 0, STYLES['keyword']),
 			(r'I no pass', 0, STYLES['keyword']),
 			(r'I give you sum', 0, STYLES['keyword']),
-			(r'I am tired', 0, STYLES['keyword']),
+			
+			(r'I am tired', 0, STYLES['keyword']),					 	# Break
+			(r'Father brought out belt', 0, STYLES['keyword']),			# Continue
 			
 
 			# Numeric literals
@@ -495,6 +506,7 @@ class Main(QtGui.QMainWindow):
 
 			self.initToolbar()
 			self.initMenubar()
+			self.readPreferences()
 
 	def writeRecentlyOpenedFiles(self):
 		self.writeRecentFiles = open('saved', 'w')
@@ -512,6 +524,51 @@ class Main(QtGui.QMainWindow):
 			self.toWriteCurrentTab.close()
 		except:
 			pass
+
+	def writePreferences(self):
+		temp = open('preferences', 'w')
+		
+		temp.write(str(self.showStatusBarAction.isChecked())+'\n')
+		temp.write(str(self.wordWrapAction.isChecked())+'\n')
+		temp.write(str(self.showHighlightlineAction.isChecked())+'\n')
+
+		temp.close()
+
+	def readPreferences(self):
+		try:
+			temp = open('preferences', 'r+')
+			
+			if temp.readline().rstrip() == "True":				#Status bar
+				self.statusbar.show()
+				self.showStatusBarAction.setChecked(True)
+			else:	
+				self.statusbar.hide()
+				self.showStatusBarAction.setChecked(False)
+
+			if temp.readline().rstrip() == "True":
+				for tab in self.listOfOpenTabs:
+					tab.edit.setWordWrapMode(3)
+				self.wordWrapAction.setChecked(True)
+			else:
+				for tab in self.listOfOpenTabs:
+					tab.edit.setWordWrapMode(0)
+				self.wordWrapAction.setChecked(False)
+
+			if temp.readline().rstrip() == "False":
+				for tab in self.listOfOpenTabs:
+					tab.edit.cursorPositionChanged.connect(tab.edit.removeHightlightline)				
+					tab.edit.removeHightlightline()
+				self.showHighlightlineAction.setChecked(False)
+			else:
+				for tab in self.listOfOpenTabs:	
+					tab.edit.cursorPositionChanged.connect(tab.edit.highlightline)				
+					tab.edit.highlightline()
+				self.showHighlightlineAction.setChecked(True)
+
+			temp.close()
+
+		except Exception, e:
+			print e
 
 	def initEditor(self, files):
 
@@ -598,7 +655,7 @@ class Main(QtGui.QMainWindow):
 		self.buildAction = QtGui.QAction(QtGui.QIcon("icons/build.png"),"Build", self)
 		self.buildAction.setStatusTip("Compile then run the program")
 		self.buildAction.setShortcut("Ctrl+B")
-		self.buildAction.triggered.connect(self.build)
+		self.buildAction.triggered.connect(self.something)
 
 		self.wordWrapAction = QtGui.QAction("Word Wrap", self, checkable = True)
 		self.wordWrapAction.setStatusTip("Set a word wrap")
@@ -612,7 +669,7 @@ class Main(QtGui.QMainWindow):
 		self.showHighlightlineAction = QtGui.QAction("Highlight Current Line", self, checkable = True)
 		self.showHighlightlineAction.setStatusTip("Show or hide the highlight line")
 		self.showHighlightlineAction.triggered.connect(self.toggleHighlightLine)
-		self.showHighlightlineAction.setChecked(True)		
+		self.showHighlightlineAction.setChecked(True)
 
 		self.incFontSizeAction = QtGui.QAction("Increment Font Size", self)
 		self.incFontSizeAction.setShortcut("Ctrl+=")
@@ -672,7 +729,7 @@ class Main(QtGui.QMainWindow):
 		# view.addAction(self.setFontSize)
 
 	def something(self):
-		subprocess.Popen("start chrome.exe", shell=True)
+		subprocess.Popen("start", shell=True)
 
 	def new(self):
 		a = LNTextEdit()			
@@ -947,6 +1004,7 @@ class Main(QtGui.QMainWindow):
 					break
 
 		if checker == True:
+			self.writePreferences()
 			self.writeCurrentTab()
 			self.writeRecentlyOpenedFiles()
 			self.recentFiles.close()
