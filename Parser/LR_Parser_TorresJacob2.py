@@ -15,7 +15,6 @@ def find_index(ch): #this returns the index of the lexeme in the table
 
 lr_table=parseTableMaker()
 
-
 #ok check this so basta ganito lang yun format ng paglagay ng rule
 #since dictionary siya, yung key is yung rule number
 #yung value is yung dissected right part ng rule; dissected to tokens to ah, mahalaga yung '->' 
@@ -34,7 +33,6 @@ for i in list_of_tokens: #this removes all the spaces in the input
         the_input.append(i)
 '''
 
-
 the_input=["Hi,Iam", "A", "a", "a", ".", "\n", "$"]
 
 stack = [0] #we want the stack to be inititally 0
@@ -49,7 +47,11 @@ while (True):
     input_var_index = find_index(the_input[0])
 
     try:
+        print "--"
+        print input_var_index
+        print stack_var_index
         intersection = lr_table[stack_var_index][input_var_index]
+        print intersection
     except TypeError:
         #this is for inputs that are not what we declared in the rules
         print "Syntax Error."

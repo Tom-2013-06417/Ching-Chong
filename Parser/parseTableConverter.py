@@ -29,7 +29,7 @@ id -> a
 Inputting this should work here.
 '''
 def parseTableMaker():
-	file=open("pt.txt","r")
+	file=open("pt3.txt","r")
 	file.readline()
 	string = file.readline()
 	inputs=string.split("\t")
@@ -69,7 +69,7 @@ def parseTableMaker():
 
 	return lr_table
 def rules():
-	file=open("grammar.txt","r")
+	file=open("grammar3.txt","r")
 
 	grammarDict = {}
 	iter = 0
