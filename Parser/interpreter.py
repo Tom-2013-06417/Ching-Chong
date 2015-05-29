@@ -1,4 +1,6 @@
+name = ''
 
+#Convert CHNG tokens to Python readable content
 def conditional(cond):
 	if cond == "Own":
 		return True
@@ -37,10 +39,12 @@ def conditional(cond):
 		cond = cond.split(split)
 		return cond[0] + val + cond[1]
 
-
+#get the next few literal lines from the indicated position
 def nextline(file, num, indents=0):
 	num = num + 1
 	string = ""
+
+	#return a string once a terminal line is reached
 	for num, line in enumerate(file, num):
 		line = line.strip()
 		if line == "I did not know lah.":
@@ -58,6 +62,18 @@ def nextline(file, num, indents=0):
 
 
 
+#get the next few literal lines from the indicated position
+def terminalFinder(file, num2, indents=0):
+	num2 = num2 + 1
+	string = ""
+
+	#return a string once a terminal line is reached
+	for num, line in enumerate(file, 1):
+		if num >= num2 and "Sincerely, " in line:
+			return num
+
+
+#find the position of the terminal line of a loop
 def getEnder(file, num, label=0):
 	num = num + 1
 	loopend = "I'm done with " + str(label) + " lah."
@@ -67,8 +83,10 @@ def getEnder(file, num, label=0):
 			return num
 	print "SYNTAX ERROR"
 
+#find the position of the terminal line of an if-statement
 def IfEnder(file, num, label=0):
 	num = num + 1
+	print num
 	ifend = "I double confirm " + label + " lah."
 	for num, line in enumerate(file, num):
 		line = line.strip()
@@ -76,6 +94,7 @@ def IfEnder(file, num, label=0):
 			return num
 	print "SYNTAX ERROR"
 
+#find the position of the terminal line of an else-statement
 def elseEnder(file, num, label=0):
 	num = num + 1
 	ifend = "Father ashamed of son for not answer " + label + " lah."
@@ -87,30 +106,35 @@ def elseEnder(file, num, label=0):
 
 
 
+#actual interpreter
+#feeds a list of reductions starting from position r and indicates the current group/block/indent
 def interpreter(mainlist, n, indents=0):
-	list = mainlist[n]
-	file = open("mySecondishProgram.chng","r")
-	writervar = '\t'*indents
+	global name
+	list = mainlist[n]												#get the reduction at the nth position
+	file = open("mySecondishProgram.chng","r")						#open the file
+	writervar = '\t'*indents										#implement indents
 
-	for num, line in enumerate(file, 1):					#line is literally just what the string in the line is, num is what line number
-		line = line.strip()
-		if num == list[1]:									#given our list from parser, we check if our current line number is what we want to parse
-			if list[0] == "Print":							#conditions to what to translate chingchong into
-				printList = line.split("I show Father")		#take away what we dont want
-				printList = printList[1].split(" lah")		#take away the other side
+	for num, line in enumerate(file, 1):							#line is literally just what the string in the line is, num is what line number
+		line = line.split("-.-")[0]
+		line = line.strip()											#remove excess lines
+		
+		if num == list[1]:											#given our list from parser, we check if our current line number is what we want to parse
+			if list[0] == "Print":									#conditions to what to translate chingchong into
+				printList = line.split("I show Father")				#take away what we dont want
+				printList = printList[1].split(" lah")				#take away the other side
 				writervar = writervar + "print" + printList[0]		#writervar is what we want to write to the python file
 				print writervar
 			if list[0] == "Input":
 				inputList = line.split("I give Father ")
 				variable = inputList[1].split(" lah")[0]
-				writervar = writervar + str(variable) + "= input()"
+				writervar = writervar + str(variable) + " = input()"
 				print writervar
 			if list[0] == "InputPrompt":
 				inputList = line.split("Father wants ")
 				inputList2 = inputList[1].split(", I give Father ")
 				prompt = inputList2[0]
 				variable = inputList2[1].split(" lah")[0]
-				writervar = writervar + str(variable) + "= input(" + prompt + ")"
+				writervar = writervar + str(variable) + " = input(" + prompt + ")"
 				print writervar
 			if list[0] == "Arithmetic":
 				inputList = line.split("Father surprise quiz: ")
@@ -136,39 +160,106 @@ def interpreter(mainlist, n, indents=0):
 					
 					nameAndValue = splitLine[0].split(", ")
 					splitDistinguish = nameAndValue[0].split(" ")
-					print splitDistinguish [0]
+					#print splitDistinguish [0]
 					if splitDistinguish[0] == "GWA":
 						
 						variableDict["Float"].append(splitDistinguish[1])
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
 						for i in range(1,len(nameAndValue)):
 							variableDict["Float"].append(nameAndValue[i].split(" of ")[0])
-					
+							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							print writeString
 					if splitDistinguish[0] == "Score":
 						variableDict["Int"].append(splitDistinguish[1])
-						for i in range(1,len(nameAndValue)):
-							variableDict["Int"].append(nameAndValue[i].split(" of ")[0])
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
 						
-					
+						for i in range(1,len(nameAndValue)):
+							
+							variableDict["Int"].append(nameAndValue[i].split(" of ")[0])
+							
+							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							print writeString
 					if splitDistinguish[0] == "Honor":
+						
 						variableDict["Bool"].append(splitDistinguish[1])
+						try:
+							
+							if "Own" == str(splitDistinguish[3]):
+								bool = "True"
+							if "Disown" == str(splitDistinguish[3]):
+								bool = "False"
+							writeString = splitDistinguish[1] + " = " + bool
+							print writeString 
+							
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
+						
 						for i in range(1,len(nameAndValue)):
 							variableDict["Bool"].append(nameAndValue[i].split(" of ")[0])
+							if "Own" == str(nameAndValue[i].split(" of ")[1]):
+								bool = "True"
+							else:
+								bool = "False"
+							writeString = str(nameAndValue[i].split(" of ")[0]) + " = " + bool
+							print writeString
 					if splitDistinguish[0] == "LetterGrade":
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
 						variableDict["Char"].append(splitDistinguish[1])
+						
 						for i in range(1,len(nameAndValue)):
 							variableDict["Char"].append(nameAndValue[i].split(" of ")[0])
-						
+							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							print writeString
 					if splitDistinguish[0] == "Essay":
+
 						variableDict["String"].append(splitDistinguish[1])
+						try:
+							if splitDistinguish [2] == "of":
+								
+								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								print writeString 
+						except IndexError:
+							
+							writeString = splitDistinguish[1]
+							print writeString 
 						for i in range(1,len(nameAndValue)):
 							variableDict["String"].append(nameAndValue[i].split(" of ")[0])
-						
+							
+							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							print writeString
 					if splitDistinguish[0] == "ReportCard":
 						variableDict["List"].append(splitDistinguish[1])
 						for i in range(1,len(nameAndValue)):
 							
 							variableDict["List"].append(nameAndValue[i].split(" of ")[0])
-					
+							#writeString = str(nameAndValue[i].split(" of ")[0]) + str(nameAndValue[i].split(" of ")[1])
+							#print writeString
 
 				print variableDict
 			if list[0] == "For":
@@ -278,15 +369,20 @@ def interpreter(mainlist, n, indents=0):
 			if list[0] == "Function":
 				FxnName = line.split("Dear ")[1].split(",")[0]
 				defFxn = 'def ' + FxnName + "("
+				
 				contents = nextline(file, num, indents)
-				#print contents
+				num2 = num + 1
+				string = ""
+
+				#return a string once a terminal line is reached
+				
+				
 				if "I want dumplings and:" in contents:
 					parameter = contents.split("okay")[0].split("I want dumplings and:")
 					parameter2 = parameter[len(parameter) - 1].split("\n")
 					for i in range(0,len(parameter2)-1):
 						if parameter2[i] == '':
 							parameter2.pop(i)
-					#print parameter2
 					args = []
 					
 					for i in range(0,len(parameter2)):
@@ -295,20 +391,32 @@ def interpreter(mainlist, n, indents=0):
 						args.append(aheho[1])
 
 					defFxn = defFxn[:-1]
-					defFxn += "):"
-					print defFxn
+				defFxn += "):"
+				print defFxn
 
+				limit = terminalFinder(file, num)
+				
+				try:
+					while mainlist[n][1] < limit:
+						n = n + 1
+						if mainlist[n][1] > limit:
+							indents = indents - 1
+						n = interpreter(mainlist, n, indents+1)
+				except IndexError:
+					pass
+
+			file.close()
 			return n
 
 
 
-
-#list = [["If", 126], ["Print", 127], ["Elif", 130], ["Print", 131], ["Print", 132], ["Print", 133], ["Else", 136], ["Print", 137]]
+#list = [["If", 104], ["Print", 105], ["Elif", 108], ["Print", 109], ["Print", 110], ["Print", 111], ["Else", 114], ["Print", 115]]
 #list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
 #list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
-
-list = [["Function", 36]]
-
-
+list = [["Function", 57], ["Print", 70], ["Print", 71], ["Input", 72], ["InputPrompt", 73], ["InputPrompt", 74]]
+file = open("mySecondishProgram.chng","r")	
+for num, line in enumerate(file, 1):
+	if num == 1:
+		name = line.split("Hi, I am ")[1].split(".")[0]
+file.close()
 interpreter(list, 0)
-

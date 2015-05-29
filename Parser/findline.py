@@ -1,9 +1,7 @@
 
 
 lookup = 'Start -> Initialize'
-file = open("pt.txt","r")
+file = open("mySecondishProgram.chng","r")
 
-for num, line in enumerate(file, 1):
-	if lookup in line:
-		print 'found at line:', num
-
+for num, line in enumerate(file, 2):
+	print num,line
