@@ -1,4 +1,5 @@
 name = ''
+indict = {}
 
 #Convert CHNG tokens to Python readable content
 def conditional(cond):
@@ -103,7 +104,6 @@ def getEnder(file, num, label=0):
 #find the position of the terminal line of an if-statement
 def IfEnder(file, num, label=0):
 	num = num + 1
-	print num
 	ifend = "I double confirm " + label + " lah."
 	for num, line in enumerate(file, num):
 		line = line.strip()
@@ -140,35 +140,55 @@ def interpreter(mainlist, n, indents=0):
 			if list[0] == "Print":									#conditions to what to translate chingchong into
 				printList = line.split("I show Father")				#take away what we dont want
 				printList = printList[1].split(" lah")				#take away the other side
-				writervar = writervar + "print" + printList[0]		#writervar is what we want to write to the python file
-				print writervar
+				writeString = writervar + "print" + printList[0]		#writervar is what we want to write to the python file
+				print writeString
 			if list[0] == "Input":
 				inputList = line.split("I give Father ")
 				variable = inputList[1].split(" lah")[0]
-				writervar = writervar + str(variable) + " = input()"
-				print writervar
+				writeString = writervar + str(variable) + " = input()"
+				print writeString
 			if list[0] == "InputPrompt":
 				inputList = line.split("Father wants ")
 				inputList2 = inputList[1].split(", I give Father ")
 				prompt = inputList2[0]
 				variable = inputList2[1].split(" lah")[0]
-				writervar = writervar + str(variable) + " = input(" + prompt + ")"
-				print writervar
+				writeString = writervar + str(variable) + " = input(" + prompt + ")"
+				print writeString
 			if list[0] == "Arithmetic":
 				inputList = line.split("Father surprise quiz: ")
 				inputList2 = inputList[1].split(" lah")
-				writervar = writervar + inputList2[0]
-				print writervar
+				writeString = writervar + inputList2[0]
+				print writeString
 			if list[0] == "ArithmeticBlock":
 
-				writervar = nextline(file, num, indents)
-				print writervar
+				writeString = nextline(file, num, indents)
+				print writeString
 			if list[0] == "Break":
-				writervar = writervar + "break"
-				print writervar
+				writeString = writervar + "break"
+				print writeString
 			if list[0] == "Continue":
-				writervar = writervar + "continue"
-				print writervar
+				writeString = writervar + "continue"
+				print writeString
+			if list[0] == "Return":
+				writeString = writervar + "return "  + str(line.split("I give you sum ")[1].split(" lah.")[0])
+				print writeString
+			if list[0] == "FxnCall":
+				list1 = line.split(" with ")
+				list2 = list1[0].split("I write to ")[1]
+				list3 = list1[1].split(" lah.")[0]
+				main = list2 + "(" + list3 + ")"
+
+				for num, line in enumerate(file, num):
+					if "I get" in line and "from" in line:
+						blist1 = line.split(" from ")
+						blist2 = blist1[0].split("I get ")[1]
+						blist3 = blist1[0].split(" lah.")[0]
+
+						main = blist2 + " = " + main
+					break
+
+				writeString = writervar + main
+				print writeString
 			if list[0] == "VarDecSegment":
 				
 				variablesDeclared = nextline(file, num)
@@ -187,33 +207,33 @@ def interpreter(mainlist, n, indents=0):
 						try:
 							if splitDistinguish [2] == "of":
 								
-								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								writeString = writervar + splitDistinguish[1] + " = " + splitDistinguish[3]
 								print writeString 
 						except IndexError:
 							
-							writeString = splitDistinguish[1]
+							writeString = writervar + splitDistinguish[1]
 							print writeString 
 						for i in range(1,len(nameAndValue)):
 							variableDict["Float"].append(nameAndValue[i].split(" of ")[0])
-							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							writeString = writervar + str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "Score":
 						variableDict["Int"].append(splitDistinguish[1])
 						try:
 							if splitDistinguish [2] == "of":
 								
-								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								writeString = writervar + splitDistinguish[1] + " = " + splitDistinguish[3]
 								print writeString 
 						except IndexError:
 							
-							writeString = splitDistinguish[1]
+							writeString = writervar + splitDistinguish[1]
 							print writeString 
 						
 						for i in range(1,len(nameAndValue)):
 							
 							variableDict["Int"].append(nameAndValue[i].split(" of ")[0])
 							
-							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							writeString = writervar + str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "Honor":
 						
@@ -224,12 +244,12 @@ def interpreter(mainlist, n, indents=0):
 								bool = "True"
 							if "Disown" == str(splitDistinguish[3]):
 								bool = "False"
-							writeString = splitDistinguish[1] + " = " + bool
+							writeString = writervar + splitDistinguish[1] + " = " + bool
 							print writeString 
 							
 						except IndexError:
 							
-							writeString = splitDistinguish[1]
+							writeString = writervar + splitDistinguish[1]
 							print writeString 
 						
 						for i in range(1,len(nameAndValue)):
@@ -238,23 +258,23 @@ def interpreter(mainlist, n, indents=0):
 								bool = "True"
 							else:
 								bool = "False"
-							writeString = str(nameAndValue[i].split(" of ")[0]) + " = " + bool
+							writeString = writervar + str(nameAndValue[i].split(" of ")[0]) + " = " + bool
 							print writeString
 					if splitDistinguish[0] == "LetterGrade":
 						try:
 							if splitDistinguish [2] == "of":
 								
-								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								writeString = writervar + splitDistinguish[1] + " = " + splitDistinguish[3]
 								print writeString 
 						except IndexError:
 							
-							writeString = splitDistinguish[1]
+							writeString = writervar + splitDistinguish[1]
 							print writeString 
 						variableDict["Char"].append(splitDistinguish[1])
 						
 						for i in range(1,len(nameAndValue)):
 							variableDict["Char"].append(nameAndValue[i].split(" of ")[0])
-							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							writeString = writervar + str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "Essay":
 
@@ -262,26 +282,27 @@ def interpreter(mainlist, n, indents=0):
 						try:
 							if splitDistinguish [2] == "of":
 								
-								writeString = splitDistinguish[1] + " = " + splitDistinguish[3]
+								writeString = writervar + splitDistinguish[1] + " = " + splitDistinguish[3]
 								print writeString 
 						except IndexError:
 							
-							writeString = splitDistinguish[1]
+							writeString = writervar + splitDistinguish[1]
 							print writeString 
 						for i in range(1,len(nameAndValue)):
 							variableDict["String"].append(nameAndValue[i].split(" of ")[0])
 							
-							writeString = str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
+							writeString = writervar + str(nameAndValue[i].split(" of ")[0]) + " = "+str(nameAndValue[i].split(" of ")[1])
 							print writeString
 					if splitDistinguish[0] == "ReportCard":
 						variableDict["List"].append(splitDistinguish[1])
 						for i in range(1,len(nameAndValue)):
 							
 							variableDict["List"].append(nameAndValue[i].split(" of ")[0])
-							#writeString = str(nameAndValue[i].split(" of ")[0]) + str(nameAndValue[i].split(" of ")[1])
+							#writeString = writervar + str(nameAndValue[i].split(" of ")[0]) + str(nameAndValue[i].split(" of ")[1])
 							#print writeString
 
-				print variableDict
+				writeString = writervar + str(variableDict)
+				print writeString
 			if list[0] == "For":
 				forList = line.split("Father say make repeat ")
 				forList2 = forList[1].split(" again lah.")
@@ -295,8 +316,8 @@ def interpreter(mainlist, n, indents=0):
 				condrng1 = condline.split(" from ")[1].split(" to ")[0]
 				condrng2 = condline.split(" from ")[1].split(" to ")[1].split(" oclock")[0]
 
-				writervar = writervar + "for " + condvar + " in range(" + condrng1 + "," + condrng2 + "):"
-				print writervar
+				writeString = writervar + "for " + condvar + " in range(" + condrng1 + "," + condrng2 + "):"
+				print writeString
 				limit = getEnder(file, num, label)
 				try:
 					while mainlist[n][1] < limit:
@@ -322,8 +343,8 @@ def interpreter(mainlist, n, indents=0):
 				cond = condline.split(" while ")[1].split(" lah.")[0]
 				conditional2 = conditional(cond)
 
-				writervar = writervar + "while " + conditional2
-				print writervar
+				writeString = writervar + "while " + conditional2
+				print writeString
 				limit = getEnder(file, num, label)
 				try:
 					while mainlist[n][1] < limit:
@@ -334,13 +355,22 @@ def interpreter(mainlist, n, indents=0):
 				except IndexError:
 					pass
 			if list[0] == "If":
-				IfList = line.split("Father ask ")
-				IfList2 = IfList[1].split(", if ")
-				label = IfList2[0]
-				cond = conditional(IfList2[1].split(" lah.")[0])
 
-				writervar = writervar + "if " + cond + ":"
-				print writervar
+				IfList = line.split("Father ask ")
+				if "if" in IfList[1]:
+					IfList2 = IfList[1].split(", if ")
+					label = IfList2[0]
+					cond = conditional(IfList2[1].split(" lah.")[0])
+				else:
+					IfList2 = IfList[1].split(", is ")
+					IfList3 = IfList2[1].split(" lah.")[0].split(" ")
+					label = IfList2[0]
+					cond = str(IfList3[0]) + " == " + str(conditional(IfList3[1]))
+
+				indict[label] = indents
+
+				writeString = writervar + "if " + cond + ":"
+				print writeString
 
 				limit = IfEnder(file, num, label)
 				try:
@@ -361,10 +391,12 @@ def interpreter(mainlist, n, indents=0):
 					IfList2 = IfList[1].split(", is ")
 					IfList3 = IfList2[1].split(" lah.")[0].split(" ")
 					label = IfList2[0]
-					print label, IfList3[0], IfList3[1]
-					cond = str(IfList3[0]) + " == " + str(conditional(List3[1]))
+					cond = str(IfList3[0]) + " == " + str(conditional(IfList3[1]))
 
-				writervar = writervar + "elif " + cond + ":"
+				indents = indict[label] 
+
+				writeString = writervar + "elif " + cond + ":"
+				print writeString
 
 				limit = IfEnder(file, num, label)
 				try:
@@ -380,6 +412,8 @@ def interpreter(mainlist, n, indents=0):
 				IfList2 = IfList[1].split(" lah.")
 				label = IfList2[0]
 
+				indents = indict[label]
+
 				writervar = writervar + "else:"
 				print writervar
 
@@ -394,44 +428,43 @@ def interpreter(mainlist, n, indents=0):
 					pass
 			if list[0] == "Function":
 				FxnName = line.split("Dear ")[1].split(",")[0]
-				defFxn = 'def ' + FxnName + "("
+				if FxnName != "Diary":
+					writeString = writervar + 'def ' + FxnName + "("
 				
-				contents = funcBlock(file, num, indents)
-				num2 = num + 1
-				string = ""
-				
-				#return a string once a terminal line is reached
-				
-				#print "here:",contents	
-				if "I want dumplings and:" in contents:
-					parameter = contents.split("okay")[0].split("I want dumplings and:")
-					parameter2 = parameter[len(parameter) - 1].split("\n")
-					for i in range(0,len(parameter2)-1):
-						if parameter2[i] == '':
-							parameter2.pop(i)
-					args = []
+					contents = funcBlock(file, num, indents)
+					num2 = num + 1
+					string = ""
 					
-					for i in range(0,len(parameter2)):
-						aheho = parameter2[i].split(" ")
-						defFxn += aheho[1] + ","
-						args.append(aheho[1])
+					#return a string once a terminal line is reached
+					
+					#print "here:",contents	
+					if "I want dumplings and:" in contents:
+						parameter = contents.split("okay")[0].split("I want dumplings and:")
+						parameter2 = parameter[len(parameter) - 1].split("\n")
+						for i in range(0,len(parameter2)-1):
+							if parameter2[i] == '':
+								parameter2.pop(i)
+						args = []
+						
+						for i in range(0,len(parameter2)):
+							aheho = parameter2[i].split(" ")
+							writeString += aheho[1] + ","
+							args.append(aheho[1])
 
-					defFxn = defFxn[:-1]
-				defFxn += "):"
-				
-				print defFxn	
-				limit = endBlock
-				print contents
+						writeString = writervar + writeString[:-1]
+					writeString += "):"
+					
+					print writeString	
+					limit = endBlock
 			
 				try:
-					
 					while mainlist[n][1] < limit:
 						
 						n = n + 1
 						
 						if mainlist[n][1] > limit:
 							indents = indents - 1
-						
+
 						n = interpreter(mainlist, n, indents+1)
 						
 				except IndexError:
@@ -448,8 +481,9 @@ def interpreter(mainlist, n, indents=0):
 #list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
 #list = [["Function", 57],["VarDecSegment",61],["Print", 70], ["Print", 71], ["Input", 72], ["InputPrompt", 73], ["InputPrompt", 74]]
 #list = [["Function",126],["If",133],["While",134],["For",136],["Print",138],["Arithmetic",140],["If",143],["Print",144],["ArithmeticBlock",145],["Elif",152],["Print",153]]
-list = [["Function",126],["VarDecSegment",127],["If",133],["While",134],["For",136],["Print",138],["Arithmetic",140],["If",143],["Print",144],["ArithmeticBlock",145],["Elif",152],["Print",153],["Elif", 158],["Print",159],["Elif",162],["Print",163],["Else",166]]
-#	
+list = [["Function",126],["VarDecSegment",127],["If",133],["While",134],["For",136],["Print",138],["Arithmetic",140],["If",143],["Print",144],["ArithmeticBlock",145],["Elif",152],["Print",153],["Elif", 158],["Print",159],["Elif",162],["Print",163],["Else",166],["Print",167]]
+#list = [["Function",126],["VarDecSegment",127],["If",133],["Print",138],["Elif", 158],["Print",159],["Elif",162],["Print",163],["Else",166],["Print",167]]
+#list = [["Function", 17], ["Parameter", 19], ["VarDecSegment", 24], ["Return", 29], ["FxnCall", 54]]
 file = open("mySecondishProgram.chng","r")	
 for num, line in enumerate(file, 1):
 	if num == 1:
