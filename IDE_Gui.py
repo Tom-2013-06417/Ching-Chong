@@ -1,7 +1,7 @@
 import sys, os
 import subprocess
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui, QtCore																		# PyQt is our GUI platform, as it is more efficient and client ready
 from PyQt4.QtCore import Qt, QRegExp
 from PyQt4.Qt import QWidget
 from PyQt4.Qt import QTextFormat
@@ -14,9 +14,9 @@ from ext import *
 
 
 
-def format(color, style=''):
+def format(color, style=''):																		# Everything related to the syntax highlighter is retrieved from											
 	"""Return a QTextCharFormat with the given attributes.
-	"""
+	"""																								# https://wiki.python.org/moin/PyQt/Python%20syntax%20highlighting
 	_color = QtGui.QColor()
 	_color.setNamedColor(color)
 
@@ -31,62 +31,53 @@ def format(color, style=''):
 
 
 # Syntax styles that can be shared by all languages
-STYLES = {
-	'keyword': format('#2B43BA'),
+STYLES = {																							# These are the styling tuples, slightly modifided
+	'keyword': format('#2B43BA'),																	# to meet our IDE's needs (color schemes)
 	'operator': format('#F51462'),
 	'brace': format('#14A6F5'),
 	'defclass': format('black', 'bold'),
 	'mainclass': format('#2B43BA', 'bold'),
-	'string': format('#87AF10'),
-	'string2': format('#777777'),			 #Comments
-	'comment': format('#777777', 'italic'),
-	'self': format('black', 'italic'),
+	'string': format('#87AF10'),				# Strings
+	'comment': format('#777777', 'italic'),		# All comments are italicized
 	'numbers': format('brown'),
 	'terminator': format('green'),
 	'loops': format('#FF7E00'),
-	'startingline': format('#FF7E00'),
-	'senderclass': format('#CD4422', 'bold'),	#Name of sender
-	'defname': format('#FF7E00'),
-	'boolean': format('#C332CD'),
+	'startingline': format('#FF7E00'),			# Salutatory greetings (Hi, I am <NAME>.)
+	'senderclass': format('#CD4422', 'bold'),	# Name of sender
+	'defname': format('#FF7E00'),				# Function salutatory greetings
+	'boolean': format('#C332CD'),				# Boolean colors are different
 }
 
 
 
-class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
+class ChingChongHighlighter (QtGui.QSyntaxHighlighter):												# Again, this code block is retrieved from https://wiki.python.org/moin/PyQt/Python%20syntax%20highlighting
 	"""Syntax highlighter for the Python language.
-	"""
-	# Python keywords
-	keywords = [
+	"""																								# And is modified by adding rules and words to meet Ching Chong needs
+	# Keywords
+	keywords = [																					# Some one word keywords for the language	
 		'and', 'again', 'ask', 'Diary', 'from', 'From', 'if', 'in', 'is', 'of', 'oclock',
 		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'ReportCard', 'okay', 'LetterGrade', 'Teacher', 'adds', 'to', 'gets',
 		'Father', 'counts', 'entries'
 	]
 
-	boolean = ['Own', 'Disown']
+	boolean = ['Own', 'Disown']																		# Additional boolean words are separate, as they are of a different color
 
-	# Python operators
-	operators = [		
+	# Operators
+	operators = [																					# Operators too are of a different color; Relational operators are textual and not symbolic	
 		# Comparison
 		'more lesser to', 'more greaterer to', 'same to', 'not same to', 'greaterer to', 'lesser to',
 		# Arithmetic
 		'\+', '-', '\*', '/', '//', '\%', '\*\*', '=',
 	]
 
-	# Python braces
-	braces = [
+	# Braces
+	braces = [																						# Braces for miscellaneous syntax
 		'\{', '\}', '\(', '\)', '\[', '\]',
 	]
 	def __init__(self, document):
 		QtGui.QSyntaxHighlighter.__init__(self, document)
 
-		# Multi-line strings (expression, flag, style)
-		# FIXME: The triple-quotes in these two lines will mess up the
-		# syntax highlighting from this point onward
-		# self.tri_single = (QRegExp("-_-"), 1, STYLES['string2'])
-
-		True
-
-		rules = []
+		rules = []																					# Rules that are of the Regular Expression form (CS 133)
 
 		# Keyword, operator, and brace rules
 		rules += [(r'\b%s\b' % w, 0, STYLES['keyword']) for w in ChingChongHighlighter.keywords]
@@ -98,74 +89,74 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 		rules += [
 			# 'self'
 			# Double-quoted string, possibly containing escape sequences
-			(r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),
+			(r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),										# These are some of the additional rules for the 'reserved phrases' of Ching Chong					
 
 			# 'def' followed by an identifier
-			(r'\bHi, I am\b\s*(\w+)\.', 1, STYLES['senderclass']),
-			(r'\bHi, I am\b', 0, STYLES['startingline']),
-			(r'Sincerely,\s*(\w+)\.', 1, STYLES['senderclass']),
+			(r'\bHi, I am\b\s*(\w+)\.', 1, STYLES['senderclass']),									# The number 1 signifies that the 2nd word should be the target of the applied color
+			(r'\bHi, I am\b', 0, STYLES['startingline']),											# The number 0 signifies that the first word boundaries should be the target too
+			(r'Sincerely,\s*(\w+)\.', 1, STYLES['senderclass']),									# Starting and ending line
 			(r'Sincerely,', 0, STYLES['startingline']),
-			# 'class' followed by an identifier
-			(r'\bDear\b', 0, STYLES['defname']),
+
+			(r'\bDear\b', 0, STYLES['defname']),													# Salutation phrases
 			(r'\bDear\b\s*(\w+)\,', 1, STYLES['defclass']),
-			(r'Diary', 0, STYLES['mainclass']),
+			(r'Diary', 0, STYLES['mainclass']),														# The Diary is a reserved word
 
-			# From '#' until a newline			
-			(r'lah.', 0, STYLES['terminator']),	
-			(r'desu.', 0, STYLES['terminator']),
-
-			(r'DABEST SI MAM RAE!', 0, STYLES['senderclass']),				
+			(r'lah.', 0, STYLES['terminator']),														# Terminators
 			
-			(r'I show Father', 0, STYLES['keyword']),
+			(r'desu.', 0, STYLES['terminator']),													# and easter eggs
+			(r'DABEST SI MAM RAE!', 0, STYLES['senderclass']),
+			
+			(r'I show Father', 0, STYLES['keyword']),												# Print and Read
 			(r'I give Father', 0, STYLES['keyword']),
 
-			(r'of A\+ in', 0, STYLES['keyword']),
+			(r'of A\+ in', 0, STYLES['keyword']),													# Reserved phrase for the list
 
-			(r'Father wants', 0, STYLES['keyword']),
+			(r'Father wants', 0, STYLES['keyword']),												# Reserved phrase for the raw_input of python
 
-			(r'I write to', 0, STYLES['keyword']),	
+			(r'I write to', 0, STYLES['keyword']),													# Calling a function
 
-			(r'I get', 0, STYLES['keyword']),			
+			(r'I get', 0, STYLES['keyword']),														# Calling a function and getting a return variable		
 
-			(r'Father surprise quiz:', 0, STYLES['keyword']),
+			(r'Father surprise quiz:', 0, STYLES['keyword']),										# Arithmetic blocks
 			(r'Father surprise long quiz:', 0, STYLES['keyword']),
 			
-			(r'Father say make repeat', 0, STYLES['keyword']),
+			(r'Father say make repeat', 0, STYLES['keyword']),										# Loop blocks
 			(r'\bFather say make repeat\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 
-			(r'to become doctor', 0, STYLES['keyword']),
-			(r'Father says that I need', 0, STYLES['keyword']),
+			(r'to become doctor', 0, STYLES['keyword']),											# Ending statements for function variable block
+			(r'Father says that I need', 0, STYLES['keyword']),										# Starting statement for function variable block
 			
-			(r'Must do', 0, STYLES['keyword']),
+			(r'Must do', 0, STYLES['keyword']),														# Additional loop blocks
 			(r'\bMust do\b\s*([A-Z]+)\s*\bwhile\b', 1, STYLES['senderclass']),
 
 			(r'Must repeat', 0, STYLES['keyword']),
 			(r'\bMust repeat\b\s*([A-Z]+)\s*\bwhile\b', 1, STYLES['senderclass']),
 			
-			(r'I\'m done with', 0, STYLES['keyword']),
+			(r'I\'m done with', 0, STYLES['keyword']),												# End of the loop block
 			(r'\bI\'m done with\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 			
-			(r'Father ask', 0, STYLES['keyword']),
+			(r'Father ask', 0, STYLES['keyword']),													# The if statement
 			(r'\bFather ask\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 
-			(r'Father ask again', 0, STYLES['keyword']),
+			(r'Father ask again', 0, STYLES['keyword']),											# The else if statement
 			(r'\bFather ask again\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 
-			(r'Father stop asking', 0, STYLES['keyword']),
+			(r'Father stop asking', 0, STYLES['keyword']),											# The else statement
 			(r'\bFather stop asking\b\s*([A-Z]+)', 1, STYLES['senderclass']),
 
-			(r'I double confirm', 0, STYLES['keyword']),
-			(r'\bI double confirm\b\s*([A-Z]+)', 1, STYLES['senderclass']),
-			(r'Father says that I need', 0, STYLES['keyword']),
-			(r'Father ashamed of son for not answer', 0, STYLES['keyword']),
-			(r'\bFather ashamed of son for not answer\b\s*([A-Z]+)', 1, STYLES['senderclass']),
-			(r'I want dumplings and', 0, STYLES['keyword']),
-			(r'I send shrimp fried rice to all:', 0, STYLES['keyword']),
-			(r'I no pass', 0, STYLES['keyword']),
-			(r'I give you sum', 0, STYLES['keyword']),
+			(r'I double confirm', 0, STYLES['keyword']),											# The ending line of the if and else if statements
+			(r'\bI double confirm\b\s*([A-Z]+)', 1, STYLES['senderclass']),		
 			
-			(r'I am tired', 0, STYLES['keyword']),					 	# Break
-			(r'Father brought out belt', 0, STYLES['keyword']),			# Continue
+			(r'Father ashamed of son for not answer', 0, STYLES['keyword']),						# The ending line of the else statement
+			(r'\bFather ashamed of son for not answer\b\s*([A-Z]+)', 1, STYLES['senderclass']),
+			
+			(r'I want dumplings and', 0, STYLES['keyword']),										# Line for acception function parameters
+			(r'I send shrimp fried rice to all:', 0, STYLES['keyword']),							# Line for instantiating global variables (the main)
+			(r'I did not know', 0, STYLES['keyword']),												# End statement for arithmetic block
+			(r'I give you sum', 0, STYLES['keyword']),												# Return statement of functions
+			
+			(r'I am tired', 0, STYLES['keyword']),					 								# Break
+			(r'Father brought out belt', 0, STYLES['keyword']),										# Continue
 			
 
 			# Numeric literals
@@ -196,12 +187,6 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 				index = expression.indexIn(text, index + length)
 
 		self.setCurrentBlockState(0)
-
-		# Do multi-line strings
-		# in_multiline = self.match_multiline(text, *self.tri_single)
-		# if not in_multiline:
-			# in_multiline = self.match_multiline(text, *self.tri_double)
-
 
 	def match_multiline(self, text, delimiter, in_state, style):
 		"""Do highlighting of multi-line strings. ``delimiter`` should be a
@@ -244,15 +229,15 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 			return False
 
 
-class NumberBar(QWidget):
+class NumberBar(QWidget):																			# Code block retrieved from https://john.nachtimwald.com/2009/08/19/better-qplaintextedit-with-line-numbers/
 
-	def __init__(self, edit):
+	def __init__(self, edit):																		# This code block adds a number bar to the GUI
 		QWidget.__init__(self, edit)
 
 		self.edit = edit
 		self.adjustWidth(1)
 
-		self.font = QtGui.QFont()
+		self.font = QtGui.QFont()																	# Set the font to Consolas 10
 		self.font.setFamily("Consolas")
 		self.font.setPointSize(10)
 
@@ -271,51 +256,47 @@ class NumberBar(QWidget):
 		if scroll:
 			self.scroll(0, scroll)
 		else:
-			# It would be nice to do
-			# self.update(0, rect.y(), self.width(), rect.height())
-			# But we can't because it will not remove the bold on the
-			# current line if word wrap is enabled and a new block is
-			# selected.
+
 			self.update()
 
 
 
-class Editor(QtGui.QPlainTextEdit):
+class Editor(QtGui.QPlainTextEdit):																	# The overrided class of the PLain Text Editor given by PyQt
 	
 	def __init__(self, parent=None):
 		
 		QtGui.QPlainTextEdit.__init__(self)
 		QtGui.QFrame.__init__(self)	
 
-		self.filename = ''		
+		self.filename = ''																			# For every editor, maintain a string called the filename
 
-		self.textChanged.connect(self.changed)
+		self.textChanged.connect(self.changed)														# For times that the document is modified / changed, connect to the self.changed 
 
-		self.font = QtGui.QFont()
+		self.font = QtGui.QFont()																	# Set default fonts to Consolas 10
 		self.font.setFamily("Consolas")
 		self.font.setPointSize(10)
 
-		self.fontSizeIndex = 2
+		self.fontSizeIndex = 2										 								# From the list of fonts, defaul size is located at index 2
 
 		self.setFont(self.font)
-		self.setTabStopWidth(33)
+		self.setTabStopWidth(33)																	# Set tab width to 33 (four spaces)
 
-		self.setFrameShape(QtGui.QFrame.NoFrame)
+		self.setFrameShape(QtGui.QFrame.NoFrame)													# Remove the border of the frame
 
-		self.highlight = ChingChongHighlighter(self.document())
+		self.highlight = ChingChongHighlighter(self.document())										# Instantiate the Ching Chong Syntax highlighter
 
-		self.cursorPositionChanged.connect(self.highlightline)
+		self.cursorPositionChanged.connect(self.highlightline)										# Every time the cursor position changes, change the hightlight line's postion
 
-		self.setWordWrapMode(0)
+		self.setWordWrapMode(0)																		# There is initially no wordwrapping
 
-		pal = QtGui.QPalette()
+		pal = QtGui.QPalette()																		# Set the colors of the default foreground text
 		# bgc = QtGui.QColor("#1E1E1E")
 		# pal.setColor(QtGui.QPalette.Base, bgc)		
 		textc = QtGui.QColor(40, 40, 40)
 		pal.setColor(QtGui.QPalette.Text, textc)
 		self.setPalette(pal)
 
-		scrollbarStyleSheet = """
+		scrollbarStyleSheet = """																	
 		/* HORIZONTAL */
 		QScrollBar:horizontal {
 			border: none;
@@ -341,10 +322,10 @@ class Editor(QtGui.QPlainTextEdit):
 		}
 
 		"""	
-		self.setStyleSheet(scrollbarStyleSheet)
+		self.setStyleSheet(scrollbarStyleSheet)														# Change the style of the scrollbar (Make it look thinner; remove the arrows)
 		self.changesSaved = True
 
-	def highlightline(self):
+	def highlightline(self):																		# Method to highlight the current line
 		hi_selection = QtGui.QTextEdit.ExtraSelection()
 
 		hi_selection.format.setBackground(QtGui.QColor("#FFFFDA"))
@@ -354,7 +335,7 @@ class Editor(QtGui.QPlainTextEdit):
 
 		self.setExtraSelections([hi_selection])
 
-	def removeHightlightline(self):
+	def removeHightlightline(self):																	# A fork of the above method to remove the current line
 		hi_selection = QtGui.QTextEdit.ExtraSelection()
 
 		hi_selection.format.setBackground(QtGui.QColor("#FFFFFF"))
@@ -364,7 +345,7 @@ class Editor(QtGui.QPlainTextEdit):
 
 		self.setExtraSelections([hi_selection])
 
-	def numberbarPaint(self, number_bar, event):
+	def numberbarPaint(self, number_bar, event):													# Combines data from the text editor to the numberbar so that the numberbar may have numbers
 		font_metrics = self.fontMetrics()
 		current_line = self.document().findBlock(self.textCursor().position()).blockNumber() + 1
 
@@ -406,7 +387,7 @@ class Editor(QtGui.QPlainTextEdit):
 
 
 
-class LNTextEdit(QtGui.QFrame):
+class LNTextEdit(QtGui.QFrame):																		# A facade class that combindes the numberbar and texteditor into one class (easy)
 	
 	def __init__(self, *args):
 		QtGui.QFrame.__init__(self, *args)		
@@ -415,7 +396,7 @@ class LNTextEdit(QtGui.QFrame):
 		self.pyFile = ""
 		self.number_bar = NumberBar(self.edit)
 
-		hbox = QHBoxLayout(self)
+		hbox = QHBoxLayout(self)																	# Pack the number bar, then pack the editor
 		hbox.setSpacing(10)
 		hbox.setContentsMargins(10,0,0,0)
 		hbox.addWidget(self.number_bar)
@@ -424,13 +405,13 @@ class LNTextEdit(QtGui.QFrame):
 		self.edit.blockCountChanged.connect(self.number_bar.adjustWidth)
 		self.edit.updateRequest.connect(self.number_bar.updateContents)
 
-	def setFileName(self, name):
+	def setFileName(self, name):																	# set file name for the class
 		self.edit.filename = name
 
-	def getFileName(self):
+	def getFileName(self):																			# Wrapper functions for getting and setting the filename of editor class
 		return self.edit.filename
 		
-	def setPyFile(self,name):
+	def setPyFile(self,name):																		# Set the filename of the translated ching chong file
 		self.pyFile = name
 	
 	def getPyFile(self):
@@ -438,19 +419,19 @@ class LNTextEdit(QtGui.QFrame):
 
 
 		
-class Main(QtGui.QMainWindow):
+class Main(QtGui.QMainWindow):																		# The Facade of interfaces that combines everything (Retrieved from https://www.binpress.com/tutorial/building-a-text-editor-with-pyqt-part-one/143)
 
-	def __init__(self, parent = None):
+	def __init__(self, parent = None):																# Of course, the whole class is modified (added more functions) so that it meets the needs of the IDE
 		
 		# super(Main, self).__init__(parent)
 		QtGui.QMainWindow.__init__(self, parent)				
 
-		self.setWindowIcon(QtGui.QIcon("icons/icon.png"))
+		self.setWindowIcon(QtGui.QIcon("icons/icon.png"))											# Set the Ching Chong icon -_-
 
-		try:
+		try:																						# Try opening the recentFiles file and the writeRecentFiles file
 			self.recentFiles = open('saved', 'r+')
 		
-		except IOError:
+		except IOError:																				# If it doesn't exist, create a new file instead
 			self.recentFiles = open('saved', 'w')
 			self.recentFiles.close()
 			self.recentFiles = open('saved', 'r+')
@@ -467,24 +448,24 @@ class Main(QtGui.QMainWindow):
 			
 		self.writeRecentFiles = open('saved', 'a+')		
 		
-		readRecentTab = self.toReadCurrentTab.read()
+		readRecentTab = self.toReadCurrentTab.read()												# Set the current tab as the recently active tab
 
-		self.listOfOpenTabs = []
+		self.listOfOpenTabs = []																	# Instantiate the reference list of editor objects
 
-		self.openedFiles = self.recentFiles.read().split('\n')
+		self.openedFiles = self.recentFiles.read().split('\n')										# Reopen the recently open tabs to the editor
 
-		if self.openedFiles[0] == '':
+		if self.openedFiles[0] == '':																# If the list of opened files is empty, then just instantiate an empty unsaved editor
 			self.initUI()
 			self.initEditor("")
 			self.initToolbar()
-			self.initMenubar()														# Initialize the bars	
+			self.initMenubar()																		# Initialize the bars	
 
 		else:
-			self.initUI()
+			self.initUI()																			# Else if it isn't empty, then immediately,
 
 			counter = 0
 			
-			for files in self.openedFiles:
+			for files in self.openedFiles:															# Open an editor per file, then copy the contents of the file to the editor screen
 				
 				if files != '':
 					self.initEditor(files)
@@ -499,23 +480,23 @@ class Main(QtGui.QMainWindow):
 
 				counter += 1
 
-				if readRecentTab == files:
+				if readRecentTab == files:															# If one of the tabs is the recently used tab, then set focus to it
 					self.tab.setCurrentWidget(self.listOfOpenTabs[-1])
 
-			self.initToolbar()
+			self.initToolbar()																		# Initialize the rest of the interface (Statusbar, Menus, Actions)
 			self.initMenubar()
-			self.readPreferences()
+			self.readPreferences()																	# Read from a file containing boolean values (Toggles status bar, word wrap, and highlight line on or off)
 
-	def writeRecentlyOpenedFiles(self):
+	def writeRecentlyOpenedFiles(self):																# Function to be called as the program exits
 		self.writeRecentFiles = open('saved', 'w')
 		
-		for files in self.listOfOpenTabs:
+		for files in self.listOfOpenTabs:															# For every open tab in the program, list down their filenames, then write them down in a file
 			if files.getFileName():
 				self.writeRecentFiles.write(str(files.getFileName()) + '\n')
 		
 		self.writeRecentFiles.close()
 
-	def writeCurrentTab(self):
+	def writeCurrentTab(self):																		# As the program exits, write the recently active tab to a file
 		try:
 			self.toWriteCurrentTab = open('currTab', 'w')
 			self.toWriteCurrentTab.write(self.tab.currentWidget().getFileName())
@@ -523,7 +504,7 @@ class Main(QtGui.QMainWindow):
 		except:
 			pass
 
-	def writePreferences(self):
+	def writePreferences(self):																		# As the program exits too, write the current preferences of the View menu (If on or off of some commands)
 		temp = open('preferences', 'w')
 		
 		temp.write(str(self.showStatusBarAction.isChecked())+'\n')
@@ -532,18 +513,18 @@ class Main(QtGui.QMainWindow):
 
 		temp.close()
 
-	def readPreferences(self):
+	def readPreferences(self):																		# Sets the recently modified preference values to On of Off (Read from the database file, then set values to true or false)
 		try:
 			temp = open('preferences', 'r+')
 			
-			if temp.readline().rstrip() == "True":				#Status bar
+			if temp.readline().rstrip() == "True":													# Status bar Mode: If true, show the status bar
 				self.statusbar.show()
 				self.showStatusBarAction.setChecked(True)
-			else:	
+			else:																					# Else, hide the status bar
 				self.statusbar.hide()
 				self.showStatusBarAction.setChecked(False)
 
-			if temp.readline().rstrip() == "True":
+			if temp.readline().rstrip() == "True":													# Word wrap mode; if True, enable word wrap. Else, do not.
 				for tab in self.listOfOpenTabs:
 					tab.edit.setWordWrapMode(3)
 				self.wordWrapAction.setChecked(True)
@@ -552,7 +533,7 @@ class Main(QtGui.QMainWindow):
 					tab.edit.setWordWrapMode(0)
 				self.wordWrapAction.setChecked(False)
 
-			if temp.readline().rstrip() == "False":
+			if temp.readline().rstrip() == "False":													# Toggle highlight word; if True, enable highlight line; else, do not
 				for tab in self.listOfOpenTabs:
 					tab.edit.cursorPositionChanged.connect(tab.edit.removeHightlightline)				
 					tab.edit.removeHightlightline()
@@ -568,11 +549,11 @@ class Main(QtGui.QMainWindow):
 		except Exception, e:
 			print e
 
-	def initEditor(self, files):
+	def initEditor(self, files):																	# The method that actually instantiates the Editor object
 
 		a = LNTextEdit()
 
-		a.setFileName(files)
+		a.setFileName(files)																		# It accepts the name of the open files, for it to be opened AND renamed as the tab title
 		self.listOfOpenTabs.append(a)
 		
 		if files == "":
@@ -580,124 +561,121 @@ class Main(QtGui.QMainWindow):
 		else:
 			self.tab.addTab(a, os.path.basename(files))
 
-		a.edit.cursorPositionChanged.connect(self.cursorPosition)
+		a.edit.cursorPositionChanged.connect(self.cursorPosition)									# Every time the program is instantiated, connect the cursor to the status bar widget display for column / line number information
 
-	def initUI(self):
+	def initUI(self):																				# The initial method from the retrieved online link.																
 
-		self.tab = QtGui.QTabWidget(self)
+		self.tab = QtGui.QTabWidget(self)															# It only adds the tab widget and sets necessary preferences, such as set movable tabs
 		self.tab.setMovable(True)
 		self.tab.setTabsClosable(True)
-		self.setCentralWidget(self.tab)
+		self.setCentralWidget(self.tab)																# Set the tab widget as the center of the interface
 		self.tab.tabCloseRequested.connect(self.closeTab)
 
-		self.statusbar = self.statusBar()										# Initialize a statusbar for the window			
+		self.statusbar = self.statusBar()															# Initialize a statusbar for the window			
 		
-		self.setGeometry(180,100,1030,600)										# x and y coordinates on the screen, width, height
-		self.setWindowTitle("Ching Chong IDE")
+		self.setGeometry(180,100,1030,600)															# x and y coordinates on the screen, width, height
+		self.setWindowTitle("Ching Chong IDE")														# The title name to be displayed (CHING CHONG IDE)
 
-	def initToolbar(self):
-		
-		self.newAction = QtGui.QAction(QtGui.QIcon("icons/new.png"),"New File",self)
-		self.newAction.setStatusTip("Create a new document from scratch.")
+	def initToolbar(self):																			# The actions to be initialized (in the original online reference, the author included icons in the toolbar)																		
+
+		self.newAction = QtGui.QAction(QtGui.QIcon("icons/new.png"),"New File",self)				# Because this project intends to be minimalist, toolbars are omitted
+		self.newAction.setStatusTip("Create a new document from scratch.")							# Set the New action
 		self.newAction.setShortcut("Ctrl+N")
 		self.newAction.triggered.connect(self.new)
 
-		self.openAction = QtGui.QAction(QtGui.QIcon("icons/open.png"),"Open File",self)
+		self.openAction = QtGui.QAction(QtGui.QIcon("icons/open.png"),"Open File",self)				# Set the Open action
 		self.openAction.setStatusTip("Open existing document")
 		self.openAction.setShortcut("Ctrl+O")
 		self.openAction.triggered.connect(self.open)
 
-		self.saveAction = QtGui.QAction(QtGui.QIcon("icons/save.png"),"Save",self)
+		self.saveAction = QtGui.QAction(QtGui.QIcon("icons/save.png"),"Save",self)					# Set the Save action
 		self.saveAction.setStatusTip("Save document")
 		self.saveAction.setShortcut("Ctrl+S")
 		self.saveAction.triggered.connect(self.save)
 
-		self.cutAction = QtGui.QAction(QtGui.QIcon("icons/cut.png"),"Cut",self)
+		self.cutAction = QtGui.QAction(QtGui.QIcon("icons/cut.png"),"Cut",self)						# Set the Cut action
 		self.cutAction.setStatusTip("Delete and copy text to clipboard")
 		self.cutAction.setShortcut("Ctrl+X")
 		self.cutAction.triggered.connect(self.tab.currentWidget().edit.cut)
 
-		self.copyAction = QtGui.QAction(QtGui.QIcon("icons/copy.png"),"Copy",self)
+		self.copyAction = QtGui.QAction(QtGui.QIcon("icons/copy.png"),"Copy",self)					# Set the Copy action
 		self.copyAction.setStatusTip("Copy text to clipboard")
 		self.copyAction.setShortcut("Ctrl+C")
 		self.copyAction.triggered.connect(self.tab.currentWidget().edit.copy)
 
-		self.pasteAction = QtGui.QAction(QtGui.QIcon("icons/paste.png"),"Paste",self)
+		self.pasteAction = QtGui.QAction(QtGui.QIcon("icons/paste.png"),"Paste",self)				# Set the Paste action
 		self.pasteAction.setStatusTip("Paste text from clipboard")
 		self.pasteAction.setShortcut("Ctrl+V")
 		self.pasteAction.triggered.connect(self.tab.currentWidget().edit.paste)
 
-		self.undoAction = QtGui.QAction(QtGui.QIcon("icons/undo.png"),"Undo",self)
+		self.undoAction = QtGui.QAction(QtGui.QIcon("icons/undo.png"),"Undo",self)					# Set the Undo action
 		self.undoAction.setStatusTip("Undo last action")
 		self.undoAction.setShortcut("Ctrl+Z")
 		self.undoAction.triggered.connect(self.tab.currentWidget().edit.undo)
 
-		self.redoAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"),"Redo",self)
+		self.redoAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"),"Redo",self)					# Set the Redo function
 		self.redoAction.setStatusTip("Redo last undone thing")
 		self.redoAction.setShortcut("Ctrl+Y")
 		self.redoAction.triggered.connect(self.tab.currentWidget().edit.redo)
 
-		self.indentAction = QtGui.QAction(QtGui.QIcon("icons/indent.png"),"Indent Area",self)
+		self.indentAction = QtGui.QAction(QtGui.QIcon("icons/indent.png"),"Indent Area",self)		# Indent area function
 		self.indentAction.setShortcut("Ctrl+Tab")
 		self.indentAction.triggered.connect(self.indent)
 
-		self.dedentAction = QtGui.QAction(QtGui.QIcon("icons/dedent.png"),"Dedent Area",self)
+		self.dedentAction = QtGui.QAction(QtGui.QIcon("icons/dedent.png"),"Dedent Area",self)		# Dedent area function
 		self.dedentAction.setShortcut("Shift+Tab")
 		self.dedentAction.triggered.connect(self.dedent)
 
-		self.findAction = QtGui.QAction(QtGui.QIcon("icons/find.png"),"Find and Replace",self)
+		self.findAction = QtGui.QAction(QtGui.QIcon("icons/find.png"),"Find and Replace",self)		# Find and replace function
 		self.findAction.setStatusTip("Find and replace words in your document")
 		self.findAction.setShortcut("Ctrl+F")
 		self.findAction.triggered.connect(find.Find(self).show)
 
-		self.buildAction = QtGui.QAction(QtGui.QIcon("icons/build.png"),"Build", self)
+		self.buildAction = QtGui.QAction(QtGui.QIcon("icons/build.png"),"Build", self)				# Build action (parse, interpret, then run)
 		self.buildAction.setStatusTip("Compile then run the program")
 		self.buildAction.setShortcut("Ctrl+B")
-		self.buildAction.triggered.connect(self.something)
+		self.buildAction.triggered.connect(self.build)
 
-		self.wordWrapAction = QtGui.QAction("Word Wrap", self, checkable = True)
+		self.wordWrapAction = QtGui.QAction("Word Wrap", self, checkable = True)					# View action to set word wrap mode
 		self.wordWrapAction.setStatusTip("Set a word wrap")
 		self.wordWrapAction.triggered.connect(self.setWordWrap)
 
-		self.showStatusBarAction = QtGui.QAction("Status Bar", self, checkable = True)
+		self.showStatusBarAction = QtGui.QAction("Status Bar", self, checkable = True)				# View action to toggle status bar
 		self.showStatusBarAction.setStatusTip("Show or hide the status bar")
 		self.showStatusBarAction.triggered.connect(self.displayStatusBar)
 		self.showStatusBarAction.setChecked(True)
 
-		self.showHighlightlineAction = QtGui.QAction("Highlight Current Line", self, checkable = True)
+		self.showHighlightlineAction = QtGui.QAction("Highlight Current Line", self, checkable = True)	# View action to toggle highlight line
 		self.showHighlightlineAction.setStatusTip("Show or hide the highlight line")
 		self.showHighlightlineAction.triggered.connect(self.toggleHighlightLine)
 		self.showHighlightlineAction.setChecked(True)
 
-		self.incFontSizeAction = QtGui.QAction("Increment Font Size", self)
+		self.incFontSizeAction = QtGui.QAction("Increment Font Size", self)							# View action to increase font size
 		self.incFontSizeAction.setShortcut("Ctrl+=")
 		self.incFontSizeAction.triggered.connect(self.incFontSize)
 
-		self.decFontSizeAction = QtGui.QAction("Decrement Font Size", self)
+		self.decFontSizeAction = QtGui.QAction("Decrement Font Size", self)							# View action to decrease font size
 		self.decFontSizeAction.setShortcut("Ctrl+-")
 		self.decFontSizeAction.triggered.connect(self.decFontSize)
 
-		self.exitAction = QtGui.QAction("Exit", self)
+		self.exitAction = QtGui.QAction("Exit", self)												# Exit the program
 		self.exitAction.setShortcut("Ctrl+W")
 		self.exitAction.triggered.connect(self.closeEvent)
 
-		self.fontSizes = [8,9,10,11,12,13,14,
+		self.fontSizes = [8,9,10,11,12,13,14,														# Set the allowed font sizes for this program
 			 15,16,18,20,22,24,26,28,
 			 32,36,40,44,48,54,60,66,
 			 72,80,88,96]
 
-	def initFormatbar(self):
-		self.formatbar = self.addToolBar("Format")								# Initialize the FORMAT toolbar
-
-	def initMenubar(self):														# Initialize the elements of the MENU bar
+	def initMenubar(self):																			# Initialize the elements of the MENU bar
 		menubar = self.menuBar()
 
-		file = menubar.addMenu("File")
+		file = menubar.addMenu("File")																# Add the menus to the bar
 		edit = menubar.addMenu("Edit")
 		view = menubar.addMenu("View")
 		tools = menubar.addMenu("Tools")
 
-		file.addAction(self.newAction)
+		file.addAction(self.newAction)																# Add the actions per menu + separators
 		file.addAction(self.openAction)
 		file.addAction(self.saveAction)
 		file.addAction(self.exitAction)
@@ -724,40 +702,37 @@ class Main(QtGui.QMainWindow):
 
 		tools.addAction(self.buildAction)
 
-		# view.addAction(self.setFontSize)
-
-	def something(self):
+	def something(self):																			# Start a random terminal (easter egg)
 		subprocess.Popen("start", shell=True)
 
-	def new(self):
+	def new(self):																					# The New action: Create a new instance of an editor
 		a = LNTextEdit()			
-		self.tab.insertTab(self.tab.currentIndex()+1, a, "Untitled.chng")
-		self.tab.setCurrentWidget(a)
-		a.edit.cursorPositionChanged.connect(self.cursorPosition)
+		self.tab.insertTab(self.tab.currentIndex()+1, a, "Untitled.chng")							# Insert the new tab right after the current tab, then set the name to "Untitled.chng"
+		self.tab.setCurrentWidget(a)																# Set focus to the tab
+		a.edit.cursorPositionChanged.connect(self.cursorPosition)									# Connect necessary events
 		a.edit.setFocus()		
-		self.listOfOpenTabs.append(a)
+		self.listOfOpenTabs.append(a)																# Do not forget to add that new tab to the list of open tabs
 
-	def open(self):
+	def open(self):																					# The Open action
+		fileAlreadyOpen = False																		# Set a lock
 
-		fileAlreadyOpen = False
+		filename = str(QtGui.QFileDialog.getOpenFileName(self, 'Open File', ".", "(*.chng)"))		# Open the dialog box 
 
-		filename = str(QtGui.QFileDialog.getOpenFileName(self, 'Open File', ".", "(*.chng)"))
-
-		for files in self.listOfOpenTabs:
+		for files in self.listOfOpenTabs:															# If the opened file from the dialog box is already an active tab in the program, then just set focus to that active tab instead
 			if files.getFileName() == filename:
 				self.tab.setCurrentWidget(files)
 				fileAlreadyOpen = True
 				break
 
-		if filename and not fileAlreadyOpen:
-			with open(filename,"r") as file:
+		if filename and not fileAlreadyOpen:														# Else if it isn't open
+			with open(filename,"r") as file:														# Then instantiate a new editor ojbect
 				a = LNTextEdit()
-				a.edit.setPlainText(file.read())
-				a.edit.changesSaved = True
+				a.edit.setPlainText(file.read())													# Copy the contents of that file into the editor screen
+				a.edit.changesSaved = True 															# Set saved changes to true (it is a fact)
 				self.listOfOpenTabs.append(a)
-				self.tab.insertTab(self.tab.currentIndex()+1, a, os.path.basename(filename))
+				self.tab.insertTab(self.tab.currentIndex()+1, a, os.path.basename(filename))		# Append the tab object to list of tabs then set the tab title to be the filename
 				
-				a.setFileName(filename)
+				a.setFileName(filename)																# Set that object's name as the filename, then connect necessary functions, then set focus to it.
 				self.tab.setCurrentWidget(a)
 				a.edit.cursorPositionChanged.connect(self.cursorPosition)
 				a.edit.setFocus()
@@ -765,26 +740,26 @@ class Main(QtGui.QMainWindow):
 		# if filename not in self.openedFiles:		
 		# 	self.writeRecentlyOpenedFiles()
 
-	def save(self):
-		if not self.tab.currentWidget().getFileName():
-			self.tab.currentWidget().setFileName(QtGui.QFileDialog.getSaveFileName(self, 'Save File', ".", "(*.chng)"))
+	def save(self):																					# The Save action
+		if not self.tab.currentWidget().getFileName():												# If the file is new (not yet saved to a directory),
+			self.tab.currentWidget().setFileName(QtGui.QFileDialog.getSaveFileName(self, 'Save File', ".", "(*.chng)"))		#Open a dialog box
 			
-			if self.tab.currentWidget().getFileName() != "":
+			if self.tab.currentWidget().getFileName() != "":										# If the save dialog box wasn't canceled, 
 				self.tab.setTabText(self.tab.currentIndex(), self.tab.currentWidget().getFileName().split('/')[-1])
 
-				with open(self.tab.currentWidget().getFileName(), "w") as file:
+				with open(self.tab.currentWidget().getFileName(), "w") as file:						# Then write to the file
 					file.write(self.tab.currentWidget().edit.toPlainText())
 
-				self.tab.currentWidget().edit.changesSaved = True		
+				self.tab.currentWidget().edit.changesSaved = True									# Then it is saved as well
 		
-		else:			
+		else:																						# Else if the file exists already in a directory
 			with open(self.tab.currentWidget().getFileName(), "w") as file:
-				file.write(self.tab.currentWidget().edit.toPlainText())
+				file.write(self.tab.currentWidget().edit.toPlainText())								# Just overwrite the original file, then set the savedChanges boolean to True
 				self.tab.currentWidget().edit.changesSaved = True
 
-		self.statusbar.showMessage('Saved')		
+		self.statusbar.showMessage('Saved')															# Send a message to the task bar.	
 
-	def indent(self):
+	def indent(self):																				# The Indent function (retrieved from https://www.binpress.com/tutorial/building-a-text-editor-with-pyqt-part-one/143)
 		# Grab the cursor
 		cursor = self.tab.currentWidget().edit.textCursor()
 
@@ -813,7 +788,7 @@ class Main(QtGui.QMainWindow):
 		else:
 			cursor.insertText("\t")
 
-	def dedent(self):
+	def dedent(self):																				# The Dedent function from the same source https://www.binpress.com/tutorial/building-a-text-editor-with-pyqt-part-one/143						
 		cursor = self.tab.currentWidget().edit.textCursor()
 
 		if cursor.hasSelection():
@@ -836,7 +811,7 @@ class Main(QtGui.QMainWindow):
 		else:
 			self.handleDedent(cursor)
 
-	def handleDedent(self,cursor):
+	def handleDedent(self,cursor):																	# A part of this resource: https://www.binpress.com/tutorial/building-a-text-editor-with-pyqt-part-one/143
 		cursor.movePosition(QtGui.QTextCursor.StartOfLine)
 
 		# Grab the current line
@@ -856,30 +831,30 @@ class Main(QtGui.QMainWindow):
 
 				cursor.deleteChar()
 
-	def build(self):
+	def build(self):																				# Connects from the interpreter classes. Executes the function
 		self.save()
 		splitList = os.path.basename(self.tab.currentWidget().getFileName()).split(".chng")
 		pyName = splitList[0] + ".py"
 		self.tab.currentWidget().setPyFile(pyName)
 		runString = "python " + self.tab.currentWidget().getPyFile()
 	
-		subprocess.Popen(runString,shell = True)
+		subprocess.Popen(runString, shell = True)
 
-	def setWordWrap(self):
-		if self.wordWrapAction.isChecked():
+	def setWordWrap(self):																			# Sets the word wrap mode
+		if self.wordWrapAction.isChecked():															# If checkbox is checked, then set the wordwrap
 			for tab in self.listOfOpenTabs:
 				tab.edit.setWordWrapMode(3)
-		else:
+		else:																						# Else do not show word wrap
 			for tab in self.listOfOpenTabs:
 				tab.edit.setWordWrapMode(0)
 
-	def displayStatusBar(self):
+	def displayStatusBar(self):																		# Same function pattern as above. Set true if false; else true
 		if not self.showStatusBarAction.isChecked():
 			self.statusbar.hide()
 		else:
 			self.statusbar.show()
 
-	def toggleHighlightLine(self):
+	def toggleHighlightLine(self):																	# Same function as above too.
 		if not self.showHighlightlineAction.isChecked():
 			for tab in self.listOfOpenTabs:
 				tab.edit.cursorPositionChanged.connect(tab.edit.removeHightlightline)				
@@ -890,8 +865,8 @@ class Main(QtGui.QMainWindow):
 				tab.edit.cursorPositionChanged.connect(tab.edit.highlightline)				
 				tab.edit.highlightline()
 
-	def cursorPosition(self):
-		cursor = self.tab.currentWidget().edit.textCursor()
+	def cursorPosition(self):																		# From the resource https://www.binpress.com/tutorial/building-a-text-editor-with-pyqt-part-one/143. 
+		cursor = self.tab.currentWidget().edit.textCursor()											# After every cursor move, change message, then update to the status bar
 
 		# Mortals like 1-indexed things
 		line = cursor.blockNumber() + 1
@@ -899,10 +874,10 @@ class Main(QtGui.QMainWindow):
 
 		self.statusbar.showMessage("Line: {}, Column: {}".format(line,col))
 
-	def incFontSize(self):
+	def incFontSize(self):																			# Increment the font size action
 
 		if self.tab.currentWidget().edit.fontSizeIndex > 29:
-			self.tab.currentWidget().edit.fontSizeIndex = 28
+			self.tab.currentWidget().edit.fontSizeIndex = 28										# Makes sure that it doesn't go overboard the list of allowed font sizes
 
 		self.tab.currentWidget().edit.fontSizeIndex += 1			
 
@@ -912,9 +887,8 @@ class Main(QtGui.QMainWindow):
 			pass
 
 		self.tab.currentWidget().edit.setFont(self.tab.currentWidget().edit.font)
-		# self.tab.currentWidget().number_bar.setFont(self.tab.currentWidget().edit.font)
 
-	def decFontSize(self):
+	def decFontSize(self):																			# Decrement the font size action (same as above function but opposite)
 
 		if self.tab.currentWidget().edit.fontSizeIndex == 0:
 			self.tab.currentWidget().edit.fontSizeIndex = 1
@@ -927,11 +901,10 @@ class Main(QtGui.QMainWindow):
 			pass				
 
 		self.tab.currentWidget().edit.setFont(self.tab.currentWidget().edit.font)
-		# self.tab.currentWidget().number_bar.setFont(self.tab.currentWidget().edit.font)
 
-	def closeTab(self):		
-		if self.tab.currentWidget().edit.changesSaved == False:
-			popup = QtGui.QMessageBox(self)
+	def closeTab(self):																				# Close only one tab. Check if it is saved. If yes, proceed to close the tab.
+		if self.tab.currentWidget().edit.changesSaved == False:										# Else no, output a dialog box (from the same resource too https://www.binpress.com/tutorial/building-a-text-editor-with-pyqt-part-one/143)
+			popup = QtGui.QMessageBox(self)															# If user ignores the dialog box, do nothing
 			popup.setIcon(QtGui.QMessageBox.Warning)
 			popup.setWindowTitle("Ching Chong Warning")
 
@@ -960,12 +933,12 @@ class Main(QtGui.QMainWindow):
 			self.tab.removeTab(self.tab.currentIndex())
 
 
-	def closeEvent(self, event):
+	def closeEvent(self, event):																	# Close the program itself (overridden function event)
 		checker = True
 
-		for tab in self.listOfOpenTabs:
+		for tab in self.listOfOpenTabs:																# Check for every open tab.
 			
-			if tab.edit.changesSaved == False:
+			if tab.edit.changesSaved == False:														# If it is saved, do nothing. Else, confirm first if user wants to save.
 				popup = QtGui.QMessageBox(self)
 				popup.setIcon(QtGui.QMessageBox.Warning)
 				popup.setWindowTitle("Ching Chong Warning")
@@ -993,7 +966,7 @@ class Main(QtGui.QMainWindow):
 				elif answer == QtGui.QMessageBox.Discard:
 					pass
 
-				else:
+				else:																				# If user does not want to save, then ignore changes (but allows access for next open)
 					try:
 						event.ignore()
 					except:
@@ -1002,24 +975,24 @@ class Main(QtGui.QMainWindow):
 					checker = False
 					break
 
-		if checker == True:
-			self.writePreferences()
-			self.writeCurrentTab()
-			self.writeRecentlyOpenedFiles()
-			self.recentFiles.close()
+		if checker == True:																			# After everything else has been processed,
+			self.writePreferences()																	# Write the current preferences.
+			self.writeCurrentTab()																	# Write the current tab
+			self.writeRecentlyOpenedFiles()															# Write the recently opened tabs
+			self.recentFiles.close()																# Close the corresponding file pointers
 			self.toReadCurrentTab.close()
-			exit(1)
+			exit(1)																					# Then exit gracefully.
 
 
 
-def main():
+def main():																							# Main function
 
-	app = QtGui.QApplication(sys.argv)	
+	app = QtGui.QApplication(sys.argv)																# Instantiate the interface in the main
 
 	main = Main()
 	main.show()
 
 	sys.exit(app.exec_())
 
-if __name__ == "__main__":
+if __name__ == "__main__":																			# Run the main.
 	main()
