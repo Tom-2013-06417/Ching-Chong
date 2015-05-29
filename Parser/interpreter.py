@@ -67,9 +67,12 @@ def terminalFinder(file, num2, indents=0):
 	num2 = num2 + 1
 	string = ""
 
+	#print "num2",num2
 	#return a string once a terminal line is reached
-	for num, line in enumerate(file, 1):
+	for num, line in enumerate(file, num2):
+		#print num,num2,line
 		if num >= num2 and "Sincerely, " in line:
+	#		print "code pls"
 			return num
 
 
@@ -142,6 +145,7 @@ def interpreter(mainlist, n, indents=0):
 				writervar = writervar + inputList2[0]
 				print writervar
 			if list[0] == "ArithmeticBlock":
+
 				writervar = nextline(file, num, indents)
 				print writervar
 			if list[0] == "Break":
@@ -151,6 +155,7 @@ def interpreter(mainlist, n, indents=0):
 				writervar = writervar + "continue"
 				print writervar
 			if list[0] == "VarDecSegment":
+				print "in"
 				variablesDeclared = nextline(file, num)
 				listedVars = variablesDeclared.split("\n")
 				variableDict = {"Int":[],"Float":[],"Bool":[],"Char":[],"String":[],"List":[]}
@@ -373,10 +378,10 @@ def interpreter(mainlist, n, indents=0):
 				contents = nextline(file, num, indents)
 				num2 = num + 1
 				string = ""
-
+				
 				#return a string once a terminal line is reached
 				
-				
+				#print "here:",contents	
 				if "I want dumplings and:" in contents:
 					parameter = contents.split("okay")[0].split("I want dumplings and:")
 					parameter2 = parameter[len(parameter) - 1].split("\n")
@@ -392,16 +397,19 @@ def interpreter(mainlist, n, indents=0):
 
 					defFxn = defFxn[:-1]
 				defFxn += "):"
+				
 				print defFxn
 
 				limit = terminalFinder(file, num)
-				
+				#print limit
 				try:
 					while mainlist[n][1] < limit:
 						n = n + 1
 						if mainlist[n][1] > limit:
 							indents = indents - 1
+						
 						n = interpreter(mainlist, n, indents+1)
+						
 				except IndexError:
 					pass
 
@@ -413,7 +421,9 @@ def interpreter(mainlist, n, indents=0):
 #list = [["If", 104], ["Print", 105], ["Elif", 108], ["Print", 109], ["Print", 110], ["Print", 111], ["Else", 114], ["Print", 115]]
 #list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
 #list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
-list = [["Function", 57], ["Print", 70], ["Print", 71], ["Input", 72], ["InputPrompt", 73], ["InputPrompt", 74]]
+#list = [["Function", 57],["VarDecSegment",61],["Print", 70], ["Print", 71], ["Input", 72], ["InputPrompt", 73], ["InputPrompt", 74]]
+#list = [["Function",126],["If",128],["While",129],["For",131],["Print",133],["Arithmetic",135],["If",138],["Print",139],["ArithmeticBlock",140],["Elif",147],["Print",148]]
+#
 file = open("mySecondishProgram.chng","r")	
 for num, line in enumerate(file, 1):
 	if num == 1:
