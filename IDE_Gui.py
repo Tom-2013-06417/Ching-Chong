@@ -82,7 +82,7 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 		# Multi-line strings (expression, flag, style)
 		# FIXME: The triple-quotes in these two lines will mess up the
 		# syntax highlighting from this point onward
-		self.tri_single = (QRegExp("-_-"), 1, STYLES['string2'])
+		# self.tri_single = (QRegExp("-_-"), 1, STYLES['string2'])
 
 		True
 
@@ -198,7 +198,7 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 		self.setCurrentBlockState(0)
 
 		# Do multi-line strings
-		in_multiline = self.match_multiline(text, *self.tri_single)
+		# in_multiline = self.match_multiline(text, *self.tri_single)
 		# if not in_multiline:
 			# in_multiline = self.match_multiline(text, *self.tri_double)
 
