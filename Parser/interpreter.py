@@ -3,9 +3,9 @@ name = ''
 #Convert CHNG tokens to Python readable content
 def conditional(cond):
 	if cond == "Own":
-		return True
+		return "True"
 	elif cond == "Disown":
-		return False
+		return "False"
 	else:
 		if "more greaterer to" in cond:
 			split = "more greaterer to"
@@ -60,6 +60,20 @@ def nextline(file, num, indents=0):
 			line = '\t'*indents + line.split(" lah")[0]
 			string = string + line + "\n"
 
+def funcBlock(file, num, indents=0):
+	num = num + 1
+	string = ""
+	global endBlock
+	#return a string once a terminal line is reached
+	for num, line in enumerate(file, num):
+		line = line.strip()
+		if "Sincerely, " in line:
+			string = string[:-1]
+			endBlock = num
+			return string
+		else:
+			line = '\t'*indents + line.split(" lah")[0]
+			string = string + line + "\n"
 
 
 #get the next few literal lines from the indicated position
@@ -113,6 +127,7 @@ def elseEnder(file, num, label=0):
 #feeds a list of reductions starting from position r and indicates the current group/block/indent
 def interpreter(mainlist, n, indents=0):
 	global name
+	global endBlock
 	list = mainlist[n]												#get the reduction at the nth position
 	file = open("mySecondishProgram.chng","r")						#open the file
 	writervar = '\t'*indents										#implement indents
@@ -155,7 +170,7 @@ def interpreter(mainlist, n, indents=0):
 				writervar = writervar + "continue"
 				print writervar
 			if list[0] == "VarDecSegment":
-				print "in"
+				
 				variablesDeclared = nextline(file, num)
 				listedVars = variablesDeclared.split("\n")
 				variableDict = {"Int":[],"Float":[],"Bool":[],"Char":[],"String":[],"List":[]}
@@ -338,11 +353,18 @@ def interpreter(mainlist, n, indents=0):
 					pass
 			if list[0] == "Elif":
 				IfList = line.split("Father ask again ")
-				IfList2 = IfList[1].split(", if ")
-				label = IfList2[0]
-				cond = conditional(IfList2[1].split(" lah.")[0])
+				if "if" in IfList[1]:
+					IfList2 = IfList[1].split(", if ")
+					label = IfList2[0]
+					cond = conditional(IfList2[1].split(" lah.")[0])
 
-				writervar = writervar + "elif " + cond + ":"
+					writervar = writervar + "elif " + cond + ":"
+				else:
+					IfList2 = IfList[1].split(", is ")
+					IfList3 = IfList2[1].split(" lah.")[0].split(" ")
+					print IfList3, "PRINTING"
+					label = IfList2[0]
+					print label, IfList3[0], IfList3[1]
 				print writervar
 
 				limit = IfEnder(file, num, label)
@@ -375,7 +397,7 @@ def interpreter(mainlist, n, indents=0):
 				FxnName = line.split("Dear ")[1].split(",")[0]
 				defFxn = 'def ' + FxnName + "("
 				
-				contents = nextline(file, num, indents)
+				contents = funcBlock(file, num, indents)
 				num2 = num + 1
 				string = ""
 				
@@ -398,13 +420,16 @@ def interpreter(mainlist, n, indents=0):
 					defFxn = defFxn[:-1]
 				defFxn += "):"
 				
-				print defFxn
-
-				limit = terminalFinder(file, num)
-				#print limit
+				print defFxn	
+				limit = endBlock
+				print contents
+			
 				try:
+					
 					while mainlist[n][1] < limit:
+						
 						n = n + 1
+						
 						if mainlist[n][1] > limit:
 							indents = indents - 1
 						
@@ -414,6 +439,7 @@ def interpreter(mainlist, n, indents=0):
 					pass
 
 			file.close()
+			#print "this is ",n
 			return n
 
 
@@ -422,8 +448,9 @@ def interpreter(mainlist, n, indents=0):
 #list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
 #list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
 #list = [["Function", 57],["VarDecSegment",61],["Print", 70], ["Print", 71], ["Input", 72], ["InputPrompt", 73], ["InputPrompt", 74]]
-#list = [["Function",126],["If",128],["While",129],["For",131],["Print",133],["Arithmetic",135],["If",138],["Print",139],["ArithmeticBlock",140],["Elif",147],["Print",148]]
-#
+#list = [["Function",126],["If",133],["While",134],["For",136],["Print",138],["Arithmetic",140],["If",143],["Print",144],["ArithmeticBlock",145],["Elif",152],["Print",153]]
+list = [["Function",126],["VarDecSegment",127],["If",133],["While",134],["For",136],["Print",138],["Arithmetic",140],["If",143],["Print",144],["ArithmeticBlock",145],["Elif",152],["Print",153],["Elif", 158],["Print",159],["Elif",162],["Print",163],["Else",166]]
+#	
 file = open("mySecondishProgram.chng","r")	
 for num, line in enumerate(file, 1):
 	if num == 1:
