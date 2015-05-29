@@ -55,7 +55,7 @@ print ["stack",   "input",   "action"]
 #first, we find the intersection of the last element of stack list
 intersection = '0'
 
-while (1):
+while (False):
     action = [] #this is the 'action' list where the shift/reduce functions are shown
     input_var_index = find_index(the_input[0])
 
