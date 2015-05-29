@@ -357,15 +357,14 @@ def interpreter(mainlist, n, indents=0):
 					IfList2 = IfList[1].split(", if ")
 					label = IfList2[0]
 					cond = conditional(IfList2[1].split(" lah.")[0])
-
-					writervar = writervar + "elif " + cond + ":"
 				else:
 					IfList2 = IfList[1].split(", is ")
 					IfList3 = IfList2[1].split(" lah.")[0].split(" ")
-					print IfList3, "PRINTING"
 					label = IfList2[0]
 					print label, IfList3[0], IfList3[1]
-				print writervar
+					cond = str(IfList3[0]) + " == " + str(conditional(List3[1]))
+
+				writervar = writervar + "elif " + cond + ":"
 
 				limit = IfEnder(file, num, label)
 				try:
