@@ -59,7 +59,7 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 	keywords = [
 		'and', 'again', 'ask', 'Diary', 'from', 'From', 'if', 'in', 'is', 'of', 'oclock',
 		'not', 'or', 'pass', 'while', 'with', 'GWA', 'Score', 'Essay', 'Honor', 'ReportCard', 'okay', 'LetterGrade', 'Teacher', 'adds', 'to', 'gets',
-		'Father', 'counts'
+		'Father', 'counts', 'entries'
 	]
 
 	boolean = ['Own', 'Disown']
@@ -97,8 +97,6 @@ class ChingChongHighlighter (QtGui.QSyntaxHighlighter):
 		# All other rules
 		rules += [
 			# 'self'
-			(r'\bself\b', 0, STYLES['self']),
-
 			# Double-quoted string, possibly containing escape sequences
 			(r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),
 
@@ -859,6 +857,7 @@ class Main(QtGui.QMainWindow):
 				cursor.deleteChar()
 
 	def build(self):
+		self.save()
 		splitList = os.path.basename(self.tab.currentWidget().getFileName()).split(".chng")
 		pyName = splitList[0] + ".py"
 		self.tab.currentWidget().setPyFile(pyName)
