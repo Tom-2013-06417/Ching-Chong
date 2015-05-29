@@ -55,8 +55,7 @@ BlnMore2 -> BlnMore
 BlnMore2 -> ''
 Declare -> ListDeclare
 ListDeclare -> ReportCard Var ListVal
-ListVal -> With PwedeNegInt entries lah. ManyNewLine
-ListVal -> With Var ListMore
+ListVal -> with Var ListMore
 ListMore -> , Var ListMore2
 ListMore2 -> ListMore
 ListMore2 -> lah. ManyNewLine
@@ -66,9 +65,9 @@ FunctionStatement -> ''
 Return -> IGiveYouSum Var lah. ManyNewLine
 Statement -> FunctionCall
 FunctionCall -> IWriteTo Name FxnCallParameter
-FxnCallParameter -> With Var ManyVar FxnCallReturn
+FxnCallParameter -> with Var ManyVar FxnCallReturn
 FxnCallParameter -> FxnCallReturn
-FxnCallReturn -> lah. ManyNewLine IGet Var From Name lah. ManyNewLine
+FxnCallReturn -> lah. ManyNewLine IGet Var from Name lah. ManyNewLine
 FxnCallReturn -> lah. ManyNewLine
 ManyVar -> , Var ManyVar
 ManyVar -> ''
@@ -88,9 +87,9 @@ Statement -> If
 If   -> FatherAsk Label , if Conditional lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
 If   -> FatherAsk Label , is Var Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
 If   -> FatherAsk Label , if Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
-Elif ->	FatherAskAgain Label , if Conditional lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
-Elif ->	FatherAskAgain Label , is Var lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
-Elif ->	FatherAskAgain Label , if Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+Elif -> FatherAskAgain Label , if Conditional lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+Elif -> FatherAskAgain Label , is Var Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
+Elif -> FatherAskAgain Label , if Boolean lah. ManyNewLine ControlStructureStatement Idoubleconfirm Label , lah. ManyNewLine Elif
 Elif -> Else
 Else -> FatherStopAsking Label lah. ManyNewLine ControlStructureStatement FatherAshamedofSonForNotAnswer Label , lah. ManyNewLine
 Else -> ''
@@ -116,7 +115,7 @@ InputPrompt -> Input
 Input -> IGiveFather Var lah. ManyNewLine
 Statement -> Arith
 Arith -> FatherSurpriseQuiz: Math lah. ManyNewLine
-Arith -> FatherSurpriseLongQ: ManyNewLine Math lah. LQ
+Arith -> FatherSurpriseLongQ: ManyNewLine Math lah. ManyNewLine LQ
 LQ -> Math lah. ManyNewLine LQ
 LQ -> Ididnotknowlah. ManyNewLine
 Math -> Var = Expr
@@ -229,11 +228,3 @@ CD -> "6"
 CD -> "7"
 CD -> "8"
 CD -> "9"
-ASCII -> _
-ASCII -> '
-ASCII -> @
-ASCII -> !
-ASCII -> ?
-ASCII -> #
-ASCII -> &
-ASCII -> ,

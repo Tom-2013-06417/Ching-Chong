@@ -20,16 +20,10 @@ lr_table=parseTableMaker()
 
 grammar_rules = rules()
 
-'''
-for i in list_of_tokens: #this removes all the spaces in the input
-    if (i != ' '):
-        the_input.append(i)
-'''
-
-the_input = tokenizer("mySecondishProgram.chng")
-
-#the_input = ['HiIam', 'A', 'a', 'a', '.', '\\n', 'ISendShrimpFriedRiceToAll:', '\\n', 'Score', 'A', 'A', 'of', '-', '1', '1', '1', '1', '1', ',', 'B', 'of', '1', '0', '1', '0', '1', ',', 'C', 'lah.', '\\n', 'GWA', 'A', 'B', 'of', '0', '.', '1', 'lah.', '\\n', 'Honor', 'A', 'B', 'of', 'Disown', 'lah.', '\\n', 'LetterGrade', 'C', 'C', 'of', 'C', 'lah.', '\\n', 'Essay', 'B', 'C', 'of', '"', 'C', 'C', 'C', 'C', '"', 'lah.', '\\n', 'Sincerely', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'IShowFather', 'A', 'lah.', '\\n', 'Sincerely', 'A', 'a', '.', '\\n', 'Dear', 'A', 'A', ',', '\\n', 'FatherSayMakeRepeat', 'A', 'againlah.', '\\n', 'MustDo', 'A', 'from', 'A', 'to', 'A', 'oclocklah.', '\\n', 'IShowFather', 'A', 'lah.', '\\n', "I'mDoneWith", 'A', 'lah.', '\\n', 'Sincerely', 'A', 'A', '.', '\\n', '$']
-
+the_input = tokenizer("ME2.chng")
+the_input.append("$")
+#print the_input
+print "!!!"
 
 #i wanna make a dictionary such that 
 #the keys => the line number of a code, 
@@ -37,6 +31,8 @@ the_input = tokenizer("mySecondishProgram.chng")
 dict_of_line_and_code = {}
 templist = []
 count = 1
+
+
 for j in the_input:
     if j != '\\n':
         templist.append(j)
@@ -44,8 +40,36 @@ for j in the_input:
         dict_of_line_and_code[count] = templist
         count += 1
         templist = []
-        
-#print dict_of_line_and_code
+
+the_keys = dict_of_line_and_code.keys()
+the_values = dict_of_line_and_code.values()
+
+list_of_maps = []
+ultralist = []
+print "AAAA"
+for i in the_keys:
+    if dict_of_line_and_code[i] != []:
+        templist = [ dict_of_line_and_code[i][0], i]
+    else:
+        templist = ['', i]
+    ultralist.append(templist)
+
+for j in ultralist:
+    if j[0] != '':
+
+        for k in grammar_rules.keys():
+            if grammar_rules[k][2] == j[0]:
+                j[0] = grammar_rules[k][0]
+                break
+
+copy = []
+
+for j in ultralist:
+    if j[0] in ["Print", "Input", "InputPrompt", "Arithmetic", "ArithmeticBlock", "Break", "Continue", "VarDecSegment", "For", "While", "If", "Elif", "Else", "Function"]:
+        copy.append(j)
+
+print copy
+print "!!"
 
 
 stack = [0] #we want the stack to be inititally 0
@@ -55,10 +79,16 @@ print ["stack",   "input",   "action"]
 #first, we find the intersection of the last element of stack list
 intersection = '0'
 
-while (False):
+ultralist = [] #para sa ultralist ng mga reduces
+counter = 0
+sendList = []
+while (1):
     action = [] #this is the 'action' list where the shift/reduce functions are shown
+    #print the_input
     input_var_index = find_index(the_input[0])
-
+   
+		#print counter
+		
     try:
         intersection = lr_table[stack_var_index][input_var_index]
         #print [stack]
@@ -69,19 +99,25 @@ while (False):
     else:
         if (intersection[0] == 's'): #if the order is a 'shift'
             action = [intersection]
-            #print [ stack ]
-            #print [ the_input ]
-            #print [ action ]
             stack.append ( the_input.pop(0) )
             stack.append ( int(intersection[1:]) )
             stack_var_index = int(intersection[1:])
 
         elif (intersection[0] == 'r'):#if the order is a 'reduce'
-            temp1 = grammar_rules[int(intersection[1:])] #so pag rule 1, temp1 = ['A', '->', 'id', '=', 'E']
+
+
+            temp1 = grammar_rules[int(intersection[1:])] 
+			#so pag rule 1, temp1 = ['A', '->', 'id', '=', 'E']
+
+
             index_arrow = temp1.index('->')
             
 
             temp2 = temp1[index_arrow + 1:]
+
+
+
+
 
             if "''" in temp2:
                 temp2 = []
@@ -120,9 +156,12 @@ while (False):
             #it means that the intersection is an 'x' in this code
             print "Syntax Error.!"
             break
-        #print "--"
+        if the_input[0] == "\\n":
+            counter = counter + 1
+        print "--"
         #print [ stack ]
         #print "========================="
         #print [ the_input ]
         #print "========================="
         print [ action ]
+
