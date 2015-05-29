@@ -38,10 +38,6 @@ def conditional(cond):
 		return cond[0] + val + cond[1]
 
 
-
-#print conditional("C more greaterer to X")
-
-
 def nextline(file, num, indents=0):
 	num = num + 1
 	string = ""
@@ -71,11 +67,29 @@ def getEnder(file, num, label=0):
 			return num
 	print "SYNTAX ERROR"
 
+def IfEnder(file, num, label=0):
+	num = num + 1
+	ifend = "I double confirm " + label + " lah."
+	for num, line in enumerate(file, num):
+		line = line.strip()
+		if line == ifend:
+			return num
+	print "SYNTAX ERROR"
+
+def elseEnder(file, num, label=0):
+	num = num + 1
+	ifend = "Father ashamed of son for not answer " + label + " lah."
+	for num, line in enumerate(file, num):
+		line = line.strip()
+		if line == ifend:
+			return num
+	print "SYNTAX ERROR"
+
 
 
 def interpreter(mainlist, n, indents=0):
 	list = mainlist[n]
-	file = open("dummycode.chng","r")
+	file = open("mySecondishProgram.chng","r")
 	writervar = '\t'*indents
 
 	for num, line in enumerate(file, 1):					#line is literally just what the string in the line is, num is what line number
@@ -208,11 +222,93 @@ def interpreter(mainlist, n, indents=0):
 						n = interpreter(mainlist, n, indents+1)
 				except IndexError:
 					pass
+			if list[0] == "If":
+				IfList = line.split("Father ask ")
+				IfList2 = IfList[1].split(", if ")
+				label = IfList2[0]
+				cond = conditional(IfList2[1].split(" lah.")[0])
+
+				writervar = writervar + "if " + cond + ":"
+				print writervar
+
+				limit = IfEnder(file, num, label)
+				try:
+					while mainlist[n][1] < limit:
+						n = n + 1
+						if mainlist[n][1] > limit:
+							indents = indents - 1
+						n = interpreter(mainlist, n, indents+1)
+				except IndexError:
+					pass
+			if list[0] == "Elif":
+				IfList = line.split("Father ask again ")
+				IfList2 = IfList[1].split(", if ")
+				label = IfList2[0]
+				cond = conditional(IfList2[1].split(" lah.")[0])
+
+				writervar = writervar + "elif " + cond + ":"
+				print writervar
+
+				limit = IfEnder(file, num, label)
+				try:
+					while mainlist[n][1] < limit:
+						n = n + 1
+						if mainlist[n][1] > limit:
+							indents = indents - 1
+						n = interpreter(mainlist, n, indents+1)
+				except IndexError:
+					pass
+			if list[0] == "Else":
+				IfList = line.split("Father stop asking ")
+				IfList2 = IfList[1].split(" lah.")
+				label = IfList2[0]
+
+				writervar = writervar + "else:"
+				print writervar
+
+				limit = elseEnder(file, num, label)
+				try:
+					while mainlist[n][1] < limit:
+						n = n + 1
+						if mainlist[n][1] > limit:
+							indents = indents - 1
+						n = interpreter(mainlist, n, indents+1)
+				except IndexError:
+					pass
+			if list[0] == "Function":
+				FxnName = line.split("Dear ")[1].split(",")[0]
+				defFxn = 'def ' + FxnName + "("
+				contents = nextline(file, num, indents)
+				#print contents
+				if "I want dumplings and:" in contents:
+					parameter = contents.split("okay")[0].split("I want dumplings and:")
+					parameter2 = parameter[len(parameter) - 1].split("\n")
+					for i in range(0,len(parameter2)-1):
+						if parameter2[i] == '':
+							parameter2.pop(i)
+					#print parameter2
+					args = []
+					
+					for i in range(0,len(parameter2)):
+						aheho = parameter2[i].split(" ")
+						defFxn += aheho[1] + ","
+						args.append(aheho[1])
+
+					defFxn = defFxn[:-1]
+					defFxn += "):"
+					print defFxn
+
 			return n
 
 
 
-list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
-list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
+
+#list = [["If", 126], ["Print", 127], ["Elif", 130], ["Print", 131], ["Print", 132], ["Print", 133], ["Else", 136], ["Print", 137]]
+#list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
+#list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
+
+list = [["Function", 36]]
+
+
 interpreter(list, 0)
 
