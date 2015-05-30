@@ -1,6 +1,6 @@
 import sys, os
 import subprocess
-
+import STRIKELANDPARSER
 from PyQt4 import QtGui, QtCore																		# PyQt is our GUI platform, as it is more efficient and client ready
 from PyQt4.QtCore import Qt, QRegExp
 from PyQt4.Qt import QWidget
@@ -833,10 +833,11 @@ class Main(QtGui.QMainWindow):																		# The Facade of interfaces that 
 
 	def build(self):																				# Connects from the interpreter classes. Executes the function
 		self.save()
+		a = STRIKELANDPARSER.parse()
 		splitList = os.path.basename(self.tab.currentWidget().getFileName()).split(".chng")
-		pyName = splitList[0] + ".py"
+		pyName = "myPythonFile.py"
 		self.tab.currentWidget().setPyFile(pyName)
-		runString = "python " + self.tab.currentWidget().getPyFile()
+		runString = "python2 " + self.tab.currentWidget().getPyFile()
 	
 		subprocess.Popen(runString, shell = True)
 

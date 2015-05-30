@@ -82,5 +82,5 @@ def tokenizer(filename):
         #print stt[a]
         #print flag
 
-    print ' '.join(toInput) 
+    #print ' '.join(toInput) 
     return toInput

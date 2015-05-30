@@ -1,0 +1,3 @@
+def Diary():
+		print
+Diary()

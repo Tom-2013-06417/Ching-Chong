@@ -1,3 +1,4 @@
+
 name = ''
 indict = {}
 
@@ -506,22 +507,15 @@ def interpreter(mainlist, n, indents=0):
 			return n
 
 
-
-#list = [["If", 104], ["Print", 105], ["Elif", 108], ["Print", 109], ["Print", 110], ["Print", 111], ["Else", 114], ["Print", 115]]
-#list = [["For", 191], ["For", 194], ["For", 197], ["Print", 199], ["Print", 202], ["ArithmeticBlock", 206], ["For", 212], ["For", 215], ["Print", 217], ["Print", 222]]
-#list = [["While", 97], ["Print", 99], ["Arithmetic", 100], ["While", 101], ["Print", 103], ["Arithmetic", 104], ["While", 105], ["Print", 107], ["Arithmetic", 108]]
-#list = [["Function", 57],["VarDecSegment",61],["Print", 70], ["Print", 71], ["Input", 72], ["InputPrompt", 73], ["InputPrompt", 74]]
-#list = [["Function",126],["If",133],["While",134],["For",136],["Print",138],["Arithmetic",140],["If",143],["Print",144],["ArithmeticBlock",145],["Elif",152],["Print",153]]
-#list = [["Function",126],["VarDecSegment",127],["If",133],["While",134],["For",136],["Print",138],["Arithmetic",140],["If",143],["Print",144],["ArithmeticBlock",145],["Elif",152],["Print",153],["Elif", 158],["Print",159],["Elif",162],["Print",163],["Else",166],["Print",167]]
-list = [["Function",126],["VarDecSegment",127],["If",135],["Print",140],["Elif", 160],["Print",161],["Elif",164],["Print",165],["Else",168],["Print",169]]
-#list = [["Function", 17], ["Parameter", 19], ["VarDecSegment", 24], ["Return", 29], ["FxnCall", 54]]
-file = open("mySecondishProgram.chng","r")	
-for num, line in enumerate(file, 1):
-	if num == 1:
-		name = line.split("Hi, I am ")[1].split(".")[0]
-file.close()
-global pyFile
-pyFile = open("myPythonFile.py","w")
-interpreter(list, 0)
-pyFile.write("Diary()")
-pyFile.close()
+def startInterpret(list):
+	#print "list",list
+	file = open("mySecondishProgram.chng","r")	
+	for num, line in enumerate(file, 1):
+		if num == 1:
+			name = line.split("Hi, I am ")[1].split(".")[0]
+	file.close()
+	global pyFile
+	pyFile = open("myPythonFile.py","w")
+	interpreter(list, 0)
+	pyFile.write("Diary()")
+	pyFile.close()
